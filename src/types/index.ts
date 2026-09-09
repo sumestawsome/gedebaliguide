@@ -75,6 +75,17 @@ export interface Review {
   featured: boolean;
 }
 
+export interface GalleryItem {
+  id: string;
+  title: string;
+  category: "culture" | "nature" | "guests" | "activity";
+  location: string;
+  imageUrl: string;
+  caption: string;
+  tourSlug?: string;
+  featured?: boolean;
+}
+
 export * from "@/lib/schemas/home-schema";
 export * from "@/lib/schemas/tour-schema";
 
