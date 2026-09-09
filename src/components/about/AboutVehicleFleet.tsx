@@ -40,7 +40,7 @@ export default function AboutVehicleFleet() {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-white border-b border-stone-200/80">
+    <section id="standar-armada" className="py-16 md:py-24 bg-white border-b border-stone-200/80 scroll-mt-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">

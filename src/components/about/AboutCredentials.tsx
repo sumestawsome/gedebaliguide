@@ -37,7 +37,7 @@ export default function AboutCredentials() {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-stone-50/70">
+    <section id="kredensial-hpi" className="py-16 md:py-24 bg-stone-50/70 scroll-mt-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Digital Credential Card */}

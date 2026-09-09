@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "eaf3a2858604a7d14dae3c2e8ffe656a530b5cc8",
+  "generatedForCommit": "d2932af1dc13ac981ceaa45173539fc849e73cb5",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -189,6 +189,12 @@
       "size": 1450
     },
     {
+      "path": "src/app/about/page.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 3860
+    },
+    {
       "path": "src/app/api/destinations/route.ts",
       "reason": "needs_summary",
       "language": "typescript",
@@ -250,7 +256,7 @@
     },
     {
       "path": "src/app/page.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 5104
     },
@@ -273,6 +279,42 @@
       "size": 13939
     },
     {
+      "path": "src/components/about/AboutComparison.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 4983
+    },
+    {
+      "path": "src/components/about/AboutCredentials.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 7710
+    },
+    {
+      "path": "src/components/about/AboutCta.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 3885
+    },
+    {
+      "path": "src/components/about/AboutHero.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 8118
+    },
+    {
+      "path": "src/components/about/AboutStory.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 6450
+    },
+    {
+      "path": "src/components/about/AboutVehicleFleet.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 6761
+    },
+    {
       "path": "src/components/common/FloatingWhatsApp.tsx",
       "reason": "needs_summary",
       "language": "typescript",
@@ -292,7 +334,7 @@
     },
     {
       "path": "src/components/home/HeroSection.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 10676
     },
@@ -304,13 +346,13 @@
     },
     {
       "path": "src/components/home/TrustBar.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 3564
     },
     {
       "path": "src/components/home/WhatsAppCtaSection.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 5193
     },
@@ -400,7 +442,7 @@
     },
     {
       "path": "src/lib/services/home-service.ts",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 2969
     },
@@ -424,9 +466,9 @@
     },
     {
       "path": "src/lib/whatsapp.ts",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 3928
+      "size": 4069
     },
     {
       "path": "src/types/index.ts",
