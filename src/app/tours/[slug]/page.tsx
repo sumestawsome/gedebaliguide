@@ -10,6 +10,7 @@ import Footer from "@/components/layout/Footer";
 import TourItinerary from "@/components/tours/TourItinerary";
 import TourInclusions from "@/components/tours/TourInclusions";
 import TourMap from "@/components/tours/TourMap";
+import TourHighlights from "@/components/tours/TourHighlights";
 import TourBookingCard from "@/components/tours/TourBookingCard";
 import { Clock, Users, Star, ChevronRight, ShieldCheck, Sparkles, MapPin, MessageCircle, HelpCircle } from "lucide-react";
 import { getDirectQuestionUrl } from "@/lib/whatsapp";
@@ -280,22 +281,12 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
                 </p>
               </div>
 
-              {/* Highlights List */}
-              <div className="space-y-4 rounded-3xl bg-stone-100/60 p-6 sm:p-8 border border-stone-200/70">
-                <h3 className="font-serif text-xl font-bold text-stone-900">
-                  Sorotan Destinasi Utama
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {tour.highlights.map((hl, i) => (
-                    <div key={i} className="flex items-center gap-2.5 text-sm font-medium text-stone-800">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-blue-800 shrink-0">
-                        <MapPin className="h-3.5 w-3.5" />
-                      </div>
-                      <span>{hl}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* Tour Experience & Destination Highlights */}
+              <TourHighlights
+                highlights={tour.highlights}
+                area={tour.area}
+                duration={tour.duration}
+              />
 
               {/* Chronological Itinerary */}
               <TourItinerary itinerary={tour.itinerary} />
