@@ -53,12 +53,22 @@ export default function ToursCatalog({ initialTours = mockAllTours }: ToursCatal
     }
   };
 
-  // Filtered tours
+  // Filtered & Sorted tours (tur populer selalu di atas tur lainnya)
   const filteredTours = useMemo(() => {
-    return activeTours.filter((tour) => {
-      const matchArea = selectedArea === "all" || tour.area.toLowerCase() === selectedArea.toLowerCase();
-      const matchCategory = selectedCategory === "all" || tour.category === selectedCategory;
+    const list = activeTours.filter((tour) => {
+      const matchArea =
+        selectedArea === "all" ||
+        tour.area.toLowerCase() === selectedArea.toLowerCase();
+      const matchCategory =
+        selectedCategory === "all" || tour.category === selectedCategory;
       return matchArea && matchCategory;
+    });
+
+    // Urutkan: tur yang ditandai populer (featured === true) tampil lebih dulu
+    return list.sort((a, b) => {
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      return 0; // Pertahankan urutan asli
     });
   }, [activeTours, selectedArea, selectedCategory]);
 

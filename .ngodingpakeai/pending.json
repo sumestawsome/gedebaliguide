@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "919975207bfcfa9175f61b01c561804ef48748a0",
+  "generatedForCommit": "d193f323b640274c223e42953ee5f8ea726c4506",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -196,7 +196,7 @@
     },
     {
       "path": "src/app/tours/page.tsx",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 3282
     },
@@ -256,19 +256,19 @@
     },
     {
       "path": "src/components/tours/TourCard.tsx",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 6856
     },
     {
       "path": "src/components/tours/ToursCatalog.tsx",
-      "reason": "new",
+      "reason": "changed",
       "language": "typescript",
-      "size": 730
+      "size": 6641
     },
     {
       "path": "src/data/mock-data.ts",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 12339
     },
