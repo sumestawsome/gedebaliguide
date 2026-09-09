@@ -36,10 +36,12 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
 
   const messageOptions = {
     tourName: tour.name,
+    tourSlug: tour.slug,
     guestName: guestName.trim() || undefined,
     tripDate: tripDate || undefined,
     guestCount: guestCount || undefined,
-    customNote: customNote.trim() || undefined,
+    pickupLocation: customNote.trim() || undefined,
+    priceFormatted: formatPrice(estimatedTotal),
     source: "tour_detail" as const,
   };
 
