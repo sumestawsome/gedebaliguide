@@ -144,9 +144,14 @@ export default function TourCard({ tour, priority = false }: TourCardProps) {
         {/* Pricing & Actions */}
         <div className="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between gap-3 mt-auto">
           <div>
-            <span className="block text-[10px] font-semibold uppercase tracking-wider text-stone-400">
-              Harga Sewa Tur
-            </span>
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-stone-400">
+                Harga Langsung
+              </span>
+              <span className="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1 py-0.2 rounded border border-emerald-200/80">
+                Tanpa Calo
+              </span>
+            </div>
             <div className="flex items-baseline gap-1">
               <span className="font-serif text-xl sm:text-2xl font-bold text-stone-900">
                 {formatPrice(tour.price)}
@@ -155,6 +160,9 @@ export default function TourCard({ tour, priority = false }: TourCardProps) {
                 {tour.priceType === "per_person" ? "/ orang" : "/ mobil"}
               </span>
             </div>
+            <span className="block text-[10px] text-stone-400 font-medium">
+              Tanpa DP • Bayar Saat Tur
+            </span>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">

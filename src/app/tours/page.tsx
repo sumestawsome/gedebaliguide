@@ -4,6 +4,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ToursCatalog from "@/components/tours/ToursCatalog";
+import DirectPricingBanner from "@/components/tours/DirectPricingBanner";
 import { Compass, ShieldCheck, Car, Clock } from "lucide-react";
 import { getActiveToursSortedByPopularity } from "@/lib/services/tour-service";
 
@@ -135,8 +136,9 @@ export default async function ToursPage() {
         </section>
 
         {/* Catalog Section */}
-        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10">
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-12 sm:space-y-16">
           <ToursCatalog initialTours={tours} />
+          <DirectPricingBanner />
         </section>
       </main>
 
