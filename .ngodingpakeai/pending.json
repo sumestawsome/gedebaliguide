@@ -1,268 +1,274 @@
 {
   "repo": "client",
-  "generatedForCommit": "6e397c87960ae38ca2280c590446afdeb7d6e314",
+  "generatedForCommit": "3c5591ac99d17c32c0c9a38157bbe2098afe35fa",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 17863
     },
     {
       "path": ".codex/skills/ngodingpakeai/SKILL.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 17863
     },
     {
       "path": ".gitignore",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": null,
       "size": 480
     },
     {
       "path": ".ngodingpakeaiignore",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": null,
       "size": 269
     },
     {
       "path": "AGENTS.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 17617
     },
     {
       "path": "CLAUDE.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 11
     },
     {
       "path": "eslint.config.mjs",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "javascript",
       "size": 465
     },
     {
       "path": "gede-bali-guide (1)/features/01-beranda.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 4551
     },
     {
       "path": "gede-bali-guide (1)/features/02-jelajahi-tur.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 2941
     },
     {
       "path": "gede-bali-guide (1)/features/03-detail-tur.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 4134
     },
     {
       "path": "gede-bali-guide (1)/features/04-pesan-whatsapp.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 3919
     },
     {
       "path": "gede-bali-guide (1)/features/05-bukti-kepercayaan.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 3955
     },
     {
       "path": "gede-bali-guide (1)/features/06-kontak-faq.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 3085
     },
     {
       "path": "gede-bali-guide (1)/features/07-panel-admin.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 4284
     },
     {
       "path": "gede-bali-guide (1)/features/08-tampil-di-google.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 3650
     },
     {
       "path": "gede-bali-guide (1)/features/09-halaman-utama.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 4588
     },
     {
       "path": "gede-bali-guide (1)/features/10-katalog-tur.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 3911
     },
     {
       "path": "gede-bali-guide (1)/features/11-detail-tur.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 3725
     },
     {
       "path": "gede-bali-guide (1)/features/12-pesan-whatsapp.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 3689
     },
     {
       "path": "gede-bali-guide (1)/features/13-profil-pemandu.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 3676
     },
     {
       "path": "gede-bali-guide (1)/features/14-galeri-ulasan.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 2971
     },
     {
       "path": "gede-bali-guide (1)/features/15-kontak-bantuan.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 3046
     },
     {
       "path": "gede-bali-guide (1)/features/16-panel-admin.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 4780
     },
     {
       "path": "gede-bali-guide (1)/PRD.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 20510
     },
     {
       "path": "next.config.ts",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 320
     },
     {
       "path": "package-lock.json",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "json",
       "size": 235599
     },
     {
       "path": "package.json",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "json",
       "size": 568
     },
     {
       "path": "postcss.config.mjs",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "javascript",
       "size": 94
     },
     {
       "path": "README.md",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "markdown",
       "size": 1450
     },
     {
       "path": "src/app/globals.css",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "css",
       "size": 595
     },
     {
       "path": "src/app/layout.tsx",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 975
     },
     {
       "path": "src/app/page.tsx",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 1028
     },
     {
       "path": "src/components/common/FloatingWhatsApp.tsx",
-      "reason": "new",
+      "reason": "changed",
       "language": "typescript",
-      "size": 2079
+      "size": 2005
     },
     {
       "path": "src/components/home/DestinationsSection.tsx",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 3353
     },
     {
       "path": "src/components/home/FeaturedToursSection.tsx",
-      "reason": "new",
+      "reason": "changed",
       "language": "typescript",
-      "size": 6420
+      "size": 6339
     },
     {
       "path": "src/components/home/HeroSection.tsx",
-      "reason": "new",
+      "reason": "changed",
       "language": "typescript",
-      "size": 7283
+      "size": 7259
     },
     {
       "path": "src/components/home/TestimonialsSection.tsx",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 3677
     },
     {
       "path": "src/components/home/TrustBar.tsx",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 1710
     },
     {
       "path": "src/components/home/WhatsAppCtaSection.tsx",
-      "reason": "new",
+      "reason": "changed",
       "language": "typescript",
-      "size": 3074
+      "size": 2964
     },
     {
       "path": "src/components/layout/Footer.tsx",
-      "reason": "new",
+      "reason": "changed",
       "language": "typescript",
-      "size": 4933
+      "size": 4940
     },
     {
       "path": "src/components/layout/Navbar.tsx",
-      "reason": "new",
+      "reason": "changed",
       "language": "typescript",
-      "size": 6051
+      "size": 5892
     },
     {
       "path": "src/data/mock-data.ts",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 8265
     },
     {
-      "path": "src/types/index.ts",
+      "path": "src/lib/whatsapp.ts",
       "reason": "new",
+      "language": "typescript",
+      "size": 3220
+    },
+    {
+      "path": "src/types/index.ts",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 1292
     },
     {
       "path": "tsconfig.json",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "json",
       "size": 670
     }
