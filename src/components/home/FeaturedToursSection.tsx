@@ -191,10 +191,10 @@ export default function FeaturedToursSection() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`Pesan ${tour.name} via WhatsApp`}
-                        className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-700 transition-all active:scale-95"
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition-all active:scale-95 shrink-0"
                       >
-                        <MessageCircle className="h-4 w-4" />
-                        <span className="hidden sm:inline">Pesan WA</span>
+                        <MessageCircle className="h-4 w-4 shrink-0" />
+                        <span>Pesan WA</span>
                       </a>
 
                       {/* Detail Tour Button */}
