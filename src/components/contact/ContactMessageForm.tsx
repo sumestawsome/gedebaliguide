@@ -87,7 +87,7 @@ export default function ContactMessageForm() {
     : "#";
 
   return (
-    <div className="rounded-3xl border border-stone-200 bg-white p-7 sm:p-9 shadow-sm">
+    <div className="rounded-3xl border border-stone-200 bg-white p-5 sm:p-8 md:p-9 shadow-sm">
       <AnimatePresence mode="wait">
         {isSuccess && submittedData ? (
           /* Mock Success State */
@@ -199,7 +199,7 @@ export default function ContactMessageForm() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Contoh: Sarah & Michael"
-                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-xs sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
+                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
                   />
                 </div>
 
@@ -213,7 +213,7 @@ export default function ContactMessageForm() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="Contoh: 0812-3456-7890"
-                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-xs sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
+                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
                   />
                 </div>
               </div>
@@ -229,7 +229,7 @@ export default function ContactMessageForm() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Contoh: sarah@gmail.com"
-                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-xs sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
+                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
                   />
                 </div>
 
@@ -242,7 +242,7 @@ export default function ContactMessageForm() {
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-xs sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
+                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
                   />
                 </div>
               </div>
@@ -257,7 +257,7 @@ export default function ContactMessageForm() {
                   <select
                     value={guests}
                     onChange={(e) => setGuests(e.target.value)}
-                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-xs sm:text-sm text-stone-900 bg-white focus:border-blue-700 focus:outline-hidden transition-colors"
+                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 bg-white focus:border-blue-700 focus:outline-hidden transition-colors"
                   >
                     <option value="1">1 Orang (Solo Traveler)</option>
                     <option value="2">2 Orang (Pasangan / Teman)</option>
@@ -275,7 +275,7 @@ export default function ContactMessageForm() {
                   <select
                     value={tourPreference}
                     onChange={(e) => setTourPreference(e.target.value)}
-                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-xs sm:text-sm text-stone-900 bg-white focus:border-blue-700 focus:outline-hidden transition-colors"
+                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 bg-white focus:border-blue-700 focus:outline-hidden transition-colors"
                   >
                     <option value="ubud">Ubud Cultural, Rice Terrace & Waterfall</option>
                     <option value="uluwatu">Uluwatu Sunset & Kecak Fire Dance</option>
@@ -299,14 +299,14 @@ export default function ContactMessageForm() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Ceritakan preferensi Anda: lokasi hotel penjemputan, ada anak kecil/lansia, atau tempat khusus yang ingin dikunjungi..."
-                  className="w-full rounded-xl border border-stone-300 px-4 py-3 text-xs sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
+                  className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 py-3.5 text-xs sm:text-sm font-semibold text-white shadow-md hover:bg-blue-800 disabled:opacity-75 transition-all"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 py-3.5 text-sm sm:text-base font-semibold text-white shadow-md hover:bg-blue-800 disabled:opacity-75 transition-all active:scale-[0.99]"
               >
                 {isLoading ? (
                   <>

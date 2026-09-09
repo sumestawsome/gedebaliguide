@@ -111,7 +111,7 @@ export default function FaqAccordion() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari pertanyaan... misal: DP, rute, mobil, jam jemput"
-            className="w-full rounded-2xl border border-stone-300 bg-white pl-12 pr-10 py-3.5 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:border-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-100 transition-all shadow-xs"
+            className="w-full rounded-2xl border border-stone-300 bg-white pl-12 pr-10 py-3.5 text-base sm:text-sm text-stone-900 placeholder:text-stone-400 focus:border-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-100 transition-all shadow-xs"
           />
           {searchQuery && (
             <button
@@ -124,8 +124,8 @@ export default function FaqAccordion() {
           )}
         </div>
 
-        {/* Category Pills */}
-        <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+        {/* Category Pills with horizontal scroll on small mobile */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 sm:flex-wrap sm:justify-center no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
           {categories.map((cat) => {
             const count =
               cat.key === "all"
@@ -137,7 +137,7 @@ export default function FaqAccordion() {
               <button
                 key={cat.key}
                 onClick={() => setActiveCategory(cat.key)}
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs sm:text-sm font-semibold transition-all ${
+                className={`inline-flex items-center gap-2 rounded-full px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold whitespace-nowrap shrink-0 transition-all ${
                   isActive
                     ? "bg-blue-700 text-white shadow-md shadow-blue-700/20"
                     : "bg-white text-stone-600 border border-stone-200 hover:border-stone-300 hover:bg-stone-50"
@@ -207,9 +207,9 @@ export default function FaqAccordion() {
                   type="button"
                   onClick={() => toggleItem(item.id)}
                   aria-expanded={isOpen}
-                  className="w-full text-left p-5 sm:p-6 flex items-start justify-between gap-4 select-none focus:outline-hidden"
+                  className="w-full text-left p-4 sm:p-6 flex items-start justify-between gap-3 sm:gap-4 select-none focus:outline-hidden"
                 >
-                  <div className="space-y-2 flex-1">
+                  <div className="space-y-2 flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span
                         className={`inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${badge.color}`}
@@ -228,7 +228,7 @@ export default function FaqAccordion() {
                   </div>
 
                   <div
-                    className={`shrink-0 mt-2 h-8 w-8 rounded-full flex items-center justify-center transition-transform duration-200 ${
+                    className={`shrink-0 mt-1 sm:mt-2 h-7 w-7 sm:h-8 sm:w-8 rounded-full flex items-center justify-center transition-transform duration-200 ${
                       isOpen
                         ? "bg-blue-50 text-blue-700 rotate-180"
                         : "bg-stone-100 text-stone-500 hover:bg-stone-200"
@@ -248,14 +248,14 @@ export default function FaqAccordion() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.25, ease: "easeInOut" }}
                     >
-                      <div className="px-5 sm:px-6 pb-6 pt-1 border-t border-stone-100 space-y-4">
+                      <div className="px-4 sm:px-6 pb-5 sm:pb-6 pt-1 border-t border-stone-100 space-y-4">
                         <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
                           {item.answer}
                         </p>
 
                         {/* Interactive Contextual Hint based on Category */}
                         {item.category === "booking" && (
-                          <div className="rounded-xl bg-emerald-50/70 border border-emerald-200/60 p-3.5 flex items-center justify-between gap-3 text-xs">
+                          <div className="rounded-xl bg-emerald-50/70 border border-emerald-200/60 p-3 sm:p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 text-xs">
                             <span className="text-emerald-800">
                               Ingin booking untuk tanggal liburan mendatang?
                             </span>
@@ -270,7 +270,7 @@ export default function FaqAccordion() {
                         )}
 
                         {item.category === "routes" && (
-                          <div className="rounded-xl bg-blue-50/70 border border-blue-200/60 p-3.5 flex items-center justify-between gap-3 text-xs">
+                          <div className="rounded-xl bg-blue-50/70 border border-blue-200/60 p-3 sm:p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 text-xs">
                             <span className="text-blue-800">
                               Lihat contoh rute privat populer yang bisa Anda sesuaikan.
                             </span>
@@ -285,7 +285,7 @@ export default function FaqAccordion() {
                         )}
 
                         {item.category === "vehicle" && (
-                          <div className="rounded-xl bg-amber-50/70 border border-amber-200/60 p-3.5 flex items-center justify-between gap-3 text-xs">
+                          <div className="rounded-xl bg-amber-50/70 border border-amber-200/60 p-3 sm:p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 text-xs">
                             <span className="text-amber-800">
                               Lihat detail standar armada Avanza & Innova Reborn Bli Gede.
                             </span>
@@ -300,7 +300,7 @@ export default function FaqAccordion() {
                         )}
 
                         {item.category === "culture" && (
-                          <div className="rounded-xl bg-purple-50/70 border border-purple-200/60 p-3.5 flex items-center justify-between gap-3 text-xs">
+                          <div className="rounded-xl bg-purple-50/70 border border-purple-200/60 p-3 sm:p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 text-xs">
                             <span className="text-purple-800">
                               Verifikasi nomor lisensi resmi HPI DPD Bali Gede Sudiartana.
                             </span>

@@ -12,9 +12,9 @@ export default function ContactInfoSection() {
   return (
     <div className="space-y-6">
       {/* Profile Card */}
-      <div className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-7 shadow-sm space-y-6">
-        <div className="flex items-center gap-4">
-          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-blue-600 shadow-md">
+      <div className="rounded-3xl border border-stone-200 bg-white p-5 sm:p-7 shadow-sm space-y-6">
+        <div className="flex items-center gap-3.5 sm:gap-4">
+          <div className="relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-full border-2 border-blue-600 shadow-md">
             <Image
               src={mockGuideProfile.avatarUrl}
               alt={mockGuideProfile.name}
@@ -22,14 +22,14 @@ export default function ContactInfoSection() {
               className="object-cover"
             />
           </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <h3 className="font-serif text-lg sm:text-xl font-bold text-stone-900">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <h3 className="font-serif text-base sm:text-xl font-bold text-stone-900 truncate">
                 {mockGuideProfile.name}
               </h3>
-              <ShieldCheck className="h-4 w-4 text-blue-600" />
+              <ShieldCheck className="h-4 w-4 text-blue-600 shrink-0" />
             </div>
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-stone-500 truncate">
               Pemandu Wisata Resmi HPI Bali
             </p>
             <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">
@@ -61,7 +61,7 @@ export default function ContactInfoSection() {
               </span>
               <a
                 href={`tel:${mockGuideProfile.phone}`}
-                className="font-bold text-stone-900 hover:text-blue-700 transition-colors"
+                className="font-bold text-stone-900 hover:text-blue-700 transition-colors block text-sm sm:text-base"
               >
                 {mockGuideProfile.phone}
               </a>
@@ -82,7 +82,7 @@ export default function ContactInfoSection() {
               </span>
               <a
                 href={`mailto:${mockGuideProfile.email}`}
-                className="font-bold text-stone-900 hover:text-blue-700 transition-colors"
+                className="font-bold text-stone-900 hover:text-blue-700 transition-colors break-all block"
               >
                 {mockGuideProfile.email}
               </a>

@@ -66,7 +66,7 @@ export default function ContactSocialCta() {
   return (
     <div className="mt-12 space-y-8">
       {/* Big High-Converting WhatsApp Funnel Card */}
-      <div className="rounded-3xl bg-gradient-to-br from-stone-900 via-stone-900 to-stone-950 p-8 sm:p-10 text-white shadow-xl relative overflow-hidden">
+      <div className="rounded-3xl bg-gradient-to-br from-stone-900 via-stone-900 to-stone-950 p-6 sm:p-8 md:p-10 text-white shadow-xl relative overflow-hidden">
         {/* Glow decorative spheres */}
         <div className="absolute top-0 right-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 -ml-16 -mb-16 h-64 w-64 rounded-full bg-blue-500/15 blur-3xl pointer-events-none" />
