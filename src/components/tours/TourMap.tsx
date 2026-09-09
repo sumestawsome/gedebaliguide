@@ -35,7 +35,7 @@ export default function TourMap({ area, mapEmbedUrl, pickupLocation }: TourMapPr
 
       {/* Map or Fallback Area Card */}
       {mapEmbedUrl ? (
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl border border-stone-200/90 bg-stone-100 shadow-md">
             <iframe
               src={mapEmbedUrl}
@@ -46,14 +46,26 @@ export default function TourMap({ area, mapEmbedUrl, pickupLocation }: TourMapPr
               allowFullScreen
             />
           </div>
-          <div className="flex items-center justify-between text-xs text-stone-500 px-2">
-            <span className="flex items-center gap-1">
-              <MapPin className="h-3.5 w-3.5 text-blue-700" />
-              <span>Wilayah Utama: <strong>{area}</strong></span>
-            </span>
-            <span className="text-[11px] text-stone-400">
-              *Rute aktual dapat disesuaikan di hari tur
-            </span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-stone-600 px-1">
+            <div className="flex items-center gap-1.5 font-medium">
+              <MapPin className="h-3.5 w-3.5 text-blue-700 shrink-0" />
+              <span>Wilayah Jelajah Utama: <strong className="text-stone-900">{area}, Bali</strong></span>
+            </div>
+            <div className="flex items-center gap-3">
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${area} Bali Tour`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-blue-700 hover:text-blue-800 font-semibold hover:underline"
+              >
+                <span>Buka di Google Maps</span>
+                <ExternalLink className="h-3 w-3" />
+              </a>
+              <span className="hidden sm:inline text-stone-300">•</span>
+              <span className="text-[11px] text-stone-400">
+                *Rute aktual fleksibel & disesuaikan kondisi lalu lintas
+              </span>
+            </div>
           </div>
         </div>
       ) : (
@@ -66,9 +78,18 @@ export default function TourMap({ area, mapEmbedUrl, pickupLocation }: TourMapPr
               Wilayah Destinasi: {area}
             </h4>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
-              Peta interaktif belum disematkan untuk tur ini. Rute dan urutan kunjungan objek wisata di area <strong>{area}</strong> akan dikoordinasikan langsung bersama Bli Gede melalui WhatsApp sesuai lokasi hotel Anda.
+              Peta interaktif sedang dipersiapkan untuk tur ini. Rute dan urutan kunjungan objek wisata di area <strong>{area}</strong> akan dikoordinasikan langsung bersama Bli Gede melalui WhatsApp sesuai lokasi hotel Anda.
             </p>
           </div>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${area} Bali`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 hover:underline pt-1"
+          >
+            <span>Cari Wilayah {area} di Google Maps</span>
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
         </div>
       )}
     </div>
