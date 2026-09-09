@@ -3,8 +3,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { Sparkles, MessageCircle, Phone, Mail, MapPin, Clock, ShieldCheck, Send } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import ContactInfoSection from "@/components/contact/ContactInfoSection";
+import ContactMessageForm from "@/components/contact/ContactMessageForm";
 import ContactSocialCta from "@/components/contact/ContactSocialCta";
 import { mockGuideProfile } from "@/data/mock-data";
 import { getGeneralConsultationUrl } from "@/lib/whatsapp";
@@ -125,76 +126,7 @@ export default function ContactPage() {
 
             {/* Right Column: Fallback Message Form */}
             <div className="lg:col-span-7">
-              <div className="rounded-3xl border border-stone-200 bg-white p-7 sm:p-8 shadow-sm space-y-6">
-                <div className="space-y-1">
-                  <h2 className="font-serif text-2xl font-bold text-stone-900">
-                    Kirim Pesan Alternatif
-                  </h2>
-                  <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                    Lebih nyaman mengirimkan detail tertulis? Silakan isi form di bawah. Bli Gede akan membalas ke email atau nomor WhatsApp Anda.
-                  </p>
-                </div>
-
-                {/* Form Framework */}
-                <form className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-stone-700">Nama Lengkap *</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="Contoh: Budi Santoso"
-                        className="w-full rounded-xl border border-stone-300 px-4 py-3 text-xs sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-stone-700">Nomor WhatsApp *</label>
-                      <input
-                        type="tel"
-                        required
-                        placeholder="Contoh: 0812-3456-7890"
-                        className="w-full rounded-xl border border-stone-300 px-4 py-3 text-xs sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-stone-700">Email Anda</label>
-                      <input
-                        type="email"
-                        placeholder="Contoh: budi@gmail.com"
-                        className="w-full rounded-xl border border-stone-300 px-4 py-3 text-xs sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-stone-700">Rencana Tanggal Tour</label>
-                      <input
-                        type="date"
-                        className="w-full rounded-xl border border-stone-300 px-4 py-3 text-xs sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-stone-700">Pesan / Rencana Liburan *</label>
-                    <textarea
-                      required
-                      rows={5}
-                      placeholder="Ceritakan berapa jumlah rombongan, destinasi yang ingin dikunjungi, atau lokasi hotel tempat menginap..."
-                      className="w-full rounded-xl border border-stone-300 px-4 py-3 text-xs sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 py-3.5 text-sm font-semibold text-white shadow-md hover:bg-blue-800 transition-colors"
-                  >
-                    <Send className="h-4 w-4" />
-                    <span>Kirim Pesan ke Bli Gede</span>
-                  </button>
-                </form>
-              </div>
+              <ContactMessageForm />
             </div>
           </div>
 
