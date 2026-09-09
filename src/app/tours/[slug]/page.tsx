@@ -6,7 +6,6 @@ import { notFound } from "next/navigation";
 import { mockAllTours } from "@/data/mock-data";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import FloatingWhatsApp from "@/components/common/FloatingWhatsApp";
 import TourItinerary from "@/components/tours/TourItinerary";
 import TourInclusions from "@/components/tours/TourInclusions";
 import TourMap from "@/components/tours/TourMap";
@@ -319,7 +318,6 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
       </main>
 
       <Footer />
-      <FloatingWhatsApp />
     </div>
   );
 }

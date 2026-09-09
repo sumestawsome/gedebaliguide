@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { MessageCircle, X, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getGeneralConsultationUrl } from "@/lib/whatsapp";
 
 export default function FloatingWhatsApp() {
+  const pathname = usePathname();
   const [showTooltip, setShowTooltip] = useState(true);
   const [hasScrolled, setHasScrolled] = useState(false);
   const waUrl = getGeneralConsultationUrl("floating");
@@ -19,6 +21,11 @@ export default function FloatingWhatsApp() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Hide on admin routes
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2.5">

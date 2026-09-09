@@ -2,7 +2,6 @@ import React from "react";
 import type { Metadata } from "next";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import FloatingWhatsApp from "@/components/common/FloatingWhatsApp";
 import ToursCatalog from "@/components/tours/ToursCatalog";
 import { Compass, Sparkles, ShieldCheck, Car, Clock } from "lucide-react";
 
@@ -61,7 +60,6 @@ export default function ToursPage() {
       </main>
 
       <Footer />
-      <FloatingWhatsApp />
     </div>
   );
 }

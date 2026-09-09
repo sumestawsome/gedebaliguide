@@ -7,7 +7,6 @@ import FeaturedToursSection from "@/components/home/FeaturedToursSection";
 import DestinationsSection from "@/components/home/DestinationsSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import WhatsAppCtaSection from "@/components/home/WhatsAppCtaSection";
-import FloatingWhatsApp from "@/components/common/FloatingWhatsApp";
 
 export default function HomePage() {
   return (
@@ -22,7 +21,6 @@ export default function HomePage() {
         <WhatsAppCtaSection />
       </main>
       <Footer />
-      <FloatingWhatsApp />
     </div>
   );
 }
