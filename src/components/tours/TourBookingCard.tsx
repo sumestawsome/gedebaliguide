@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { MessageCircle, ShieldCheck, Users, Calendar, Clock, CheckCircle2, Car } from "lucide-react";
+import { MessageCircle, ShieldCheck, Users, Calendar, Clock, CheckCircle2, Car, User, FileText, Eye } from "lucide-react";
 import { Tour } from "@/types";
-import { getTourInquiryUrl, buildWhatsAppUrl } from "@/lib/whatsapp";
+import { buildWhatsAppUrl, formatWhatsAppMessage } from "@/lib/whatsapp";
 import { mockGuideProfile } from "@/data/mock-data";
 
 interface TourBookingCardProps {
@@ -11,9 +11,11 @@ interface TourBookingCardProps {
 }
 
 export default function TourBookingCard({ tour }: TourBookingCardProps) {
+  const [guestName, setGuestName] = useState("");
   const [tripDate, setTripDate] = useState("");
   const [guestCount, setGuestCount] = useState(tour.minimumGuests || 2);
   const [customNote, setCustomNote] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -23,13 +25,17 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
     }).format(price);
   };
 
-  const dynamicWaUrl = buildWhatsAppUrl({
+  const messageOptions = {
     tourName: tour.name,
+    guestName: guestName.trim() || undefined,
     tripDate: tripDate || undefined,
     guestCount: guestCount || undefined,
-    customNote: customNote || undefined,
-    source: "tour_detail",
-  });
+    customNote: customNote.trim() || undefined,
+    source: "tour_detail" as const,
+  };
+
+  const dynamicWaUrl = buildWhatsAppUrl(messageOptions);
+  const livePreviewText = formatWhatsAppMessage(messageOptions);
 
   return (
     <div className="sticky top-24 rounded-3xl border border-stone-200/90 bg-white p-6 sm:p-7 shadow-xl space-y-6">
@@ -43,11 +49,11 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
             {formatPrice(tour.price)}
           </span>
           <span className="text-sm font-medium text-stone-500">
-            {tour.priceType === "per_person" ? "/ orang" : "/ mobil (maks 5 tamu)"}
+            {tour.priceType === "per_person" ? "/ orang" : "/ mobil (rombongan)"}
           </span>
         </div>
         <p className="text-xs text-emerald-700 font-medium mt-1">
-          ✓ Sudah termasuk mobil, BBM, supir/guide, dan parkir
+          ✓ Sudah termasuk mobil ber-AC, BBM, supir/guide, dan parkir
         </p>
       </div>
 
@@ -59,7 +65,7 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
             Kapasitas Rombongan:
           </span>
           <span className="font-bold text-stone-900">
-            {tour.minimumGuests} – {tour.maximumGuests} Tamu / Mobil
+            Min. {tour.minimumGuests} – Maks. {tour.maximumGuests} Tamu
           </span>
         </div>
         <div className="flex items-center justify-between text-stone-700">
@@ -71,8 +77,29 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
         </div>
       </div>
 
-      {/* Mini Booking Input Fields */}
-      <div className="space-y-4">
+      {/* Mini Booking Form */}
+      <div className="space-y-3.5">
+        <p className="text-xs font-bold uppercase tracking-wider text-stone-400">
+          Form Pemesanan Cepat:
+        </p>
+
+        {/* Guest Name */}
+        <div>
+          <label htmlFor="guestName" className="block text-xs font-semibold text-stone-700 mb-1 flex items-center gap-1">
+            <User className="h-3.5 w-3.5 text-stone-400" />
+            Nama Pemesan (Opsional):
+          </label>
+          <input
+            id="guestName"
+            type="text"
+            placeholder="Contoh: Budi Santoso"
+            value={guestName}
+            onChange={(e) => setGuestName(e.target.value)}
+            className="w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-xs text-stone-800 placeholder:text-stone-400 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+          />
+        </div>
+
+        {/* Trip Date */}
         <div>
           <label htmlFor="tripDate" className="block text-xs font-semibold text-stone-700 mb-1 flex items-center gap-1">
             <Calendar className="h-3.5 w-3.5 text-stone-400" />
@@ -87,10 +114,11 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
           />
         </div>
 
+        {/* Guest Count */}
         <div>
           <label htmlFor="guestCount" className="block text-xs font-semibold text-stone-700 mb-1 flex items-center gap-1">
             <Users className="h-3.5 w-3.5 text-stone-400" />
-            Jumlah Tamu:
+            Jumlah Peserta Tur:
           </label>
           <select
             id="guestCount"
@@ -100,10 +128,44 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
           >
             {[1, 2, 3, 4, 5, 6].map((num) => (
               <option key={num} value={num}>
-                {num} Orang {num > 5 ? "(Butuh 2 mobil)" : ""}
+                {num} Orang {num > tour.maximumGuests ? `(Melebihi kuota ${tour.maximumGuests} tamu)` : ""}
               </option>
             ))}
           </select>
+        </div>
+
+        {/* Custom Notes / Hotel Pickup */}
+        <div>
+          <label htmlFor="customNote" className="block text-xs font-semibold text-stone-700 mb-1 flex items-center gap-1">
+            <FileText className="h-3.5 w-3.5 text-stone-400" />
+            Hotel Penjemputan / Catatan Khusus:
+          </label>
+          <textarea
+            id="customNote"
+            rows={2}
+            placeholder="Contoh: Jemput di The Westin Resort Nusa Dua jam 08:30"
+            value={customNote}
+            onChange={(e) => setCustomNote(e.target.value)}
+            className="w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-xs text-stone-800 placeholder:text-stone-400 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 resize-none"
+          />
+        </div>
+
+        {/* Live WhatsApp Message Preview Toggle */}
+        <div className="pt-1">
+          <button
+            type="button"
+            onClick={() => setShowPreview(!showPreview)}
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 hover:text-blue-800 cursor-pointer"
+          >
+            <Eye className="h-3.5 w-3.5" />
+            <span>{showPreview ? "Sembunyikan Draf Pesan WhatsApp" : "Lihat Draf Pesan WhatsApp"}</span>
+          </button>
+
+          {showPreview && (
+            <div className="mt-2 rounded-xl bg-emerald-50/70 border border-emerald-200 p-3 text-[11px] text-stone-700 whitespace-pre-line font-mono leading-relaxed">
+              {livePreviewText}
+            </div>
+          )}
         </div>
       </div>
 
@@ -116,22 +178,22 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
           className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-emerald-600 px-6 py-4 text-base font-bold text-white shadow-lg shadow-emerald-700/25 hover:bg-emerald-700 active:scale-[0.98] transition-all"
         >
           <MessageCircle className="h-5 w-5" />
-          <span>Pesan Tur via WhatsApp</span>
+          <span>Kirim Pemesanan ke WhatsApp</span>
         </a>
 
-        <p className="text-center text-[11px] text-stone-500">
-          Tanpa pembayaran online • Chat langsung dengan Bli Gede
+        <p className="text-center text-[11px] text-stone-500 leading-snug">
+          Langsung terhubung dengan Bli Gede • Tanpa kartu kredit / Tanpa DP online
         </p>
       </div>
 
       {/* Host Credentials */}
       <div className="pt-4 border-t border-stone-100 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-800 font-serif font-bold text-base">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-800 font-serif font-bold text-base">
           G
         </div>
-        <div className="text-xs">
-          <p className="font-bold text-stone-900">{mockGuideProfile.name}</p>
-          <p className="text-stone-500">Lisensi Resmi HPI No. {mockGuideProfile.licenseNumber}</p>
+        <div className="text-xs min-w-0">
+          <p className="font-bold text-stone-900 truncate">{mockGuideProfile.name}</p>
+          <p className="text-stone-500 truncate">Pramuwisata Resmi HPI Bali No. {mockGuideProfile.licenseNumber}</p>
         </div>
       </div>
     </div>

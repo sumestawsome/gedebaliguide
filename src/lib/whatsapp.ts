@@ -2,6 +2,7 @@ import { mockGuideProfile } from "@/data/mock-data";
 
 export interface WhatsAppMessageOptions {
   tourName?: string;
+  guestName?: string;
   guestCount?: number;
   tripDate?: string;
   customNote?: string;
@@ -25,10 +26,11 @@ export function normalizePhoneNumber(phone: string): string {
  * Generates formatted, polite Indonesian message text for Gede Bali Guide WhatsApp chat.
  */
 export function formatWhatsAppMessage(options: WhatsAppMessageOptions): string {
-  const { tourName, guestCount, tripDate, customNote, source } = options;
+  const { tourName, guestName, guestCount, tripDate, customNote, source } = options;
 
   if (tourName) {
-    let msg = `Halo Bli Gede, saya tertarik dengan paket tur *${tourName}*.`;
+    const greeting = guestName ? `Halo Bli Gede, saya ${guestName}.` : `Halo Bli Gede,`;
+    let msg = `${greeting} Saya tertarik dengan paket tur *${tourName}*.`;
     const details: string[] = [];
 
     if (tripDate) {
@@ -38,14 +40,14 @@ export function formatWhatsAppMessage(options: WhatsAppMessageOptions): string {
       details.push(`• Jumlah tamu: ${guestCount} orang`);
     }
     if (customNote) {
-      details.push(`• Catatan/request: ${customNote}`);
+      details.push(`• Catatan / Lokasi hotel: ${customNote}`);
     }
 
     if (details.length > 0) {
-      msg += `\n\nDetail perjalanan:\n${details.join("\n")}`;
+      msg += `\n\nDetail pemesanan:\n${details.join("\n")}`;
     }
 
-    msg += `\n\nBisa tolong info ketersediaan jadwalnya Bli? Suksema (Terima kasih)!`;
+    msg += `\n\nBisa tolong cek ketersediaan jadwalnya Bli? Suksema (Terima kasih)!`;
     return msg;
   }
 

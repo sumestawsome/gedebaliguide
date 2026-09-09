@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "4add29a5124f59d6b7dfefef5639ff46da9d7275",
+  "generatedForCommit": "fa9762a333a217c67eb955f3d8050bfef325bc69",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -202,9 +202,9 @@
     },
     {
       "path": "src/app/tours/[slug]/page.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 7748
+      "size": 10490
     },
     {
       "path": "src/components/common/FloatingWhatsApp.tsx",
@@ -286,7 +286,7 @@
     },
     {
       "path": "src/components/tours/TourMap.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 3294
     },
