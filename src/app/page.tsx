@@ -1,4 +1,5 @@
 import React from "react";
+import type { Metadata } from "next";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/home/HeroSection";
@@ -7,10 +8,125 @@ import FeaturedToursSection from "@/components/home/FeaturedToursSection";
 import DestinationsSection from "@/components/home/DestinationsSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import WhatsAppCtaSection from "@/components/home/WhatsAppCtaSection";
+import { mockGuideProfile } from "@/data/mock-data";
+
+export const metadata: Metadata = {
+  title: "Gede Bali Guide — Private Tour Guide Berlisensi HPI Bali",
+  description:
+    "Jelajahi keindahan autentik Bali bersama Gede Sudiartana, private tour guide resmi HPI Bali. Mobil ber-AC terawat, rute santai fleksibel & tanpa biaya perantara.",
+  keywords: [
+    "Tour Guide Bali",
+    "Private Tour Guide Bali",
+    "Gede Bali Guide",
+    "Gede Sudiartana",
+    "Sewa Mobil Bali Supir",
+    "Paket Wisata Bali",
+    "HPI Bali",
+    "Tour Bali Keluarga",
+  ],
+  alternates: {
+    canonical: "https://gedebaliguide.com",
+  },
+  openGraph: {
+    title: "Gede Bali Guide — Private Tour Guide Berlisensi HPI Bali",
+    description:
+      "Jelajahi keindahan autentik Bali bersama Gede Sudiartana, private tour guide resmi HPI Bali. Mobil ber-AC terawat, rute santai fleksibel & tanpa biaya perantara.",
+    url: "https://gedebaliguide.com",
+    siteName: "Gede Bali Guide",
+    locale: "id_ID",
+    type: "website",
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=80",
+        width: 1200,
+        height: 630,
+        alt: "Gede Bali Guide - Private Tour Guide Bali",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Gede Bali Guide — Private Tour Guide Berlisensi HPI Bali",
+    description:
+      "Jelajahi keindahan autentik Bali bersama Gede Sudiartana, private tour guide resmi HPI Bali. Rute santai & fleksibel.",
+    images: [
+      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=80",
+    ],
+  },
+};
 
 export default function HomePage() {
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    "@id": "https://gedebaliguide.com/#organization",
+    name: "Gede Bali Guide",
+    alternateName: "Private Tour Guide Bali - Gede Sudiartana",
+    description:
+      "Layanan pemandu wisata privat resmi berlisensi HPI Bali berpengalaman lebih dari 10 tahun dengan armada mobil ber-AC nyaman.",
+    url: "https://gedebaliguide.com",
+    telephone: "+6281234567890",
+    priceRange: "Rp 500.000 - Rp 950.000",
+    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=80",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Jl. Raya Ubud No. 88",
+      addressLocality: "Ubud, Gianyar",
+      addressRegion: "Bali",
+      postalCode: "80571",
+      addressCountry: "ID",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: -8.506854,
+      longitude: 115.260846,
+    },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      opens: "06:00",
+      closes: "22:00",
+    },
+    founder: {
+      "@type": "Person",
+      name: "Gede Sudiartana",
+      jobTitle: "Licensed Bali Tour Guide (HPI Bali)",
+      licenseNumber: mockGuideProfile.licenseNumber,
+      url: "https://gedebaliguide.com/about",
+    },
+    areaServed: [
+      "Bali",
+      "Ubud",
+      "Uluwatu",
+      "Bedugul",
+      "Kintamani",
+      "Nusa Penida",
+      "Canggu",
+      "Seminyak",
+    ],
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "5.0",
+      reviewCount: "48",
+      bestRating: "5",
+      worstRating: "1",
+    },
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-[#fafaf9] text-stone-900 font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+      />
       <Navbar />
       <main className="flex-1">
         <HeroSection />
