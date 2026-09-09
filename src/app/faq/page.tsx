@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { HelpCircle, Sparkles, MessageCircle, ChevronRight, CheckCircle2 } from "lucide-react";
+import { HelpCircle, MessageCircle } from "lucide-react";
+import FaqAccordion from "@/components/faq/FaqAccordion";
 import { getGeneralConsultationUrl } from "@/lib/whatsapp";
 import { mockFaqItems } from "@/data/mock-faq";
 
@@ -105,22 +106,7 @@ export default function FaqPage() {
 
         {/* FAQ List Container */}
         <section className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pt-12 md:pt-16">
-          <div className="space-y-4">
-            {mockFaqItems.map((item) => (
-              <div
-                key={item.id}
-                className="rounded-2xl border border-stone-200/90 bg-white p-6 sm:p-7 shadow-xs space-y-2 hover:border-amber-300/80 transition-colors"
-              >
-                <h3 className="font-serif text-lg sm:text-xl font-bold text-stone-900 leading-snug flex items-start gap-2.5">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>{item.question}</span>
-                </h3>
-                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed pl-7.5">
-                  {item.answer}
-                </p>
-              </div>
-            ))}
-          </div>
+          <FaqAccordion />
 
           {/* Still Have Questions CTA */}
           <div className="mt-14 rounded-3xl bg-stone-900 text-white p-8 sm:p-10 text-center space-y-5 shadow-xl">
