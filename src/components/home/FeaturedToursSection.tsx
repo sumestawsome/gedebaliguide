@@ -84,7 +84,10 @@ export default function FeaturedToursSection() {
                 className="flex flex-col overflow-hidden rounded-3xl border border-stone-200/90 bg-white shadow-md hover:shadow-2xl transition-all duration-300 group"
               >
                 {/* Tour Cover Image Container */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden bg-stone-100">
+                <Link
+                  href={`/tours/${tour.slug}`}
+                  className="relative aspect-[16/10] w-full overflow-hidden bg-stone-100 block"
+                >
                   <Image
                     src={tour.coverImage}
                     alt={tour.name}
@@ -114,7 +117,7 @@ export default function FeaturedToursSection() {
                   <div className="absolute bottom-3 left-3.5 text-xs font-medium text-amber-200">
                     {getCategoryLabel(tour.category)}
                   </div>
-                </div>
+                </Link>
 
                 {/* Card Body */}
                 <div className="flex flex-1 flex-col p-6 sm:p-7">

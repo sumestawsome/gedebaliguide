@@ -49,7 +49,10 @@ export default function TourCard({ tour, priority = false }: TourCardProps) {
       className="flex flex-col h-full overflow-hidden rounded-3xl border border-stone-200/90 bg-white shadow-md hover:shadow-2xl transition-all duration-300 group"
     >
       {/* Cover Image */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-stone-100">
+      <Link
+        href={`/tours/${tour.slug}`}
+        className="relative aspect-[16/10] w-full overflow-hidden bg-stone-100 block"
+      >
         <Image
           src={tour.coverImage}
           alt={tour.name}
@@ -86,7 +89,7 @@ export default function TourCard({ tour, priority = false }: TourCardProps) {
         <div className="absolute bottom-3 left-3.5 text-xs font-semibold text-amber-200">
           {getCategoryLabel(tour.category)}
         </div>
-      </div>
+      </Link>
 
       {/* Card Content */}
       <div className="flex flex-1 flex-col p-6 sm:p-7">
