@@ -6,10 +6,30 @@ import Link from "next/link";
 import { MessageCircle, Compass, Star, Sparkles, ShieldCheck, MapPin, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { mockGuideProfile } from "@/data/mock-data";
+import { HeroConfig, WhatsAppConfig } from "@/types";
 import { getGeneralConsultationUrl } from "@/lib/whatsapp";
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  heroConfig?: HeroConfig;
+  whatsAppConfig?: WhatsAppConfig;
+}
+
+export default function HeroSection({ heroConfig, whatsAppConfig }: HeroSectionProps = {}) {
   const waUrl = getGeneralConsultationUrl("hero");
+  const guideName = heroConfig?.guideName || mockGuideProfile.name;
+  const badgeText = heroConfig?.badgeText || "Tour Guide Resmi Berlisensi HPI Bali • Tanpa Biaya Calo";
+  const greeting = heroConfig?.greeting || "Om Swastyastu!";
+  const welcomeText = heroConfig?.welcomeText || "Selamat Datang di Bali";
+  const description = heroConfig?.description || mockGuideProfile.bio;
+  const avatarUrl = heroConfig?.avatarUrl || mockGuideProfile.avatarUrl;
+  const licenseNumber = heroConfig?.licenseNumber || mockGuideProfile.licenseNumber;
+  const experienceYears = heroConfig?.experienceYears || mockGuideProfile.experienceYears;
+  const featureChecklist = heroConfig?.featureChecklist || [
+    "100% Tur Privat (Hanya Rombongan Anda)",
+    "Mobil MPV/SUV Ber-AC Dingin & Terawat",
+    "Rute Fleksibel & Bebas Request Spot Foto",
+    "Tanpa Kewajiban Belanja Toko Oleh-Oleh",
+  ];
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-[#fafaf9] via-stone-100/50 to-[#fafaf9] pt-8 pb-16 md:pt-14 md:pb-24 lg:pt-16 lg:pb-28">
@@ -29,21 +49,21 @@ export default function HeroSection() {
             {/* Trust Pill */}
             <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/80 bg-amber-50/90 px-4 py-1.5 text-xs font-semibold text-amber-900 shadow-sm backdrop-blur-sm">
               <Sparkles className="h-3.5 w-3.5 text-amber-600 animate-pulse" />
-              <span>Tour Guide Resmi Berlisensi HPI Bali • Tanpa Biaya Calo</span>
+              <span>{badgeText}</span>
             </div>
 
             {/* Sapaan Personal */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm sm:text-base font-semibold text-blue-800">
-                <span>Om Swastyastu!</span>
+                <span>{greeting}</span>
                 <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-                <span>Selamat Datang di Bali</span>
+                <span>{welcomeText}</span>
               </div>
 
               <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-stone-900 leading-[1.14]">
                 Jelajahi Pesona Asli Bali Bersama{" "}
                 <span className="relative inline-block text-blue-700 italic">
-                  Gede Sudiartana
+                  {guideName}
                   <svg
                     className="absolute -bottom-1.5 left-0 w-full text-amber-400"
                     height="8"
@@ -63,27 +83,17 @@ export default function HeroSection() {
 
             {/* Sapaan & Nilai Tambah */}
             <p className="text-base sm:text-lg text-stone-600 leading-relaxed max-w-2xl font-sans">
-              Hai, saya Gede. Bukan agen korporat atau calo marketplace. Saya memandu Anda langsung dengan mobil privat ber-AC yang nyaman, wawasan budaya asli Bali, dan kebebasan menentukan tempo liburan keluarga tanpa terburu-buru.
+              {description}
             </p>
 
             {/* Feature Highlights Checklist */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 text-xs sm:text-sm text-stone-700 font-medium">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
-                <span>100% Tur Privat (Hanya Rombongan Anda)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
-                <span>Mobil MPV/SUV Ber-AC Dingin & Terawat</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
-                <span>Rute Fleksibel & Bebas Request Spot Foto</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
-                <span>Tanpa Kewajiban Belanja Toko Oleh-Oleh</span>
-              </div>
+              {featureChecklist.map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
+                  <span>{item}</span>
+                </div>
+              ))}
             </div>
 
             {/* CTA Buttons */}
@@ -167,8 +177,8 @@ export default function HeroSection() {
                     <div className="flex items-center gap-3.5">
                       <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border-2 border-blue-600 shadow-md">
                         <Image
-                          src={mockGuideProfile.avatarUrl}
-                          alt={`Foto Profil ${mockGuideProfile.name}`}
+                          src={avatarUrl}
+                          alt={`Foto Profil ${guideName}`}
                           fill
                           className="object-cover"
                         />
@@ -176,15 +186,15 @@ export default function HeroSection() {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5">
                           <h3 className="font-serif text-base font-bold text-stone-900 truncate">
-                            {mockGuideProfile.name}
+                            {guideName}
                           </h3>
                           <ShieldCheck className="h-4 w-4 text-blue-600 shrink-0" />
                         </div>
                         <p className="text-xs text-stone-500 truncate">
-                          {mockGuideProfile.title}
+                          Licensed Bali Tour Guide (HPI Bali)
                         </p>
                         <p className="text-[11px] font-semibold text-emerald-700 pt-0.5">
-                          No. Lisensi: {mockGuideProfile.licenseNumber}
+                          No. Lisensi: {licenseNumber}
                         </p>
                       </div>
                     </div>
@@ -194,7 +204,7 @@ export default function HeroSection() {
 
               {/* Years Experience Floating Tag */}
               <div className="absolute -bottom-3 -right-2 rounded-xl bg-amber-500 px-4 py-2 text-xs font-bold text-white shadow-lg sm:block border-2 border-white">
-                Pengalaman 10+ Tahun
+                Pengalaman {experienceYears}+ Tahun
               </div>
             </div>
           </motion.div>

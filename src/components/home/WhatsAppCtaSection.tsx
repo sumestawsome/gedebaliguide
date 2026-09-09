@@ -3,10 +3,31 @@
 import React from "react";
 import { MessageCircle, ShieldCheck, CheckCircle2, Clock, Car, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
-import { getCustomItineraryUrl } from "@/lib/whatsapp";
+import { DirectBookingReasonConfig, WhatsAppConfig } from "@/types";
+import { getCustomItineraryUrl, buildWhatsAppUrl } from "@/lib/whatsapp";
 
-export default function WhatsAppCtaSection() {
-  const waUrl = getCustomItineraryUrl();
+interface WhatsAppCtaSectionProps {
+  directBooking?: DirectBookingReasonConfig;
+  whatsApp?: WhatsAppConfig;
+}
+
+export default function WhatsAppCtaSection({ directBooking, whatsApp }: WhatsAppCtaSectionProps = {}) {
+  const waUrl = whatsApp
+    ? buildWhatsAppUrl({
+        phoneNumber: whatsApp.normalizedNumber,
+        source: "custom_itinerary",
+        customNote: "Halo Bli Gede, saya ingin konsultasi rute khusus untuk liburan keluarga saya di Bali.",
+      })
+    : getCustomItineraryUrl();
+
+  const headline = directBooking?.headline || "Ingin Rute Khusus Sesuai Selera Anda?";
+  const subheadline =
+    directBooking?.subheadline ||
+    "Ceritakan tempat impian yang ingin Anda kunjungi di Bali. Bli Gede akan membantu merancang jadwal yang santai, nyaman, dan efisien untuk Anda dan keluarga.";
+  const ctaButtonText = directBooking?.ctaButtonText || "Chat WhatsApp dengan Gede Sekarang";
+  const noteText =
+    directBooking?.noteText ||
+    `Biasanya membalas dalam beberapa menit • Jam layanan ${whatsApp?.serviceHours || "07:00 - 22:00 WITA"}`;
 
   return (
     <section className="bg-gradient-to-b from-stone-900 via-stone-900 to-stone-950 py-20 md:py-28 relative overflow-hidden text-white">
@@ -35,10 +56,10 @@ export default function WhatsAppCtaSection() {
           className="space-y-4 max-w-3xl mx-auto"
         >
           <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-stone-100 leading-[1.15]">
-            Ingin Rute Khusus Sesuai Selera Anda?
+            {headline}
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-stone-300 leading-relaxed font-sans max-w-2xl mx-auto">
-            Ceritakan tempat impian yang ingin Anda kunjungi di Bali. Bli Gede akan membantu merancang jadwal yang santai, nyaman, dan efisien untuk Anda dan keluarga.
+            {subheadline}
           </p>
         </motion.div>
 
@@ -79,10 +100,10 @@ export default function WhatsAppCtaSection() {
             className="inline-flex items-center gap-3 rounded-full bg-emerald-600 px-8 py-4.5 text-base sm:text-lg font-bold text-white shadow-2xl shadow-emerald-600/40 hover:bg-emerald-500 hover:shadow-emerald-500/50 transition-all transform hover:-translate-y-1 active:translate-y-0"
           >
             <MessageCircle className="h-6 w-6 animate-bounce" />
-            <span>Chat WhatsApp dengan Gede Sekarang</span>
+            <span>{ctaButtonText}</span>
           </a>
           <p className="mt-3 text-xs text-stone-400">
-            Biasanya membalas dalam beberapa menit • Jam layanan 07:00 - 22:00 WITA
+            {noteText}
           </p>
         </motion.div>
       </div>

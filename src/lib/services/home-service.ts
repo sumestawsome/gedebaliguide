@@ -1,30 +1,25 @@
 import {
   mockGuideProfile,
   mockTrustItems,
-  mockFeaturedTours,
-  mockPopularDestinations,
-  mockReviews,
 } from "@/data/mock-data";
 import { HomeContentSchema } from "@/types";
-import { normalizePhoneNumber } from "@/lib/whatsapp";
 import { getWhatsAppConfig } from "@/lib/services/whatsapp-config-service";
+import { getActiveFeaturedTours } from "@/lib/services/tour-service";
+import { getPopularDestinations } from "@/lib/services/destination-service";
+import { getFeaturedFiveStarReviews } from "@/lib/services/review-service";
 
 /**
  * Service to aggregate and return unified home content.
  * Follows the HomeContentSchema structure and provides safe fallback defaults.
  */
 export async function getUnifiedHomeContent(): Promise<HomeContentSchema> {
-  const whatsAppConfig = await getWhatsAppConfig();
-
-  const activeFeaturedTours = mockFeaturedTours.filter(
-    (t) => t.isActive && t.featured
-  );
-
-  const activeDestinations = mockPopularDestinations;
-
-  const approvedReviews = mockReviews.filter(
-    (r) => r.isApproved && r.featured
-  );
+  const [whatsAppConfig, activeFeaturedTours, activeDestinations, approvedReviews] =
+    await Promise.all([
+      getWhatsAppConfig(),
+      getActiveFeaturedTours(6),
+      getPopularDestinations(4),
+      getFeaturedFiveStarReviews(3),
+    ]);
 
   return {
     hero: {

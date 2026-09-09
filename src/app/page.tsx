@@ -9,6 +9,7 @@ import DestinationsSection from "@/components/home/DestinationsSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import WhatsAppCtaSection from "@/components/home/WhatsAppCtaSection";
 import { mockGuideProfile } from "@/data/mock-data";
+import { getUnifiedHomeContent } from "@/lib/services/home-service";
 
 export const metadata: Metadata = {
   title: "Gede Bali Guide — Private Tour Guide Berlisensi HPI Bali",
@@ -55,19 +56,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const homeData = await getUnifiedHomeContent();
+
   const localBusinessJsonLd = {
     "@context": "https://schema.org",
     "@type": "TravelAgency",
     "@id": "https://gedebaliguide.com/#organization",
     name: "Gede Bali Guide",
-    alternateName: "Private Tour Guide Bali - Gede Sudiartana",
+    alternateName: `Private Tour Guide Bali - ${homeData.hero.guideName}`,
     description:
       "Layanan pemandu wisata privat resmi berlisensi HPI Bali berpengalaman lebih dari 10 tahun dengan armada mobil ber-AC nyaman.",
     url: "https://gedebaliguide.com",
-    telephone: "+6281234567890",
+    telephone: homeData.whatsApp.phoneNumber || "+6281234567890",
     priceRange: "Rp 500.000 - Rp 950.000",
-    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=80",
+    image: homeData.hero.heroImageUrl || "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=80",
     address: {
       "@type": "PostalAddress",
       streetAddress: "Jl. Raya Ubud No. 88",
@@ -97,9 +100,9 @@ export default function HomePage() {
     },
     founder: {
       "@type": "Person",
-      name: "Gede Sudiartana",
+      name: homeData.hero.guideName,
       jobTitle: "Licensed Bali Tour Guide (HPI Bali)",
-      licenseNumber: mockGuideProfile.licenseNumber,
+      licenseNumber: homeData.hero.licenseNumber,
       url: "https://gedebaliguide.com/about",
     },
     areaServed: [
@@ -129,12 +132,18 @@ export default function HomePage() {
       />
       <Navbar />
       <main className="flex-1">
-        <HeroSection />
-        <TrustBar />
-        <FeaturedToursSection />
-        <DestinationsSection />
-        <TestimonialsSection />
-        <WhatsAppCtaSection />
+        <HeroSection
+          heroConfig={homeData.hero}
+          whatsAppConfig={homeData.whatsApp}
+        />
+        <TrustBar items={homeData.trustItems} />
+        <FeaturedToursSection initialTours={homeData.featuredTours} />
+        <DestinationsSection initialDestinations={homeData.destinations} />
+        <TestimonialsSection reviews={homeData.testimonials} />
+        <WhatsAppCtaSection
+          directBooking={homeData.directBooking}
+          whatsApp={homeData.whatsApp}
+        />
       </main>
       <Footer />
     </div>

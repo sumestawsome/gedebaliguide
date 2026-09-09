@@ -4,8 +4,14 @@ import React from "react";
 import { Award, ShieldCheck, Car, Sparkles, Check } from "lucide-react";
 import { motion } from "framer-motion";
 import { mockTrustItems } from "@/data/mock-data";
+import { TrustItemConfig, TrustItem } from "@/types";
 
-export default function TrustBar() {
+interface TrustBarProps {
+  items?: (TrustItemConfig | TrustItem)[];
+}
+
+export default function TrustBar({ items }: TrustBarProps = {}) {
+  const trustList = items && items.length > 0 ? items : mockTrustItems;
   const getIconConfig = (iconName: string) => {
     switch (iconName) {
       case "Award":
@@ -43,7 +49,7 @@ export default function TrustBar() {
     <section className="relative z-20 -mt-6 sm:-mt-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="rounded-3xl border border-stone-200/90 bg-white/95 p-6 sm:p-8 shadow-xl shadow-stone-200/60 backdrop-blur-md">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 divide-y md:divide-y-0 md:divide-x divide-stone-200">
-          {mockTrustItems.map((item, idx) => {
+          {trustList.map((item, idx) => {
             const config = getIconConfig(item.icon);
             return (
               <motion.div
