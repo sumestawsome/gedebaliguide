@@ -3,9 +3,10 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, ArrowUpRight, Compass, Sparkles } from "lucide-react";
+import { MapPin, ArrowUpRight, MessageCircle, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { mockPopularDestinations } from "@/data/mock-data";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 export default function DestinationsSection() {
   if (!mockPopularDestinations || mockPopularDestinations.length === 0) {
@@ -35,6 +36,10 @@ export default function DestinationsSection() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {mockPopularDestinations.map((dest, index) => {
             const targetUrl = dest.tourSlug ? `/tours/${dest.tourSlug}` : `/tours`;
+            const waDestUrl = buildWhatsAppUrl({
+              customNote: `Saya tertarik mengunjungi destinasi ${dest.name} (${dest.area}). Spot yang ingin dikunjungi: ${dest.highlightSpot}.`,
+              source: "custom_itinerary",
+            });
 
             return (
               <motion.div
@@ -43,13 +48,11 @@ export default function DestinationsSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.45, delay: index * 0.08 }}
+                className="flex flex-col h-full"
               >
-                <Link
-                  href={targetUrl}
-                  className="group relative flex flex-col h-full overflow-hidden rounded-3xl bg-white shadow-sm border border-stone-200/80 hover:shadow-xl hover:border-amber-300/80 transition-all duration-300"
-                >
+                <div className="group relative flex flex-col h-full overflow-hidden rounded-3xl bg-white shadow-sm border border-stone-200/80 hover:shadow-xl hover:border-amber-300/80 transition-all duration-300">
                   {/* Image Frame */}
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-200">
+                  <Link href={targetUrl} className="relative aspect-[4/3] w-full overflow-hidden bg-stone-200 block">
                     <Image
                       src={dest.imageUrl}
                       alt={`Pemandangan ${dest.name}`}
@@ -73,7 +76,7 @@ export default function DestinationsSection() {
                         </div>
                       </h3>
                     </div>
-                  </div>
+                  </Link>
 
                   {/* Info card footer */}
                   <div className="p-5 flex flex-col flex-1 justify-between bg-white space-y-3">
@@ -81,18 +84,33 @@ export default function DestinationsSection() {
                       {dest.description}
                     </p>
 
-                    <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
-                      <span className="flex items-center gap-1 font-medium text-stone-700 truncate">
+                    <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-xs">
+                      <span className="flex items-center gap-1 font-medium text-stone-700 truncate mr-2">
                         <MapPin className="h-3.5 w-3.5 text-blue-700 shrink-0" />
                         <span className="truncate">{dest.highlightSpot}</span>
                       </span>
 
-                      <span className="text-[11px] font-bold text-blue-700 group-hover:text-amber-600 transition-colors shrink-0">
-                        Lihat Tur →
-                      </span>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <a
+                          href={waDestUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={`Tanya tur ${dest.name} via WhatsApp`}
+                          aria-label={`Tanya tur ${dest.name} via WhatsApp`}
+                          className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-colors"
+                        >
+                          <MessageCircle className="h-4 w-4" />
+                        </a>
+                        <Link
+                          href={targetUrl}
+                          className="text-[11px] font-bold text-blue-700 hover:text-amber-600 transition-colors py-1 px-1.5"
+                        >
+                          Detail →
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               </motion.div>
             );
           })}

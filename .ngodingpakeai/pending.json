@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "b3d78e7de42246d0ac9a7eea0756b5de15678656",
+  "generatedForCommit": "b20fdacddc573550daec63018b1caba1daab1f4f",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -196,9 +196,9 @@
     },
     {
       "path": "src/components/common/FloatingWhatsApp.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 2005
+      "size": 4008
     },
     {
       "path": "src/components/home/DestinationsSection.tsx",
@@ -220,7 +220,7 @@
     },
     {
       "path": "src/components/home/TestimonialsSection.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 5350
     },
@@ -232,9 +232,9 @@
     },
     {
       "path": "src/components/home/WhatsAppCtaSection.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 2964
+      "size": 4382
     },
     {
       "path": "src/components/layout/Footer.tsx",
