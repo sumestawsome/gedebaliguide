@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "06e23de38566769b6605667847b35d18a5e6a812",
+  "generatedForCommit": "c76e08d264be0a81df579f51b114dad5bc55635e",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -202,13 +202,13 @@
     },
     {
       "path": "src/components/home/DestinationsSection.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 3353
+      "size": 5202
     },
     {
       "path": "src/components/home/FeaturedToursSection.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 9829
     },
@@ -250,9 +250,9 @@
     },
     {
       "path": "src/data/mock-data.ts",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 8265
+      "size": 8417
     },
     {
       "path": "src/lib/whatsapp.ts",
