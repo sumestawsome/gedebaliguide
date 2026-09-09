@@ -4,8 +4,9 @@ import React, { useState, useMemo } from "react";
 import { Tour } from "@/types";
 import { mockAllTours } from "@/data/mock-data";
 import TourCard from "./TourCard";
-import { Filter, X, RotateCcw, MapPin, Tag, Sparkles } from "lucide-react";
+import { Filter, X, RotateCcw, MapPin, Tag, Sparkles, Compass, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 interface ToursCatalogProps {
   initialTours?: Tour[];
@@ -78,6 +79,15 @@ export default function ToursCatalog({ initialTours = mockAllTours }: ToursCatal
     setSelectedArea("all");
     setSelectedCategory("all");
   };
+
+  const emptyWaUrl = buildWhatsAppUrl({
+    customNote: `Halo Bli Gede, saya mencari paket tur dengan preferensi wilayah ${
+      selectedArea !== "all" ? selectedArea : "bebas"
+    } dan kategori ${
+      selectedCategory !== "all" ? getCategoryLabel(selectedCategory) : "bebas"
+    }. Apakah bisa custom itinerary khusus?`,
+    source: "custom_itinerary",
+  });
 
   return (
     <div className="space-y-8">
@@ -177,14 +187,57 @@ export default function ToursCatalog({ initialTours = mockAllTours }: ToursCatal
         </div>
       </div>
 
-      {/* Tours Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <AnimatePresence mode="popLayout">
-          {filteredTours.map((tour, index) => (
-            <TourCard key={tour.id} tour={tour} priority={index < 3} />
-          ))}
-        </AnimatePresence>
-      </div>
+      {/* Empty State vs Tours Grid */}
+      {filteredTours.length === 0 ? (
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-3xl border border-dashed border-stone-300 bg-white p-10 sm:p-14 text-center space-y-5"
+        >
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 border border-amber-200">
+            <Compass className="h-8 w-8" />
+          </div>
+
+          <div className="space-y-2 max-w-md mx-auto">
+            <h3 className="font-serif text-2xl font-bold text-stone-900">
+              Tidak Ada Tur yang Sesuai
+            </h3>
+            <p className="text-sm text-stone-600 leading-relaxed font-sans">
+              Belum ada paket tur yang cocok dengan kombinasi filter yang Anda pilih saat ini. Coba ubah atau hapus filter untuk melihat pilihan lainnya.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 transition-all cursor-pointer"
+            >
+              <RotateCcw className="h-4 w-4" />
+              <span>Reset Filter & Lihat Semua Tur</span>
+            </button>
+
+            <a
+              href={emptyWaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 transition-all cursor-pointer"
+            >
+              <MessageCircle className="h-4 w-4" />
+              <span>Tanya Custom Itinerary via WA</span>
+            </a>
+          </div>
+        </motion.div>
+      ) : (
+        /* Tours Grid */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <AnimatePresence mode="popLayout">
+            {filteredTours.map((tour, index) => (
+              <TourCard key={tour.id} tour={tour} priority={index < 3} />
+            ))}
+          </AnimatePresence>
+        </div>
+      )}
     </div>
   );
 }
