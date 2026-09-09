@@ -3,20 +3,76 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { HelpCircle, Sparkles, MessageCircle, ChevronRight } from "lucide-react";
+import { HelpCircle, Sparkles, MessageCircle, ChevronRight, CheckCircle2 } from "lucide-react";
 import { getGeneralConsultationUrl } from "@/lib/whatsapp";
+import { mockFaqItems } from "@/data/mock-faq";
 
 export const metadata: Metadata = {
-  title: "Tanya Jawab (FAQ) — Gede Bali Guide",
+  title: "Tanya Jawab (FAQ) Tur Privat Bali — Gede Bali Guide",
   description:
-    "Pertanyaan umum seputar tur privat di Bali bersama Gede Sudiartana: cara pemesanan, sistem pembayaran, armada mobil, dan fleksibilitas rute.",
+    "Pertanyaan umum seputar booking tur privat Bali bersama Gede Sudiartana: pemesanan tanpa DP, rute fleksibel, mobil ber-AC, dan pemandu resmi HPI Bali.",
+  keywords: [
+    "FAQ Tour Bali",
+    "Tanya Jawab Wisata Bali",
+    "Cara Pesan Tour Guide Bali",
+    "Sewa Mobil Bali Fleksibel",
+    "HPI Bali Guide FAQ",
+    "Paket Liburan Bali Tanpa DP",
+  ],
+  alternates: {
+    canonical: "https://gedebaliguide.com/faq",
+  },
+  openGraph: {
+    title: "Tanya Jawab (FAQ) Tur Privat Bali — Gede Bali Guide",
+    description:
+      "Informasi lengkap seputar pemesanan tanpa perantara, armada mobil ber-AC, biaya transparan, dan fleksibilitas jadwal tur bersama Bli Gede.",
+    url: "https://gedebaliguide.com/faq",
+    siteName: "Gede Bali Guide",
+    locale: "id_ID",
+    type: "website",
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=80",
+        width: 1200,
+        height: 630,
+        alt: "Tanya Jawab FAQ Gede Bali Guide",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tanya Jawab (FAQ) Tur Privat Bali — Gede Bali Guide",
+    description:
+      "Informasi lengkap cara pesan, sistem pembayaran, dan fleksibilitas rute tur Bali bersama Bli Gede.",
+    images: [
+      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=80",
+    ],
+  },
 };
 
 export default function FaqPage() {
   const waUrl = getGeneralConsultationUrl("faq");
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": "https://gedebaliguide.com/faq#faqpage",
+    mainEntity: mockFaqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-[#fafaf9] text-stone-900 font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <Navbar />
 
       <main className="flex-1 pb-20">
@@ -42,7 +98,7 @@ export default function FaqPage() {
             </h1>
 
             <p className="text-stone-600 text-sm sm:text-base leading-relaxed font-sans max-w-2xl mx-auto">
-              Semua hal penting mengenai sistem pemesanan tanpa perantara, kenyamanan mobil, hingga fleksibilitas waktu kami rangkum di sini.
+              Semua hal penting mengenai sistem pemesanan tanpa perantara, kenyamanan armada mobil ber-AC, hingga fleksibilitas waktu kami rangkum secara transparan.
             </p>
           </div>
         </section>
@@ -50,70 +106,41 @@ export default function FaqPage() {
         {/* FAQ List Container */}
         <section className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pt-12 md:pt-16">
           <div className="space-y-4">
-            {/* Initial Accordion items framework */}
-            <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs space-y-2">
-              <h3 className="font-serif text-lg font-bold text-stone-900">
-                Bagaimana cara memesan paket tur bersama Bli Gede?
-              </h3>
-              <p className="text-sm text-stone-600 leading-relaxed">
-                Pemesanan sangat mudah dan langsung: cukup klik tombol WhatsApp di website ini. Anda akan langsung terhubung ke chat pribadi Bli Gede untuk mencocokkan tanggal, jumlah peserta, dan rute impian Anda.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs space-y-2">
-              <h3 className="font-serif text-lg font-bold text-stone-900">
-                Apakah harus membayar uang muka (DP) terlebih dahulu?
-              </h3>
-              <p className="text-sm text-stone-600 leading-relaxed">
-                Untuk sebagian besar tur darat privat, Anda tidak diwajibkan membayar DP. Pembayaran dapat dilakukan tunai atau transfer langsung saat bertemu Bli Gede di hari penjemputan.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs space-y-2">
-              <h3 className="font-serif text-lg font-bold text-stone-900">
-                Apakah rute turnya bisa diubah di tengah jalan?
-              </h3>
-              <p className="text-sm text-stone-600 leading-relaxed">
-                Tentu saja! Karena ini adalah tur 100% privat, Anda memegang kendali penuh atas tempo perjalanan. Jika Anda ingin berlama-lama di satu tempat atau melewati destinasi tertentu, cukup diskusikan dengan Bli Gede.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs space-y-2">
-              <h3 className="font-serif text-lg font-bold text-stone-900">
-                Apakah mobil digabung dengan wisatawan lain?
-              </h3>
-              <p className="text-sm text-stone-600 leading-relaxed">
-                Sama sekali tidak. Seluruh armada mobil privat Bli Gede ber-AC dingin dan hanya diisi oleh rombongan keluarga atau teman Anda sendiri demi kenyamanan dan privasi maksimal.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs space-y-2">
-              <h3 className="font-serif text-lg font-bold text-stone-900">
-                Apakah ada kewajiban belanja di toko oleh-oleh tertentu?
-              </h3>
-              <p className="text-sm text-stone-600 leading-relaxed">
-                Tidak ada komisi toko belanja sama sekali. Bli Gede tidak akan pernah memaksa Anda mengunjungi toko rekanan atau galeri tertentu. Waktu liburan 100% untuk kenikmatan Anda.
-              </p>
-            </div>
+            {mockFaqItems.map((item) => (
+              <div
+                key={item.id}
+                className="rounded-2xl border border-stone-200/90 bg-white p-6 sm:p-7 shadow-xs space-y-2 hover:border-amber-300/80 transition-colors"
+              >
+                <h3 className="font-serif text-lg sm:text-xl font-bold text-stone-900 leading-snug flex items-start gap-2.5">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                  <span>{item.question}</span>
+                </h3>
+                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed pl-7.5">
+                  {item.answer}
+                </p>
+              </div>
+            ))}
           </div>
 
           {/* Still Have Questions CTA */}
-          <div className="mt-14 rounded-3xl bg-stone-900 text-white p-8 text-center space-y-5 shadow-xl">
-            <h3 className="font-serif text-2xl font-bold">
-              Punya Pertanyaan Lain yang Belum Terjawab?
+          <div className="mt-14 rounded-3xl bg-stone-900 text-white p-8 sm:p-10 text-center space-y-5 shadow-xl">
+            <h3 className="font-serif text-2xl sm:text-3xl font-bold">
+              Punya Pertanyaan Lain yang Belum Tercantum?
             </h3>
-            <p className="text-sm text-stone-300 max-w-md mx-auto leading-relaxed">
-              Jangan sungkan untuk bertanya langsung kepada Bli Gede lewat WhatsApp. Konsultasi bebas biaya dan ramah.
+            <p className="text-xs sm:text-sm text-stone-300 max-w-md mx-auto leading-relaxed">
+              Jangan sungkan untuk bertanya langsung kepada Bli Gede lewat WhatsApp. Konsultasi bebas biaya, santai, dan ramah.
             </p>
-            <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 rounded-2xl bg-emerald-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-emerald-500 transition-colors"
-            >
-              <MessageCircle className="h-5 w-5" />
-              <span>Tanya Bli Gede via WhatsApp</span>
-            </a>
+            <div className="pt-2">
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2.5 rounded-2xl bg-emerald-600 px-7 py-4 text-sm sm:text-base font-bold text-white shadow-lg hover:bg-emerald-500 transition-colors"
+              >
+                <MessageCircle className="h-5 w-5" />
+                <span>Tanya Bli Gede via WhatsApp</span>
+              </a>
+            </div>
           </div>
         </section>
       </main>

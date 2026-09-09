@@ -8,16 +8,81 @@ import { mockGuideProfile } from "@/data/mock-data";
 import { getGeneralConsultationUrl } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
-  title: "Kontak & Konsultasi Tur — Gede Bali Guide",
+  title: "Kontak Bli Gede — Reservasi & Konsultasi Tur Privat Bali",
   description:
-    "Hubungi Gede Sudiartana langsung via WhatsApp atau formulir pesan untuk konsultasi rute tur privat di Bali tanpa biaya calo.",
+    "Hubungi Gede Sudiartana via WhatsApp atau formulir pesan untuk konsultasi rute liburan privat di Bali. Respon ramah, cepat, & tanpa komisi perantara.",
+  keywords: [
+    "Kontak Tour Guide Bali",
+    "WhatsApp Gede Bali Guide",
+    "Reservasi Tour Bali",
+    "Konsultasi Wisata Bali",
+    "Gede Sudiartana Kontak",
+    "Nomor Telepon Guide Bali",
+  ],
+  alternates: {
+    canonical: "https://gedebaliguide.com/contact",
+  },
+  openGraph: {
+    title: "Kontak Bli Gede — Reservasi & Konsultasi Tur Privat Bali",
+    description:
+      "Hubungi Gede Sudiartana langsung via WhatsApp untuk konsultasi rute liburan privat keluarga di Bali. Tanpa biaya calo.",
+    url: "https://gedebaliguide.com/contact",
+    siteName: "Gede Bali Guide",
+    locale: "id_ID",
+    type: "website",
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=80",
+        width: 1200,
+        height: 630,
+        alt: "Kontak Bli Gede Bali Guide",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kontak Bli Gede — Reservasi & Konsultasi Tur Privat Bali",
+    description:
+      "Konsultasi rute liburan privat di Bali langsung via WhatsApp Bli Gede.",
+    images: [
+      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=80",
+    ],
+  },
 };
 
 export default function ContactPage() {
   const waUrl = getGeneralConsultationUrl("contact");
 
+  const contactJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": "https://gedebaliguide.com/contact#contactpage",
+    name: "Kontak Gede Bali Guide",
+    description:
+      "Layanan kontak langsung dan reservasi tur privat di Bali bersama pramuwisata berlisensi resmi HPI Gede Sudiartana.",
+    url: "https://gedebaliguide.com/contact",
+    mainEntity: {
+      "@type": "Person",
+      name: mockGuideProfile.name,
+      jobTitle: "Licensed Bali Tour Guide (HPI Bali)",
+      telephone: mockGuideProfile.phone,
+      email: mockGuideProfile.email,
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: mockGuideProfile.phone,
+        contactType: "customer service",
+        availableLanguage: ["Indonesian", "English"],
+        areaServed: "ID",
+      },
+    },
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-[#fafaf9] text-stone-900 font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactJsonLd) }}
+      />
       <Navbar />
 
       <main className="flex-1 pb-20">
