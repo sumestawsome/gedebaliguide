@@ -109,3 +109,24 @@ export function getCustomItineraryUrl(customNote?: string): string {
     customNote,
   });
 }
+
+/**
+ * Quick helper for direct question regarding a specific tour
+ */
+export function getDirectQuestionUrl(tourName: string): string {
+  return buildWhatsAppUrl({
+    tourName,
+    customNote: "Saya ingin konsultasi / tanya-tanya terlebih dahulu mengenai tur ini",
+    source: "tour_detail",
+  });
+}
+
+/**
+ * Quick helper to open WhatsApp chat directly
+ */
+export function getDirectChatUrl(phoneNumber?: string): string {
+  const targetPhone = normalizePhoneNumber(
+    phoneNumber || mockGuideProfile.whatsappNumber || "6281234567890"
+  );
+  return `https://wa.me/${targetPhone}`;
+}
