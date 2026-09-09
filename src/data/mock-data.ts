@@ -241,6 +241,35 @@ export const mockAllTours: Tour[] = [
     highlights: ["Sunrise Gunung Batur", "Black Lava Jeep Tour", "Pemandian Air Panas Alami", "Kopi Kintamani"],
     includes: ["Mobil privat jemput hotel", "Driver & Guide Gede", "BBM & Parkir", "Air mineral botol"],
     excludes: ["Sewa Jeep 4WD lokal", "Tiket Hot Spring", "Makan pagi/siang"],
+    pickupLocation: "Lobby Hotel / Villa di Bali Selatan & Ubud (Penjemputan Dini Hari)",
+    itinerary: [
+      {
+        time: "03:00 - 03:30",
+        title: "Penjemputan Dini Hari di Hotel",
+        description: "Bli Gede menjemput Anda untuk memulai perjalanan menuju kaki Gunung Batur.",
+      },
+      {
+        time: "05:00 - 07:00",
+        title: "Sunrise Point Gunung Batur dengan Jeep 4WD",
+        description: "Menyaksikan lautan awan dan matahari terbit spektakuler dari kaldera purba.",
+      },
+      {
+        time: "07:30 - 08:30",
+        title: "Eksplorasi Black Lava & Black Sand",
+        description: "Berkeliling hamparan batu lava hitam legendaris letusan masa lampau.",
+      },
+      {
+        time: "09:00 - 11:00",
+        title: "Relaksasi Pemandian Air Panas Alami Batur",
+        description: "Berendam di kolam air belerang hangat dengan view Danau Batur yang menenangkan.",
+      },
+      {
+        time: "11:30 - 13:00",
+        title: "Makan Siang & Menikmati Kopi Kintamani",
+        description: "Istirahat santai di kafe tebing Kintamani sebelum kembali ke hotel.",
+      },
+    ],
+    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3947.6974127025816!2d115.375269!3d-8.242858!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1f7c3dc0060fb%3A0x7d286f9ee521c7cb!2sMount%20Batur!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid",
     featured: false,
     isActive: true,
     rating: 4.9,
@@ -268,6 +297,35 @@ export const mockAllTours: Tour[] = [
     highlights: ["Kelingking Beach T-Rex", "Broken Beach", "Angel's Billabong", "Crystal Bay Sunset"],
     includes: ["Antar-jemput hotel Sanur", "Mobil privat di Nusa Penida", "Driver & Guide lokal", "BBM & Parkir"],
     excludes: ["Tiket Fastboat PP Sanur-Penida", "Tiket retribusi pulau", "Makan siang"],
+    pickupLocation: "Lobby Hotel / Villa di Bali Selatan & Pelabuhan Sanur",
+    itinerary: [
+      {
+        time: "06:30",
+        title: "Penjemputan Menuju Pelabuhan Sanur",
+        description: "Diantar menuju pelabuhan Sanur untuk naik fastboat ke Nusa Penida.",
+      },
+      {
+        time: "08:30 - 10:30",
+        title: "Angel's Billabong & Broken Beach",
+        description: "Menyaksikan tebing berlubang alami raksasa dan kolam laguna samudra.",
+      },
+      {
+        time: "11:30 - 13:30",
+        title: "Tebing Ikonik Pantai Kelingking (T-Rex)",
+        description: "Spot pemandangan paling spektakuler di Nusa Penida dan makan siang lokal.",
+      },
+      {
+        time: "14:30 - 16:00",
+        title: "Pantai Crystal Bay",
+        description: "Santai di bawah pohon kelapa dan berenang di pantai berpasir putih.",
+      },
+      {
+        time: "16:30 - 18:30",
+        title: "Fastboat Kembali ke Sanur & Hotel",
+        description: "Menyeberang kembali ke pulau Bali dan diantar selamat sampai penginapan.",
+      },
+    ],
+    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63138.81442116035!2d115.485124!3d-8.727807!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd26e95ab5fbfbf%3A0xb35a0928a6f44d!2sKelingking%20Beach!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid",
     featured: false,
     isActive: true,
     rating: 4.8,
@@ -295,6 +353,35 @@ export const mockAllTours: Tour[] = [
     highlights: ["Pura Lempuyang (Gate of Heaven)", "Tirta Gangga Water Palace", "Taman Ujung Sukasada", "Pantai Pasir Putih Virgin Beach"],
     includes: ["Mobil privat ber-AC", "Driver & Guide Gede", "BBM & Parkir", "Air mineral botol"],
     excludes: ["Tiket masuk pura & istana", "Sewa kain sarung", "Makan siang"],
+    pickupLocation: "Lobby Hotel / Villa di seluruh area Bali Selatan & Ubud",
+    itinerary: [
+      {
+        time: "06:00",
+        title: "Penjemputan Pagi di Hotel",
+        description: "Memulai perjalanan pagi ke Bali Timur agar tiba sebelum antrean ramai.",
+      },
+      {
+        time: "08:30 - 11:00",
+        title: "Pura Penataran Agung Lempuyang (Gate of Heaven)",
+        description: "Mengabadikan foto ikonik di gerbang candi berlatar kemegahan Gunung Agung.",
+      },
+      {
+        time: "12:00 - 13:30",
+        title: "Istana Air Tirta Gangga",
+        description: "Makan siang dan berjalan di batu pijakan di atas kolam ikan mas koi yang jernih.",
+      },
+      {
+        time: "14:15 - 15:45",
+        title: "Taman Ujung Sukasada",
+        description: "Istana peristirahatan megah perpaduan arsitektur Bali, Belanda, dan Tiongkok kuno.",
+      },
+      {
+        time: "16:00 - 18:30",
+        title: "Perjalanan Kembali ke Hotel",
+        description: "Kembali ke penginapan dengan aman dan membawa banyak foto kenangan indah.",
+      },
+    ],
+    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3946.0483818816434!2d115.628867!3d-8.391219!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd208696d077df3%3A0xd64c4897df146030!2sPura%20Penataran%20Agung%20Lempuyang!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid",
     featured: false,
     isActive: true,
     rating: 4.9,
