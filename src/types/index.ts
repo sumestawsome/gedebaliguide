@@ -74,3 +74,6 @@ export interface Review {
   isApproved: boolean;
   featured: boolean;
 }
+
+export * from "@/lib/schemas/home-schema";
+
