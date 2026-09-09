@@ -58,6 +58,45 @@ export const mockAllTours: Tour[] = [
     highlights: ["Tegalalang Rice Terrace", "Tirta Empul Holy Water", "Air Terjun Tibumana", "Pura Tirta Empul"],
     includes: ["Mobil privat ber-AC", "Driver & Guide Gede", "BBM & Parkir", "Air mineral botol"],
     excludes: ["Tiket masuk objek wisata", "Makan siang", "Pengeluaran pribadi"],
+    pickupLocation: "Lobby Hotel / Villa di area Kuta, Seminyak, Canggu, Sanur, Ubud, Nusa Dua",
+    itinerary: [
+      {
+        time: "08:30",
+        title: "Penjemputan di Hotel / Villa",
+        description: "Bli Gede menjemput rombongan Anda tepat waktu dengan mobil bersih ber-AC dingin.",
+      },
+      {
+        time: "09:30 - 11:00",
+        title: "Ubud Monkey Forest Sanctuary",
+        description: "Menjelajahi hutan suci yang rimbun dan berinteraksi damai dengan kera ekor panjang.",
+      },
+      {
+        time: "11:30 - 13:00",
+        title: "Tegalalang Rice Terrace & Coffee Plantation",
+        description: "Menikmati lanskap persawahan berundak khas Bali dan mencicipi kopi Bali autentik.",
+      },
+      {
+        time: "13:00 - 14:00",
+        title: "Makan Siang Santai di Ubud",
+        description: "Istirahat makan siang di restoran pilihan Anda dengan panorama lembah atau sawah.",
+      },
+      {
+        time: "14:30 - 16:00",
+        title: "Pura Tirta Empul Tampaksiring",
+        description: "Melihat mata air suci kuno yang digunakan untuk ritual penyucian diri (melukat).",
+      },
+      {
+        time: "16:30 - 17:30",
+        title: "Air Terjun Tibumana",
+        description: "Menikmati ketenangan dan segarnya air terjun alami di balik tebing hijau yang asri.",
+      },
+      {
+        time: "17:30 - 19:00",
+        title: "Perjalanan Kembali ke Hotel",
+        description: "Kembali ke hotel dengan aman dan nyaman tanpa terburu-buru.",
+      },
+    ],
+    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.385419958744!2d115.260846!3d-8.506854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd23d6a8945197f%3A0x62804b47c645b23d!2sUbud%2C%20Gianyar%2C%20Bali!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid",
     featured: true,
     isActive: true,
     rating: 5.0,
@@ -85,6 +124,40 @@ export const mockAllTours: Tour[] = [
     highlights: ["Tebing Uluwatu", "Pertunjukan Tari Kecak Api", "Pantai Melasti", "Makan malam Jimbaran Seafood (opsional)"],
     includes: ["Mobil privat ber-AC", "Driver & Guide Gede", "BBM & Parkir", "Air mineral botol"],
     excludes: ["Tiket masuk pantai & pura", "Tiket pertunjukan tari Kecak", "Makan malam"],
+    pickupLocation: "Lobby Hotel / Villa di area Kuta, Seminyak, Canggu, Sanur, Jimbaran, Nusa Dua",
+    itinerary: [
+      {
+        time: "11:30",
+        title: "Penjemputan di Hotel / Villa",
+        description: "Penjemputan santai di siang hari menuju pesisir selatan Bali.",
+      },
+      {
+        time: "13:00 - 15:30",
+        title: "Pantai Melasti Ungasan",
+        description: "Menikmati tebing kapur spektakuler dan pantai pasir putih berair jernih.",
+      },
+      {
+        time: "16:30 - 18:00",
+        title: "Pura Luhur Uluwatu",
+        description: "Menyusuri jalan setapak tebing setinggi 70 meter dengan panorama Samudra Hindia.",
+      },
+      {
+        time: "18:00 - 19:00",
+        title: "Pertunjukan Tari Kecak Api Sunset",
+        description: "Menyaksikan magisnya tarian kolosal Kecak berlatar lembayung matahari terbenam.",
+      },
+      {
+        time: "19:30 - 21:00",
+        title: "Makan Malam Jimbaran Seafood (Opsional)",
+        description: "Menikmati hidangan laut bakar di tepi pantai pasir Jimbaran yang romantis.",
+      },
+      {
+        time: "21:00 - 21:45",
+        title: "Kembali ke Hotel",
+        description: "Perjalanan kembali ke penginapan Anda dengan nyaman.",
+      },
+    ],
+    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3942.8732049102434!2d115.084277!3d-8.829147!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd24ffbe6302325%3A0xb35fa3de52bc957e!2sUluwatu%20Temple!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid",
     featured: true,
     isActive: true,
     rating: 4.9,
@@ -112,6 +185,35 @@ export const mockAllTours: Tour[] = [
     highlights: ["Pura Ulun Danu Beratan", "Jatiluwih Rice Terrace (UNESCO)", "Gerbang Ikonik Handara", "Perkebunan Kopi Luwak"],
     includes: ["Mobil privat ber-AC", "Driver & Guide Gede", "BBM & Parkir", "Air mineral botol"],
     excludes: ["Tiket masuk objek wisata", "Makan siang", "Pengeluaran pribadi"],
+    pickupLocation: "Lobby Hotel / Villa di seluruh area Bali Selatan & Ubud",
+    itinerary: [
+      {
+        time: "08:00",
+        title: "Penjemputan Hotel",
+        description: "Menuju dataran tinggi Bedugul dengan udara sejuk pegunungan.",
+      },
+      {
+        time: "10:00 - 11:30",
+        title: "Pura Ulun Danu Danau Beratan",
+        description: "Pura terapung ikonik yang menghiasi uang kertas Rp50.000 dengan panorama danau asri.",
+      },
+      {
+        time: "12:00 - 12:45",
+        title: "Gerbang Megah Handara Gate",
+        description: "Spot foto arsitektur khas Bali dengan latar perbukitan hijau berkabut.",
+      },
+      {
+        time: "13:30 - 15:30",
+        title: "Jatiluwih Rice Terrace (Warisan Dunia UNESCO)",
+        description: "Makan siang dengan pemandangan sawah terluas di Bali serta jalan santai di pematang sawah.",
+      },
+      {
+        time: "16:00 - 18:00",
+        title: "Perjalanan Kembali ke Hotel",
+        description: "Perjalanan santai kembali ke penginapan.",
+      },
+    ],
+    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3947.5323928198756!2d115.163914!3d-8.275147!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd1897c8d9dfb1d%3A0xe5a2bbbe76a164b4!2sUlun%20Danu%20Beratan%20Temple!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid",
     featured: true,
     isActive: true,
     rating: 5.0,

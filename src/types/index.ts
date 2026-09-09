@@ -18,6 +18,12 @@ export interface TrustItem {
   icon: string;
 }
 
+export interface ItineraryItem {
+  time: string;
+  title: string;
+  description: string;
+}
+
 export interface Tour {
   id: string;
   slug: string;
@@ -37,6 +43,9 @@ export interface Tour {
   highlights: string[];
   includes: string[];
   excludes: string[];
+  itinerary?: ItineraryItem[];
+  mapEmbedUrl?: string;
+  pickupLocation?: string;
   featured: boolean;
   isActive: boolean;
   rating: number;

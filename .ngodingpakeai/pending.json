@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "d616280edcefa57e6c93de998074e68c6886007a",
+  "generatedForCommit": "da1481e81574d877301675d9f869aea1c48ff2e8",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -264,7 +264,7 @@
       "path": "src/components/tours/ToursCatalog.tsx",
       "reason": "changed",
       "language": "typescript",
-      "size": 6981
+      "size": 9405
     },
     {
       "path": "src/data/mock-data.ts",
