@@ -110,12 +110,50 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
           />
         </div>
 
-        {/* Trip Date */}
+        {/* Trip Date with Quick Select Pills */}
         <div>
-          <label htmlFor="tripDate" className="block text-xs font-semibold text-stone-700 mb-1 flex items-center gap-1">
-            <Calendar className="h-3.5 w-3.5 text-stone-400" />
-            Rencana Tanggal Tur:
+          <label htmlFor="tripDate" className="block text-xs font-semibold text-stone-700 mb-1 flex items-center justify-between">
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3.5 w-3.5 text-stone-400" />
+              Rencana Tanggal Tur:
+            </span>
+            <span className="text-[10px] text-stone-400 font-normal">Bisa diubah nanti</span>
           </label>
+          <div className="flex items-center gap-1.5 mb-2">
+            <button
+              type="button"
+              onClick={() => {
+                const d = new Date();
+                d.setDate(d.getDate() + 1);
+                setTripDate(d.toISOString().split("T")[0]);
+              }}
+              className="rounded-lg border border-stone-200 bg-stone-50 hover:bg-stone-100 px-2 py-1 text-[11px] font-medium text-stone-700 transition-colors"
+            >
+              + Besok
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const d = new Date();
+                d.setDate(d.getDate() + 2);
+                setTripDate(d.toISOString().split("T")[0]);
+              }}
+              className="rounded-lg border border-stone-200 bg-stone-50 hover:bg-stone-100 px-2 py-1 text-[11px] font-medium text-stone-700 transition-colors"
+            >
+              + Lusa
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const d = new Date();
+                d.setDate(d.getDate() + 7);
+                setTripDate(d.toISOString().split("T")[0]);
+              }}
+              className="rounded-lg border border-stone-200 bg-stone-50 hover:bg-stone-100 px-2 py-1 text-[11px] font-medium text-stone-700 transition-colors"
+            >
+              + 1 Minggu Lagi
+            </button>
+          </div>
           <input
             id="tripDate"
             type="date"
@@ -151,12 +189,28 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
           </select>
         </div>
 
-        {/* Custom Notes / Hotel Pickup */}
+        {/* Custom Notes / Hotel Pickup with Area Pills */}
         <div>
           <label htmlFor="customNote" className="block text-xs font-semibold text-stone-700 mb-1 flex items-center gap-1">
             <FileText className="h-3.5 w-3.5 text-stone-400" />
             Hotel Penjemputan / Catatan Khusus:
           </label>
+          <div className="flex flex-wrap gap-1 mb-2">
+            {["Kuta / Seminyak", "Nusa Dua / Jimbaran", "Sanur", "Ubud", "Canggu"].map((area) => (
+              <button
+                key={area}
+                type="button"
+                onClick={() => {
+                  setCustomNote((prev) =>
+                    prev ? `${prev}, Area ${area}` : `Jemput di area ${area}`
+                  );
+                }}
+                className="rounded-lg border border-stone-200 bg-stone-50 hover:bg-blue-50 hover:border-blue-200 px-2 py-0.5 text-[10px] text-stone-600 hover:text-blue-700 transition-colors"
+              >
+                + {area}
+              </button>
+            ))}
+          </div>
           <textarea
             id="customNote"
             rows={2}
@@ -209,9 +263,15 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
           <span>Tanya / Diskusi Tur Langsung</span>
         </a>
 
-        <p className="text-center text-[11px] text-stone-500 leading-snug">
-          Langsung terhubung dengan Bli Gede • Tanpa kartu kredit / Tanpa DP online
-        </p>
+        <div className="pt-2 space-y-1 text-center">
+          <p className="text-[11px] text-emerald-800 font-semibold flex items-center justify-center gap-1">
+            <CheckCircle2 className="h-3.5 w-3.5" />
+            <span>Tanpa DP • Bayar Saat Tur Selesai</span>
+          </p>
+          <p className="text-[10px] text-stone-400">
+            Reschedule & pembatalan fleksibel tanpa denda
+          </p>
+        </div>
       </div>
 
       {/* Host Credentials */}
