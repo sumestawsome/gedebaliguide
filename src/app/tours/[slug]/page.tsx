@@ -10,7 +10,8 @@ import TourItinerary from "@/components/tours/TourItinerary";
 import TourInclusions from "@/components/tours/TourInclusions";
 import TourMap from "@/components/tours/TourMap";
 import TourBookingCard from "@/components/tours/TourBookingCard";
-import { Clock, Users, Star, ChevronRight, ShieldCheck, Sparkles, MapPin } from "lucide-react";
+import { Clock, Users, Star, ChevronRight, ShieldCheck, Sparkles, MapPin, MessageCircle, HelpCircle } from "lucide-react";
+import { getDirectQuestionUrl } from "@/lib/whatsapp";
 
 interface TourDetailPageProps {
   params: Promise<{
@@ -307,6 +308,32 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
                 mapEmbedUrl={tour.mapEmbedUrl}
                 pickupLocation={tour.pickupLocation}
               />
+
+              {/* Direct Question Section */}
+              <div className="rounded-3xl border border-blue-200/80 bg-gradient-to-br from-blue-50/70 to-indigo-50/40 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                <div className="space-y-1.5 max-w-lg">
+                  <div className="flex items-center gap-2 text-xs font-bold text-blue-800 uppercase tracking-wider">
+                    <HelpCircle className="h-4 w-4 text-blue-700" />
+                    <span>Ada Pertanyaan Seputar Tur Ini?</span>
+                  </div>
+                  <h4 className="font-serif text-xl sm:text-2xl font-bold text-stone-900">
+                    Ingin Menyesuaikan Rute atau Jadwal?
+                  </h4>
+                  <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+                    Bli Gede siap membantu merancang rute paling nyaman sesuai keinginan keluarga atau rombongan Anda. Konsultasi 100% gratis dan ramah.
+                  </p>
+                </div>
+
+                <a
+                  href={getDirectQuestionUrl(tour.name)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-2xl bg-blue-700 px-5 py-3.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-700/20 hover:bg-blue-800 active:scale-95 transition-all shrink-0"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  <span>Tanya Langsung ke Bli Gede</span>
+                </a>
+              </div>
             </div>
 
             {/* Right Column: Sticky Booking & WhatsApp Card */}

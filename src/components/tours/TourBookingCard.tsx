@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { MessageCircle, ShieldCheck, Users, Calendar, Clock, CheckCircle2, Car, User, FileText, Eye } from "lucide-react";
+import { MessageCircle, ShieldCheck, Users, Calendar, Clock, CheckCircle2, Car, User, FileText, Eye, HelpCircle } from "lucide-react";
 import { Tour } from "@/types";
-import { buildWhatsAppUrl, formatWhatsAppMessage } from "@/lib/whatsapp";
+import { buildWhatsAppUrl, formatWhatsAppMessage, getDirectQuestionUrl } from "@/lib/whatsapp";
 import { mockGuideProfile } from "@/data/mock-data";
 
 interface TourBookingCardProps {
@@ -194,6 +194,17 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
         >
           <MessageCircle className="h-5 w-5" />
           <span>Kirim Pemesanan ke WhatsApp</span>
+        </a>
+
+        {/* Secondary: Direct question button */}
+        <a
+          href={getDirectQuestionUrl(tour.name)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-stone-300 bg-stone-50/80 px-4 py-3 text-xs font-bold text-stone-700 hover:bg-stone-100 hover:border-stone-400 hover:text-stone-900 active:scale-[0.98] transition-all"
+        >
+          <HelpCircle className="h-4 w-4 text-blue-700" />
+          <span>Tanya / Diskusi Tur Langsung</span>
         </a>
 
         <p className="text-center text-[11px] text-stone-500 leading-snug">
