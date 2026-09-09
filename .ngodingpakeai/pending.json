@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "18d756fd72e59ba3c35633542b40e7bde2613ab1",
+  "generatedForCommit": "b3d78e7de42246d0ac9a7eea0756b5de15678656",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -222,7 +222,7 @@
       "path": "src/components/home/TestimonialsSection.tsx",
       "reason": "changed",
       "language": "typescript",
-      "size": 4993
+      "size": 5350
     },
     {
       "path": "src/components/home/TrustBar.tsx",
