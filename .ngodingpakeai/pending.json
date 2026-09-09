@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "ff6f51458908cf14e8fa323ef848f2f1d3449e09",
+  "generatedForCommit": "d167284253be774c17460b62c253fb86c852f606",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -154,13 +154,13 @@
     },
     {
       "path": "package-lock.json",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "json",
       "size": 237007
     },
     {
       "path": "package.json",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "json",
       "size": 600
     },
@@ -214,7 +214,7 @@
     },
     {
       "path": "src/components/home/HeroSection.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 10508
     },
@@ -226,9 +226,9 @@
     },
     {
       "path": "src/components/home/TrustBar.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 1710
+      "size": 3342
     },
     {
       "path": "src/components/home/WhatsAppCtaSection.tsx",
