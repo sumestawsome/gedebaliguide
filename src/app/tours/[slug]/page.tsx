@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { mockAllTours } from "@/data/mock-data";
+import { getActiveTourBySlug } from "@/lib/services/tour-service";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import TourItinerary from "@/components/tours/TourItinerary";
@@ -27,7 +28,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: TourDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const tour = mockAllTours.find((t) => t.slug === slug && t.isActive);
+  const tour = await getActiveTourBySlug(slug);
 
   if (!tour) {
     return {
@@ -88,7 +89,7 @@ export async function generateMetadata({ params }: TourDetailPageProps): Promise
 
 export default async function TourDetailPage({ params }: TourDetailPageProps) {
   const { slug } = await params;
-  const tour = mockAllTours.find((t) => t.slug === slug && t.isActive);
+  const tour = await getActiveTourBySlug(slug);
 
   if (!tour) {
     notFound();
