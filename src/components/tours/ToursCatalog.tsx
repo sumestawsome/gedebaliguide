@@ -464,7 +464,7 @@ export default function ToursCatalog({ initialTours = mockAllTours }: ToursCatal
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-3xl border border-dashed border-stone-300 bg-white p-10 sm:p-14 text-center space-y-5 shadow-xs"
+          className="rounded-3xl border border-dashed border-stone-300 bg-white p-8 sm:p-12 text-center space-y-6 shadow-xs"
         >
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 border border-amber-200">
             <Compass className="h-8 w-8" />
@@ -475,29 +475,80 @@ export default function ToursCatalog({ initialTours = mockAllTours }: ToursCatal
               Tidak Ada Tur yang Sesuai
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
-              Kami tidak menemukan paket tur untuk kriteria filter dan pencarian yang Anda tentukan. Ingin menggabungkan rute sesuai keinginan pribadi?
+              Tidak ada paket tur yang cocok dengan kombinasi filter Anda
+              {searchQuery && (
+                <>
+                  {" "}
+                  (pencarian: &ldquo;<strong>{searchQuery}</strong>&rdquo;)
+                </>
+              )}
+              {selectedCategory !== "all" && (
+                <>
+                  {" "}
+                  kategori <strong>{getCategoryLabel(selectedCategory)}</strong>
+                </>
+              )}
+              {selectedArea !== "all" && (
+                <>
+                  {" "}
+                  wilayah <strong>{selectedArea}</strong>
+                </>
+              )}
+              . Coba reset filter atau konsultasikan rute kustom Anda langsung bersama Bli Gede.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
             <button
               type="button"
               onClick={resetFilters}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-3 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-blue-800 transition-all cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 px-6 py-3.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-blue-800 transition-all cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
-              <span>Reset Filter & Lihat Semua Tur</span>
+              <span>Reset Filter & Tampilkan Semua Tur</span>
             </button>
 
             <a
               href={emptyWaUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 transition-all cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 transition-all cursor-pointer"
             >
               <MessageCircle className="h-4 w-4" />
               <span>Tanya Custom Itinerary via WA</span>
             </a>
+          </div>
+
+          {/* Quick Recommendations when Empty */}
+          <div className="pt-6 border-t border-stone-200/80 max-w-2xl mx-auto text-left">
+            <p className="text-xs font-bold uppercase tracking-wider text-stone-400 mb-3 text-center">
+              Atau Jelajahi Rekomendasi Tur Terfavorit Wisatawan:
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {activeTours.slice(0, 3).map((recTour) => (
+                <div
+                  key={recTour.id}
+                  className="rounded-2xl border border-stone-200/80 bg-stone-50/70 p-3.5 hover:border-blue-300 hover:bg-white transition-all text-xs space-y-1.5"
+                >
+                  <p className="font-serif font-bold text-stone-900 line-clamp-1">
+                    {recTour.name}
+                  </p>
+                  <p className="text-[11px] text-stone-500">
+                    {recTour.area} • {recTour.duration}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      resetFilters();
+                      setSearchQuery(recTour.area);
+                    }}
+                    className="text-[11px] font-bold text-blue-700 hover:underline inline-block pt-0.5 cursor-pointer"
+                  >
+                    Lihat Tur Ini →
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </motion.div>
       ) : (
