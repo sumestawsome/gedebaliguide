@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "cf85fc372e92bcd27d2f668eb6e007d6d4745c84",
+  "generatedForCommit": "7f187dd37399be3815c54b117792e928d065c0e3",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -244,7 +244,7 @@
     },
     {
       "path": "src/app/gallery/page.tsx",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 6041
     },
@@ -268,9 +268,9 @@
     },
     {
       "path": "src/app/reviews/page.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 7583
+      "size": 8558
     },
     {
       "path": "src/app/tours/page.tsx",
@@ -328,13 +328,13 @@
     },
     {
       "path": "src/components/gallery/GalleryGrid.tsx",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 5754
     },
     {
       "path": "src/components/gallery/GalleryLightbox.tsx",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 7692
     },
@@ -387,6 +387,12 @@
       "size": 6079
     },
     {
+      "path": "src/components/reviews/ReviewsFilterableList.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 15658
+    },
+    {
       "path": "src/components/tours/TourBookingCard.tsx",
       "reason": "needs_summary",
       "language": "typescript",
@@ -424,13 +430,13 @@
     },
     {
       "path": "src/data/mock-data.ts",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 21071
+      "size": 23520
     },
     {
       "path": "src/data/mock-gallery.ts",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 5422
     },
@@ -496,7 +502,7 @@
     },
     {
       "path": "src/types/index.ts",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 1779
     },
