@@ -17,6 +17,8 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
   const [customNote, setCustomNote] = useState("");
   const [showPreview, setShowPreview] = useState(false);
 
+  const today = new Date().toISOString().split("T")[0];
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -24,6 +26,13 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
       maximumFractionDigits: 0,
     }).format(price);
   };
+
+  const estimatedTotal =
+    tour.priceType === "per_person"
+      ? tour.price * guestCount
+      : guestCount > tour.maximumGuests
+      ? tour.price * Math.ceil(guestCount / tour.maximumGuests)
+      : tour.price;
 
   const messageOptions = {
     tourName: tour.name,
@@ -103,11 +112,12 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
         <div>
           <label htmlFor="tripDate" className="block text-xs font-semibold text-stone-700 mb-1 flex items-center gap-1">
             <Calendar className="h-3.5 w-3.5 text-stone-400" />
-            Rencana Tanggal Tur (Opsional):
+            Rencana Tanggal Tur:
           </label>
           <input
             id="tripDate"
             type="date"
+            min={today}
             value={tripDate}
             onChange={(e) => setTripDate(e.target.value)}
             className="w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-xs text-stone-800 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
@@ -116,19 +126,24 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
 
         {/* Guest Count */}
         <div>
-          <label htmlFor="guestCount" className="block text-xs font-semibold text-stone-700 mb-1 flex items-center gap-1">
-            <Users className="h-3.5 w-3.5 text-stone-400" />
-            Jumlah Peserta Tur:
-          </label>
+          <div className="flex items-center justify-between mb-1">
+            <label htmlFor="guestCount" className="text-xs font-semibold text-stone-700 flex items-center gap-1">
+              <Users className="h-3.5 w-3.5 text-stone-400" />
+              Jumlah Peserta Tur:
+            </label>
+            <span className="text-[11px] font-semibold text-blue-700">
+              Est. Total: {formatPrice(estimatedTotal)}
+            </span>
+          </div>
           <select
             id="guestCount"
             value={guestCount}
             onChange={(e) => setGuestCount(Number(e.target.value))}
             className="w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-xs text-stone-800 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
           >
-            {[1, 2, 3, 4, 5, 6].map((num) => (
+            {Array.from({ length: Math.max(tour.maximumGuests, 8) }, (_, i) => i + 1).map((num) => (
               <option key={num} value={num}>
-                {num} Orang {num > tour.maximumGuests ? `(Melebihi kuota ${tour.maximumGuests} tamu)` : ""}
+                {num} Tamu {num > tour.maximumGuests ? `(Perlu ${Math.ceil(num / tour.maximumGuests)} armada mobil)` : `(Kapasitas 1 mobil)`}
               </option>
             ))}
           </select>
