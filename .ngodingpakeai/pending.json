@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "01a31890f53311a9807a1cf8eb16c2371cc01014",
+  "generatedForCommit": "8332866d20d4da2db5566a3f0b86345f1ee7728a",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -178,9 +178,9 @@
     },
     {
       "path": "src/app/globals.css",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "css",
-      "size": 595
+      "size": 691
     },
     {
       "path": "src/app/layout.tsx",
@@ -202,7 +202,7 @@
     },
     {
       "path": "src/components/home/DestinationsSection.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 6325
     },
@@ -244,9 +244,9 @@
     },
     {
       "path": "src/components/layout/Navbar.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 5892
+      "size": 6079
     },
     {
       "path": "src/data/mock-data.ts",

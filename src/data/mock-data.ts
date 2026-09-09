@@ -34,7 +34,7 @@ export const mockTrustItems: TrustItem[] = [
   },
 ];
 
-export const mockFeaturedTours: Tour[] = [
+export const mockAllTours: Tour[] = [
   {
     id: "tour-1",
     slug: "ubud-cultural-heritage-waterfall",
@@ -43,7 +43,7 @@ export const mockFeaturedTours: Tour[] = [
     description:
       "Perjalanan privat sehari penuh mengunjungi jantung kebudayaan Bali di Ubud: Monkey Forest yang asri, Tegalalang Rice Terrace yang megah, pura tirta empul suci, dan ditutup dengan segarnya air terjun tersembunyi.",
     category: "culture",
-    area: "Ubud & Gianyar",
+    area: "Ubud",
     duration: "9 - 10 Jam",
     price: 650000,
     priceType: "per_group",
@@ -71,7 +71,7 @@ export const mockFeaturedTours: Tour[] = [
     description:
       "Menikmati pesona pantai selatan Bali di Pantai Melasti, dilanjutkan menuju tebing Pura Luhur Uluwatu setinggi 70 meter di atas Samudra Hindia saat matahari terbenam dengan pertunjukan legendaris Tari Kecak.",
     category: "adventure",
-    area: "Uluwatu & Jimbaran",
+    area: "Uluwatu",
     duration: "8 - 9 Jam",
     price: 700000,
     priceType: "per_group",
@@ -98,7 +98,7 @@ export const mockFeaturedTours: Tour[] = [
     description:
       "Jelajahi keindahan dataran tinggi Bali bagian tengah. Mengunjungi Pura Ulun Danu Beratan yang ikonik di tepi danau, Handara Gate yang legendaris, serta panorama spektakuler sawah terasering Jatiluwih yang diakui UNESCO.",
     category: "nature",
-    area: "Bedugul & Tabanan",
+    area: "Bedugul",
     duration: "10 Jam",
     price: 750000,
     priceType: "per_group",
@@ -117,7 +117,90 @@ export const mockFeaturedTours: Tour[] = [
     rating: 5.0,
     reviewCount: 39,
   },
+  {
+    id: "tour-4",
+    slug: "kintamani-volcano-batur-sunrise-jeep",
+    name: "Kintamani Sunrise Jeep 4WD & Pemandian Air Panas Batur",
+    tagline: "Sambut fajar spektakuler dari kaldera Gunung Batur dan relaksasi di kolam air panas alami.",
+    description:
+      "Petualangan fajar menyaksikan matahari terbit di atas lautan awan Gunung Batur menggunakan mobil jeep terbuka 4WD legendaris, disusul relaksasi di Toya Devasya Hot Spring dengan panorama danau Batur.",
+    category: "adventure",
+    area: "Kintamani",
+    duration: "9 Jam",
+    price: 850000,
+    priceType: "per_group",
+    currency: "IDR",
+    minimumGuests: 1,
+    maximumGuests: 4,
+    coverImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80",
+    ],
+    highlights: ["Sunrise Gunung Batur", "Black Lava Jeep Tour", "Pemandian Air Panas Alami", "Kopi Kintamani"],
+    includes: ["Mobil privat jemput hotel", "Driver & Guide Gede", "BBM & Parkir", "Air mineral botol"],
+    excludes: ["Sewa Jeep 4WD lokal", "Tiket Hot Spring", "Makan pagi/siang"],
+    featured: false,
+    isActive: true,
+    rating: 4.9,
+    reviewCount: 29,
+  },
+  {
+    id: "tour-5",
+    slug: "nusa-penida-west-coastal-escape",
+    name: "Nusa Penida West Coast: Kelingking & Broken Beach",
+    tagline: "Eksplorasi tebing dinosaurus Kelingking, Broken Beach, dan keajaiban Angel's Billabong.",
+    description:
+      "Tur sehari menyeberang pulau menuju surga Nusa Penida. Mengunjungi pantai T-Rex Kelingking yang spektakuler dari puncak tebing, kolam alami Angel's Billabong, dan Crystal Bay yang tenang.",
+    category: "nature",
+    area: "Nusa Penida",
+    duration: "11 Jam",
+    price: 950000,
+    priceType: "per_group",
+    currency: "IDR",
+    minimumGuests: 1,
+    maximumGuests: 5,
+    coverImage: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=800&auto=format&fit=crop&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=800&auto=format&fit=crop&q=80",
+    ],
+    highlights: ["Kelingking Beach T-Rex", "Broken Beach", "Angel's Billabong", "Crystal Bay Sunset"],
+    includes: ["Antar-jemput hotel Sanur", "Mobil privat di Nusa Penida", "Driver & Guide lokal", "BBM & Parkir"],
+    excludes: ["Tiket Fastboat PP Sanur-Penida", "Tiket retribusi pulau", "Makan siang"],
+    featured: false,
+    isActive: true,
+    rating: 4.8,
+    reviewCount: 34,
+  },
+  {
+    id: "tour-6",
+    slug: "lempuyang-gates-of-heaven-tirta-gangga",
+    name: "Lempuyang Gate of Heaven & Istana Air Tirta Gangga",
+    tagline: "Foto ikonik gerbang surga berlatar Gunung Agung dan ketenangan istana air kerajaan Karangasem.",
+    description:
+      "Jelajah Bali Timur yang sakral dan memukau. Mengabadikan momen magis di Pura Penataran Agung Lempuyang, berjalan di atas kolam teratai istana air Tirta Gangga, dan menjelajahi istana peristirahatan raja Taman Ujung.",
+    category: "heritage",
+    area: "Bali Timur",
+    duration: "10 - 11 Jam",
+    price: 800000,
+    priceType: "per_group",
+    currency: "IDR",
+    minimumGuests: 1,
+    maximumGuests: 5,
+    coverImage: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&auto=format&fit=crop&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&auto=format&fit=crop&q=80",
+    ],
+    highlights: ["Pura Lempuyang (Gate of Heaven)", "Tirta Gangga Water Palace", "Taman Ujung Sukasada", "Pantai Pasir Putih Virgin Beach"],
+    includes: ["Mobil privat ber-AC", "Driver & Guide Gede", "BBM & Parkir", "Air mineral botol"],
+    excludes: ["Tiket masuk pura & istana", "Sewa kain sarung", "Makan siang"],
+    featured: false,
+    isActive: true,
+    rating: 4.9,
+    reviewCount: 41,
+  },
 ];
+
+export const mockFeaturedTours: Tour[] = mockAllTours.filter((t) => t.featured);
 
 export const mockPopularDestinations: Destination[] = [
   {
