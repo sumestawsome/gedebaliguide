@@ -4,14 +4,22 @@ import React from "react";
 import Link from "next/link";
 import { Star, Quote, ArrowRight, CheckCircle2, HeartHandshake, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { Review } from "@/types";
 import { mockReviews } from "@/data/mock-data";
 
-export default function TestimonialsSection() {
-  const approvedFeaturedReviews = mockReviews.filter(
+interface TestimonialsSectionProps {
+  reviews?: Review[];
+}
+
+export default function TestimonialsSection({ reviews = mockReviews }: TestimonialsSectionProps) {
+  // Hanya ambil review yang sudah dimoderasi/disetujui dan ditandai featured
+  const approvedFeaturedReviews = (reviews || []).filter(
     (r) => r.isApproved && r.featured
   );
 
-  if (!approvedFeaturedReviews || approvedFeaturedReviews.length === 0) {
+  // Jika belum ada testimoni yang layak tampil, seksi ini disembunyikan sepenuhnya
+  // agar tidak menunjukkan konten kosong yang janggal bagi calon tamu.
+  if (approvedFeaturedReviews.length === 0) {
     return null;
   }
 
