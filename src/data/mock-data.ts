@@ -1,0 +1,194 @@
+import { GuideProfile, Tour, Destination, Review, TrustItem } from "@/types";
+
+export const mockGuideProfile: GuideProfile = {
+  name: "Gede Sudiartana",
+  title: "Private Tour Guide Berlisensi Resmi HPI Bali",
+  licenseNumber: "HPI-BALI-2015-8849",
+  experienceYears: 10,
+  phone: "+62 812-3456-7890",
+  whatsappNumber: "6281234567890",
+  email: "halo@gedebaliguide.com",
+  bio: "Om Swastyastu! Saya Gede, lahir dan besar di Bali. Lebih dari 10 tahun memandu wisatawan dari seluruh dunia menjelajahi keindahan budaya, pura suci, dan panorama eksotis Bali dengan kenyamanan dan cerita mendalam.",
+  avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80",
+  greeting: "Nikmati Bali Sejati Bersama Pemandu Lokal Pribadi Anda",
+};
+
+export const mockTrustItems: TrustItem[] = [
+  {
+    id: "experience",
+    title: "10+ Tahun Pengalaman",
+    description: "Memandu ribuan wisatawan mancanegara & domestik dengan rute terbaik tanpa terburu-buru.",
+    icon: "Award",
+  },
+  {
+    id: "license",
+    title: "Lisensi Resmi HPI Bali",
+    description: "Tersertifikasi Himpunan Pramuwisata Indonesia (HPI) dengan wawasan budaya autentik.",
+    icon: "ShieldCheck",
+  },
+  {
+    id: "vehicle",
+    title: "Armada Mobil Nyaman Ber-AC",
+    description: "Mobil MPV/SUV ber-AC dingin, bersih, luas, dan selalu diservis berkala demi kenyamanan Anda.",
+    icon: "Car",
+  },
+];
+
+export const mockFeaturedTours: Tour[] = [
+  {
+    id: "tour-1",
+    slug: "ubud-cultural-heritage-waterfall",
+    name: "Ubud Cultural, Rice Terrace & Secret Waterfall",
+    tagline: "Eksplorasi mahakarya seni, persawahan terasering Tegalalang, dan air terjun alami.",
+    description:
+      "Perjalanan privat sehari penuh mengunjungi jantung kebudayaan Bali di Ubud: Monkey Forest yang asri, Tegalalang Rice Terrace yang megah, pura tirta empul suci, dan ditutup dengan segarnya air terjun tersembunyi.",
+    category: "culture",
+    area: "Ubud & Gianyar",
+    duration: "9 - 10 Jam",
+    price: 650000,
+    priceType: "per_group",
+    currency: "IDR",
+    minimumGuests: 1,
+    maximumGuests: 5,
+    coverImage: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&auto=format&fit=crop&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?w=800&auto=format&fit=crop&q=80",
+    ],
+    highlights: ["Tegalalang Rice Terrace", "Tirta Empul Holy Water", "Air Terjun Tibumana", "Pura Tirta Empul"],
+    includes: ["Mobil privat ber-AC", "Driver & Guide Gede", "BBM & Parkir", "Air mineral botol"],
+    excludes: ["Tiket masuk objek wisata", "Makan siang", "Pengeluaran pribadi"],
+    featured: true,
+    isActive: true,
+    rating: 5.0,
+    reviewCount: 48,
+  },
+  {
+    id: "tour-2",
+    slug: "uluwatu-cliff-sunset-kecak-dance",
+    name: "Uluwatu Sunset Cliff, Melasti Beach & Tari Kecak",
+    tagline: "Pesona tebing kapur megah, pasir putih pantai selatan, dan magisnya tari Kecak api.",
+    description:
+      "Menikmati pesona pantai selatan Bali di Pantai Melasti, dilanjutkan menuju tebing Pura Luhur Uluwatu setinggi 70 meter di atas Samudra Hindia saat matahari terbenam dengan pertunjukan legendaris Tari Kecak.",
+    category: "adventure",
+    area: "Uluwatu & Jimbaran",
+    duration: "8 - 9 Jam",
+    price: 700000,
+    priceType: "per_group",
+    currency: "IDR",
+    minimumGuests: 1,
+    maximumGuests: 5,
+    coverImage: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=800&auto=format&fit=crop&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=800&auto=format&fit=crop&q=80",
+    ],
+    highlights: ["Tebing Uluwatu", "Pertunjukan Tari Kecak Api", "Pantai Melasti", "Makan malam Jimbaran Seafood (opsional)"],
+    includes: ["Mobil privat ber-AC", "Driver & Guide Gede", "BBM & Parkir", "Air mineral botol"],
+    excludes: ["Tiket masuk pantai & pura", "Tiket pertunjukan tari Kecak", "Makan malam"],
+    featured: true,
+    isActive: true,
+    rating: 4.9,
+    reviewCount: 62,
+  },
+  {
+    id: "tour-3",
+    slug: "bedugul-ulun-danu-jatiluwih-unesco",
+    name: "Bedugul Ulun Danu & Jatiluwih UNESCO Rice Terrace",
+    tagline: "Hawa sejuk pegunungan, pura terapung Danau Beratan, dan lanskap sawah warisan dunia.",
+    description:
+      "Jelajahi keindahan dataran tinggi Bali bagian tengah. Mengunjungi Pura Ulun Danu Beratan yang ikonik di tepi danau, Handara Gate yang legendaris, serta panorama spektakuler sawah terasering Jatiluwih yang diakui UNESCO.",
+    category: "nature",
+    area: "Bedugul & Tabanan",
+    duration: "10 Jam",
+    price: 750000,
+    priceType: "per_group",
+    currency: "IDR",
+    minimumGuests: 1,
+    maximumGuests: 5,
+    coverImage: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=800&auto=format&fit=crop&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=800&auto=format&fit=crop&q=80",
+    ],
+    highlights: ["Pura Ulun Danu Beratan", "Jatiluwih Rice Terrace (UNESCO)", "Gerbang Ikonik Handara", "Perkebunan Kopi Luwak"],
+    includes: ["Mobil privat ber-AC", "Driver & Guide Gede", "BBM & Parkir", "Air mineral botol"],
+    excludes: ["Tiket masuk objek wisata", "Makan siang", "Pengeluaran pribadi"],
+    featured: true,
+    isActive: true,
+    rating: 5.0,
+    reviewCount: 39,
+  },
+];
+
+export const mockPopularDestinations: Destination[] = [
+  {
+    id: "dest-1",
+    name: "Ubud & Gianyar",
+    area: "Bali Tengah",
+    description: "Pusat seni, budaya, hutan monyet, dan sawah bertingkat hijau asri.",
+    imageUrl: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&auto=format&fit=crop&q=80",
+    highlightSpot: "Tegalalang & Monkey Forest",
+  },
+  {
+    id: "dest-2",
+    name: "Uluwatu & Jimbaran",
+    area: "Bali Selatan",
+    description: "Tebing samudra megah, pantai pasir putih, sunset dan tari kecak api.",
+    imageUrl: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=600&auto=format&fit=crop&q=80",
+    highlightSpot: "Pura Luhur Uluwatu",
+  },
+  {
+    id: "dest-3",
+    name: "Bedugul & Jatiluwih",
+    area: "Bali Utara / Tabanan",
+    description: "Kesejukan danau pegunungan, pura terapung, dan terasering sawah terluas.",
+    imageUrl: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=600&auto=format&fit=crop&q=80",
+    highlightSpot: "Danau Beratan & Jatiluwih",
+  },
+  {
+    id: "dest-4",
+    name: "Kintamani & Batur",
+    area: "Bangli",
+    description: "Pemandangan kaldera gunung berapi dan danau Batur dengan udara dingin segar.",
+    imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80",
+    highlightSpot: "Gunung & Danau Batur",
+  },
+];
+
+export const mockReviews: Review[] = [
+  {
+    id: "rev-1",
+    tourName: "Ubud Cultural Heritage",
+    authorName: "Sarah & Mark",
+    authorOrigin: "Melbourne, Australia",
+    rating: 5,
+    content:
+      "Gede adalah tour guide terbaik selama kami berlibur di Bali! Ramah, pengetahuannya tentang tradisi Hindu Bali sangat luar biasa, dan mobilnya sangat bersih & dingin. Tidak ada paksaan belanja sama sekali, benar-benar rute privat sesuai ritme kami.",
+    dateOfTrip: "Agustus 2025",
+    isApproved: true,
+    featured: true,
+  },
+  {
+    id: "rev-2",
+    tourName: "Uluwatu Sunset & Kecak Dance",
+    authorName: "Keluarga Budi Santoso",
+    authorOrigin: "Jakarta, Indonesia",
+    rating: 5,
+    content:
+      "Sangat puas menyewa tur dengan Bli Gede. Bawa orang tua dan anak-anak jadi tenang karena gaya mengemudinya aman dan sabar. Beliau juga fotografer yang handal, banyak foto keluarga bagus yang diabadikan!",
+    dateOfTrip: "Desember 2025",
+    isApproved: true,
+    featured: true,
+  },
+  {
+    id: "rev-3",
+    tourName: "Bedugul & Jatiluwih",
+    authorName: "Jean-Paul",
+    authorOrigin: "Paris, France",
+    rating: 5,
+    content:
+      "Exceptional private experience with Gede. He showed us hidden spots away from crowded tourists and explained Balinese philosophy with great English. Booking directly via WhatsApp was seamless!",
+    dateOfTrip: "Januari 2026",
+    isApproved: true,
+    featured: true,
+  },
+];
