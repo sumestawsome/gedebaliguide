@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Sparkles, MessageCircle, Phone, Mail, MapPin, Clock, ShieldCheck, Send } from "lucide-react";
 import ContactInfoSection from "@/components/contact/ContactInfoSection";
+import ContactSocialCta from "@/components/contact/ContactSocialCta";
 import { mockGuideProfile } from "@/data/mock-data";
 import { getGeneralConsultationUrl } from "@/lib/whatsapp";
 
@@ -196,6 +197,9 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
+
+          {/* WhatsApp Direct Funnel & Social Media Channels */}
+          <ContactSocialCta />
         </section>
       </main>
 
