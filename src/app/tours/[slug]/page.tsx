@@ -139,6 +139,61 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
                 <p className="text-base sm:text-lg text-stone-600 leading-relaxed font-sans">
                   {tour.tagline}
                 </p>
+
+                {/* Key Specifications Grid: Harga per-satuan & Kuota Tamu */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-5 border-y border-stone-200/80 bg-stone-50/70 rounded-2xl px-4 sm:px-6">
+                  <div className="space-y-0.5">
+                    <span className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider">
+                      Biaya Sewa
+                    </span>
+                    <p className="font-serif text-base sm:text-lg font-bold text-stone-900">
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: tour.currency || "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(tour.price)}
+                    </p>
+                    <span className="text-[11px] text-stone-500 font-medium">
+                      {tour.priceType === "per_person" ? "per orang" : "per mobil (rombongan)"}
+                    </span>
+                  </div>
+
+                  <div className="space-y-0.5">
+                    <span className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider">
+                      Kuota Tamu
+                    </span>
+                    <p className="font-serif text-base sm:text-lg font-bold text-stone-900">
+                      {tour.minimumGuests} – {tour.maximumGuests} Tamu
+                    </p>
+                    <span className="text-[11px] text-stone-500">
+                      Min. {tour.minimumGuests} / Maks. {tour.maximumGuests} orang
+                    </span>
+                  </div>
+
+                  <div className="space-y-0.5">
+                    <span className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider">
+                      Durasi Tur
+                    </span>
+                    <p className="font-serif text-base sm:text-lg font-bold text-stone-900">
+                      {tour.duration}
+                    </p>
+                    <span className="text-[11px] text-stone-500">
+                      Jadwal santai
+                    </span>
+                  </div>
+
+                  <div className="space-y-0.5">
+                    <span className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider">
+                      Tipe Layanan
+                    </span>
+                    <p className="font-serif text-base sm:text-lg font-bold text-blue-700">
+                      100% Privat
+                    </p>
+                    <span className="text-[11px] text-emerald-700 font-medium">
+                      Khusus grup Anda
+                    </span>
+                  </div>
+                </div>
               </div>
 
               {/* Cover Image */}
