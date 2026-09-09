@@ -173,7 +173,7 @@ export default function TourCard({ tour, priority = false }: TourCardProps) {
             {/* View Detail Button */}
             <Link
               href={`/tours/${tour.slug}`}
-              className="inline-flex items-center gap-1 rounded-xl bg-stone-900 px-3 py-2.5 text-xs font-semibold text-white hover:bg-blue-700 transition-all"
+              className="inline-flex items-center justify-center gap-1 rounded-xl bg-stone-900 px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs font-semibold text-white hover:bg-blue-700 active:scale-95 transition-all shrink-0"
             >
               <span>Detail</span>
               <ArrowRight className="h-3 w-3" />
