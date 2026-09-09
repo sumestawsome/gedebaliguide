@@ -35,7 +35,7 @@ export default function DestinationsSection() {
         {/* Grid Destinations */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {mockPopularDestinations.map((dest, index) => {
-            const targetUrl = dest.tourSlug ? `/tours/${dest.tourSlug}` : `/tours`;
+            const targetUrl = dest.tourSlug ? `/tours/${dest.tourSlug}` : `/tours?area=${encodeURIComponent(dest.area)}`;
             const waDestUrl = buildWhatsAppUrl({
               customNote: `Saya tertarik mengunjungi destinasi ${dest.name} (${dest.area}). Spot yang ingin dikunjungi: ${dest.highlightSpot}.`,
               source: "custom_itinerary",
