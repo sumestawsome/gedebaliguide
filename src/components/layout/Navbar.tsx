@@ -82,66 +82,66 @@ export default function Navbar() {
 
       {/* Mobile nav menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-stone-200 bg-[#fafaf9] px-4 pt-2 pb-6 space-y-3">
-          <div className="flex flex-col space-y-2 text-base font-medium text-stone-700">
+        <div className="md:hidden border-b border-stone-200 bg-[#fafaf9] px-4 pt-3 pb-6 space-y-3">
+          <div className="flex flex-col space-y-1 text-base font-medium text-stone-800">
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="rounded-md px-3 py-2 text-stone-900 bg-stone-200/50"
+              className="rounded-xl px-4 py-3 text-stone-900 bg-stone-200/60 font-semibold"
             >
               Beranda
             </Link>
             <Link
               href="/tours"
               onClick={() => setMobileMenuOpen(false)}
-              className="rounded-md px-3 py-2 hover:bg-stone-100"
+              className="rounded-xl px-4 py-3 hover:bg-stone-100 transition-colors"
             >
               Katalog Tur
             </Link>
             <Link
               href="/about"
               onClick={() => setMobileMenuOpen(false)}
-              className="rounded-md px-3 py-2 hover:bg-stone-100"
+              className="rounded-xl px-4 py-3 hover:bg-stone-100 transition-colors"
             >
               Tentang Gede
             </Link>
             <Link
               href="/gallery"
               onClick={() => setMobileMenuOpen(false)}
-              className="rounded-md px-3 py-2 hover:bg-stone-100"
+              className="rounded-xl px-4 py-3 hover:bg-stone-100 transition-colors"
             >
-              Galeri
+              Galeri Dokumentasi
             </Link>
             <Link
               href="/reviews"
               onClick={() => setMobileMenuOpen(false)}
-              className="rounded-md px-3 py-2 hover:bg-stone-100"
+              className="rounded-xl px-4 py-3 hover:bg-stone-100 transition-colors"
             >
               Ulasan Tamu
             </Link>
             <Link
               href="/faq"
               onClick={() => setMobileMenuOpen(false)}
-              className="rounded-md px-3 py-2 hover:bg-stone-100"
+              className="rounded-xl px-4 py-3 hover:bg-stone-100 transition-colors"
             >
-              FAQ
+              Tanya Jawab (FAQ)
             </Link>
             <Link
               href="/contact"
               onClick={() => setMobileMenuOpen(false)}
-              className="rounded-md px-3 py-2 hover:bg-stone-100"
+              className="rounded-xl px-4 py-3 hover:bg-stone-100 transition-colors"
             >
-              Kontak
+              Hubungi Gede
             </Link>
           </div>
-          <div className="pt-2 border-t border-stone-200">
+          <div className="pt-3 border-t border-stone-200">
             <a
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3.5 text-base font-bold text-white shadow-md hover:bg-emerald-700 active:scale-[0.98] transition-all"
             >
-              <MessageCircle className="h-4 w-4" />
+              <MessageCircle className="h-5 w-5" />
               <span>Tanya via WhatsApp Langsung</span>
             </a>
           </div>
