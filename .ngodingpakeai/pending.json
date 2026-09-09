@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "3c5591ac99d17c32c0c9a38157bbe2098afe35fa",
+  "generatedForCommit": "ff6f51458908cf14e8fa323ef848f2f1d3449e09",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -154,15 +154,15 @@
     },
     {
       "path": "package-lock.json",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "json",
-      "size": 235599
+      "size": 237007
     },
     {
       "path": "package.json",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "json",
-      "size": 568
+      "size": 600
     },
     {
       "path": "postcss.config.mjs",
@@ -196,7 +196,7 @@
     },
     {
       "path": "src/components/common/FloatingWhatsApp.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 2005
     },
@@ -208,7 +208,7 @@
     },
     {
       "path": "src/components/home/FeaturedToursSection.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 6339
     },
@@ -216,7 +216,7 @@
       "path": "src/components/home/HeroSection.tsx",
       "reason": "changed",
       "language": "typescript",
-      "size": 7259
+      "size": 10508
     },
     {
       "path": "src/components/home/TestimonialsSection.tsx",
@@ -232,19 +232,19 @@
     },
     {
       "path": "src/components/home/WhatsAppCtaSection.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 2964
     },
     {
       "path": "src/components/layout/Footer.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 4940
     },
     {
       "path": "src/components/layout/Navbar.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 5892
     },
@@ -256,7 +256,7 @@
     },
     {
       "path": "src/lib/whatsapp.ts",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 3220
     },
