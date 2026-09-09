@@ -6,10 +6,19 @@ import Link from "next/link";
 import { MapPin, ArrowUpRight, MessageCircle, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { mockPopularDestinations } from "@/data/mock-data";
+import { Destination } from "@/types";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
-export default function DestinationsSection() {
-  if (!mockPopularDestinations || mockPopularDestinations.length === 0) {
+interface DestinationsSectionProps {
+  initialDestinations?: Destination[];
+}
+
+export default function DestinationsSection({ initialDestinations }: DestinationsSectionProps = {}) {
+  const destinations = initialDestinations && initialDestinations.length > 0
+    ? initialDestinations
+    : mockPopularDestinations;
+
+  if (!destinations || destinations.length === 0) {
     return null;
   }
 
@@ -34,7 +43,7 @@ export default function DestinationsSection() {
 
         {/* Grid Destinations */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {mockPopularDestinations.map((dest, index) => {
+          {destinations.map((dest, index) => {
             const targetUrl = dest.tourSlug ? `/tours/${dest.tourSlug}` : `/tours?area=${encodeURIComponent(dest.area)}`;
             const waDestUrl = buildWhatsAppUrl({
               customNote: `Saya tertarik mengunjungi destinasi ${dest.name} (${dest.area}). Spot yang ingin dikunjungi: ${dest.highlightSpot}.`,

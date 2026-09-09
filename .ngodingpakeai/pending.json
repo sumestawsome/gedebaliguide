@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "fa9762a333a217c67eb955f3d8050bfef325bc69",
+  "generatedForCommit": "1ae857210f863db3c9935b91a92fda568f74cf31",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -43,6 +43,18 @@
       "reason": "needs_summary",
       "language": "javascript",
       "size": 465
+    },
+    {
+      "path": "firestore.indexes.json",
+      "reason": "needs_summary",
+      "language": "json",
+      "size": 1126
+    },
+    {
+      "path": "firestore.rules",
+      "reason": "needs_summary",
+      "language": null,
+      "size": 1138
     },
     {
       "path": "gede-bali-guide (1)/features/01-beranda.md",
@@ -177,6 +189,48 @@
       "size": 1450
     },
     {
+      "path": "src/app/api/home/route.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 690
+    },
+    {
+      "path": "src/app/api/reviews/route.ts",
+      "reason": "new",
+      "language": "typescript",
+      "size": 1394
+    },
+    {
+      "path": "src/app/api/seed/tours/route.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 772
+    },
+    {
+      "path": "src/app/api/tours/featured/route.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 910
+    },
+    {
+      "path": "src/app/api/tours/route.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 1164
+    },
+    {
+      "path": "src/app/api/tours/[slug]/route.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 1074
+    },
+    {
+      "path": "src/app/api/whatsapp-config/route.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 1264
+    },
+    {
       "path": "src/app/globals.css",
       "reason": "needs_summary",
       "language": "css",
@@ -186,43 +240,49 @@
       "path": "src/app/layout.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 975
+      "size": 1073
     },
     {
       "path": "src/app/page.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 1028
+      "size": 4573
+    },
+    {
+      "path": "src/app/reviews/page.tsx",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 7583
     },
     {
       "path": "src/app/tours/page.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 3282
+      "size": 3186
     },
     {
       "path": "src/app/tours/[slug]/page.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
-      "size": 10490
+      "size": 13939
     },
     {
       "path": "src/components/common/FloatingWhatsApp.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 4008
+      "size": 4177
     },
     {
       "path": "src/components/home/DestinationsSection.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 6325
+      "size": 6363
     },
     {
       "path": "src/components/home/FeaturedToursSection.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 9829
+      "size": 10127
     },
     {
       "path": "src/components/home/HeroSection.tsx",
@@ -264,13 +324,13 @@
       "path": "src/components/tours/TourBookingCard.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 5558
+      "size": 9681
     },
     {
       "path": "src/components/tours/TourCard.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 6856
+      "size": 6936
     },
     {
       "path": "src/components/tours/TourInclusions.tsx",
@@ -303,16 +363,64 @@
       "size": 21071
     },
     {
+      "path": "src/lib/firestore/collections.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 2843
+    },
+    {
+      "path": "src/lib/firestore/seed-tours.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 1941
+    },
+    {
+      "path": "src/lib/schemas/home-schema.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 1779
+    },
+    {
+      "path": "src/lib/schemas/tour-schema.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 4253
+    },
+    {
+      "path": "src/lib/services/home-service.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 2912
+    },
+    {
+      "path": "src/lib/services/review-service.ts",
+      "reason": "new",
+      "language": "typescript",
+      "size": 704
+    },
+    {
+      "path": "src/lib/services/tour-service.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 2052
+    },
+    {
+      "path": "src/lib/services/whatsapp-config-service.ts",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 2386
+    },
+    {
       "path": "src/lib/whatsapp.ts",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 3220
+      "size": 3928
     },
     {
       "path": "src/types/index.ts",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 1466
+      "size": 1554
     },
     {
       "path": "tsconfig.json",
