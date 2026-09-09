@@ -7,12 +7,15 @@ import {
 } from "@/data/mock-data";
 import { HomeContentSchema } from "@/types";
 import { normalizePhoneNumber } from "@/lib/whatsapp";
+import { getWhatsAppConfig } from "@/lib/services/whatsapp-config-service";
 
 /**
  * Service to aggregate and return unified home content.
  * Follows the HomeContentSchema structure and provides safe fallback defaults.
  */
 export async function getUnifiedHomeContent(): Promise<HomeContentSchema> {
+  const whatsAppConfig = await getWhatsAppConfig();
+
   const activeFeaturedTours = mockFeaturedTours.filter(
     (t) => t.isActive && t.featured
   );
@@ -48,16 +51,7 @@ export async function getUnifiedHomeContent(): Promise<HomeContentSchema> {
       tag: idx === 0 ? "Berpengalaman" : idx === 1 ? "Terverifikasi HPI" : "Standar VIP",
       order: idx + 1,
     })),
-    whatsApp: {
-      phoneNumber: mockGuideProfile.whatsappNumber,
-      normalizedNumber: normalizePhoneNumber(mockGuideProfile.whatsappNumber),
-      defaultGreeting: "Halo Bli Gede, saya ingin konsultasi seputar tur privat di Bali.",
-      serviceHours: "07:00 - 22:00 WITA",
-      responseTimeText: "Biasanya membalas dalam beberapa menit",
-      consultationButtonText: "Konsultasi Tur via WhatsApp",
-      directBookingNotes: "Tanpa kartu kredit • Tanpa biaya perantara marketplace",
-      isActive: true,
-    },
+    whatsApp: whatsAppConfig,
     directBooking: {
       headline: "Ingin Rute Khusus Sesuai Selera Anda?",
       subheadline:
