@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { Check, X, ShieldCheck, Info } from "lucide-react";
+import { Check, X, ShieldCheck, Info, Car, Fuel, MapPin, Sparkles, AlertCircle } from "lucide-react";
 
 interface TourInclusionsProps {
   includes: string[];
@@ -9,19 +11,23 @@ interface TourInclusionsProps {
 export default function TourInclusions({ includes, excludes }: TourInclusionsProps) {
   return (
     <div className="space-y-6">
-      <div className="border-b border-stone-200 pb-3">
+      <div className="border-b border-stone-200/80 pb-4">
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-0.5 text-xs font-bold uppercase tracking-wider text-emerald-800 mb-2">
+          <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+          <span>Transparansi Biaya 100%</span>
+        </div>
         <h3 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900">
           Fasilitas & Ketentuan Layanan
         </h3>
-        <p className="text-xs sm:text-sm text-stone-600 mt-1">
-          Transparan dan jelas tanpa biaya tersembunyi. Anda mengetahui pasti apa saja yang sudah ditanggung dan apa yang perlu disiapkan sendiri.
+        <p className="text-xs sm:text-sm text-stone-600 mt-1 leading-relaxed font-sans">
+          Semua komponen harga kami cantumkan secara transparan tanpa biaya tersembunyi. Anda mengetahui pasti apa saja yang sudah ditanggung dan apa yang disiapkan mandiri.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Kolom 1: Sudah Termasuk */}
-        <div className="rounded-3xl border border-emerald-200/90 bg-emerald-50/50 p-6 sm:p-7 space-y-4 shadow-xs">
-          <div className="flex items-center gap-2.5 text-emerald-900 font-serif font-bold text-lg sm:text-xl">
+        {/* Kolom 1: Sudah Termasuk (Inclusions) */}
+        <div className="rounded-3xl border border-emerald-200/90 bg-emerald-50/40 p-5 sm:p-7 space-y-4 shadow-xs">
+          <div className="flex items-center gap-2.5 text-emerald-950 font-serif font-bold text-lg sm:text-xl border-b border-emerald-200/60 pb-3">
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-600 text-white shadow-xs">
               <Check className="h-4 w-4" />
             </div>
@@ -44,9 +50,9 @@ export default function TourInclusions({ includes, excludes }: TourInclusionsPro
           </ul>
         </div>
 
-        {/* Kolom 2: Belum Termasuk */}
-        <div className="rounded-3xl border border-stone-200/90 bg-stone-50/70 p-6 sm:p-7 space-y-4 shadow-xs">
-          <div className="flex items-center gap-2.5 text-stone-900 font-serif font-bold text-lg sm:text-xl">
+        {/* Kolom 2: Belum Termasuk (Exclusions) */}
+        <div className="rounded-3xl border border-stone-200/90 bg-stone-50/70 p-5 sm:p-7 space-y-4 shadow-xs">
+          <div className="flex items-center gap-2.5 text-stone-900 font-serif font-bold text-lg sm:text-xl border-b border-stone-200/60 pb-3">
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-300 text-stone-700 shadow-xs">
               <X className="h-4 w-4" />
             </div>
@@ -70,12 +76,15 @@ export default function TourInclusions({ includes, excludes }: TourInclusionsPro
         </div>
       </div>
 
-      {/* Helpful note */}
-      <div className="flex items-start gap-3 rounded-2xl bg-blue-50/80 border border-blue-200/70 p-4 text-xs sm:text-sm text-blue-900">
+      {/* Practical Advice Note */}
+      <div className="flex items-start gap-3 rounded-2xl bg-blue-50/80 border border-blue-200/70 p-4 sm:p-4.5 text-xs sm:text-sm text-blue-950">
         <Info className="h-5 w-5 text-blue-700 shrink-0 mt-0.5" />
-        <p className="leading-relaxed">
-          <strong>Catatan praktis:</strong> Bli Gede dapat membantu Anda membeli tiket masuk objek wisata langsung di lokasi tanpa antre panjang, serta merekomendasikan tempat makan siang halal atau sesuai preferensi kuliner keluarga Anda.
-        </p>
+        <div className="space-y-0.5">
+          <p className="font-bold">Kemudahan Pembelian Tiket & Kuliner:</p>
+          <p className="leading-relaxed text-blue-900">
+            Bli Gede dapat membantu Anda membeli tiket masuk objek wisata langsung di loket resmi tanpa biaya calo dan tanpa antre lama, serta merekomendasikan kuliner halal atau ramah anak sesuai selera rombongan.
+          </p>
+        </div>
       </div>
     </div>
   );
