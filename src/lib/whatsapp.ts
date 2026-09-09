@@ -6,7 +6,21 @@ export interface WhatsAppMessageOptions {
   guestCount?: number;
   tripDate?: string;
   customNote?: string;
-  source?: "hero" | "floating" | "navbar" | "tour_card" | "tour_detail" | "custom_itinerary" | "footer";
+  source?:
+    | "hero"
+    | "floating"
+    | "navbar"
+    | "tour_card"
+    | "tour_detail"
+    | "custom_itinerary"
+    | "footer"
+    | "about_hero"
+    | "about_cta"
+    | "about"
+    | "reviews"
+    | "gallery"
+    | "faq"
+    | "contact";
   phoneNumber?: string;
 }
 

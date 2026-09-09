@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "327dd4f6f30b3278a7d830fb82943f2a618231fc",
+  "generatedForCommit": "eaf3a2858604a7d14dae3c2e8ffe656a530b5cc8",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -190,7 +190,7 @@
     },
     {
       "path": "src/app/api/destinations/route.ts",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 1056
     },
@@ -250,9 +250,9 @@
     },
     {
       "path": "src/app/page.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 4573
+      "size": 5104
     },
     {
       "path": "src/app/reviews/page.tsx",
@@ -280,7 +280,7 @@
     },
     {
       "path": "src/components/home/DestinationsSection.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 6637
     },
@@ -292,9 +292,9 @@
     },
     {
       "path": "src/components/home/HeroSection.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 10508
+      "size": 10676
     },
     {
       "path": "src/components/home/TestimonialsSection.tsx",
@@ -304,15 +304,15 @@
     },
     {
       "path": "src/components/home/TrustBar.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 3342
+      "size": 3564
     },
     {
       "path": "src/components/home/WhatsAppCtaSection.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 4382
+      "size": 5193
     },
     {
       "path": "src/components/layout/Footer.tsx",
@@ -394,15 +394,15 @@
     },
     {
       "path": "src/lib/services/destination-service.ts",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 1090
     },
     {
       "path": "src/lib/services/home-service.ts",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 2912
+      "size": 2969
     },
     {
       "path": "src/lib/services/review-service.ts",
