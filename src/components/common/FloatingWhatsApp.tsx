@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
-import { mockGuideProfile } from "@/data/mock-data";
+import { getGeneralConsultationUrl } from "@/lib/whatsapp";
 
 export default function FloatingWhatsApp() {
   const [showTooltip, setShowTooltip] = useState(true);
+  const waUrl = getGeneralConsultationUrl("floating");
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex items-end gap-3">
@@ -28,7 +29,7 @@ export default function FloatingWhatsApp() {
 
       {/* Floating Action Button */}
       <a
-        href={`https://wa.me/${mockGuideProfile.whatsappNumber}?text=Halo%20Bli%20Gede,%20saya%20tertarik%20untuk%20konsultasi%20tur%20privat%20di%20Bali.`}
+        href={waUrl}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat WhatsApp dengan Gede"

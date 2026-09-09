@@ -3,8 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { MessageCircle, ShieldCheck, Compass, Star, Sparkles } from "lucide-react";
 import { mockGuideProfile } from "@/data/mock-data";
+import { getGeneralConsultationUrl } from "@/lib/whatsapp";
 
 export default function HeroSection() {
+  const waUrl = getGeneralConsultationUrl("hero");
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-[#fafaf9] via-stone-100/60 to-[#fafaf9] py-12 md:py-20 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -38,7 +41,7 @@ export default function HeroSection() {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
               <a
-                href={`https://wa.me/${mockGuideProfile.whatsappNumber}?text=Halo%20Bli%20Gede,%20saya%20tertarik%20untuk%20konsultasi%20tur%20privat%20di%20Bali.`}
+                href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-emerald-600 px-6 py-3.5 text-base font-semibold text-white shadow-md hover:bg-emerald-700 hover:shadow-lg transition-all active:scale-[0.98]"

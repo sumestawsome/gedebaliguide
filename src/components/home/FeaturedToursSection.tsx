@@ -2,7 +2,8 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Clock, MapPin, Users, Star, ArrowRight, MessageCircle } from "lucide-react";
-import { mockFeaturedTours, mockGuideProfile } from "@/data/mock-data";
+import { mockFeaturedTours } from "@/data/mock-data";
+import { getTourInquiryUrl } from "@/lib/whatsapp";
 
 export default function FeaturedToursSection() {
   if (!mockFeaturedTours || mockFeaturedTours.length === 0) {
@@ -117,7 +118,7 @@ export default function FeaturedToursSection() {
 
                   <div className="flex items-center gap-2">
                     <a
-                      href={`https://wa.me/${mockGuideProfile.whatsappNumber}?text=Halo%20Bli%20Gede,%20saya%20tertarik%20dengan%20tur%20${encodeURIComponent(tour.name)}.`}
+                      href={getTourInquiryUrl(tour.name)}
                       target="_blank"
                       rel="noopener noreferrer"
                       title="Pesan via WhatsApp"

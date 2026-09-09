@@ -4,9 +4,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { MessageCircle, Menu, X, Phone, ShieldCheck } from "lucide-react";
 import { mockGuideProfile } from "@/data/mock-data";
+import { getGeneralConsultationUrl } from "@/lib/whatsapp";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const waUrl = getGeneralConsultationUrl("navbar");
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-stone-200/80 bg-[#fafaf9]/90 backdrop-blur-md transition-all">
@@ -54,7 +56,7 @@ export default function Navbar() {
         {/* WhatsApp CTA */}
         <div className="hidden sm:flex items-center gap-3">
           <a
-            href={`https://wa.me/${mockGuideProfile.whatsappNumber}?text=Halo%20Bli%20Gede,%20saya%20tertarik%20untuk%20konsultasi%20tur%20privat%20di%20Bali.`}
+            href={waUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 transition-all active:scale-95"
@@ -134,7 +136,7 @@ export default function Navbar() {
           </div>
           <div className="pt-2 border-t border-stone-200">
             <a
-              href={`https://wa.me/${mockGuideProfile.whatsappNumber}?text=Halo%20Bli%20Gede,%20saya%20tertarik%20untuk%20konsultasi%20tur%20privat%20di%20Bali.`}
+              href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"

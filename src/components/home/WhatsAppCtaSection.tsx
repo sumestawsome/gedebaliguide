@@ -1,8 +1,9 @@
 import React from "react";
 import { MessageCircle, ShieldCheck, CheckCircle2 } from "lucide-react";
-import { mockGuideProfile } from "@/data/mock-data";
+import { getCustomItineraryUrl } from "@/lib/whatsapp";
 
 export default function WhatsAppCtaSection() {
+  const waUrl = getCustomItineraryUrl();
   return (
     <section className="bg-stone-900 py-16 md:py-20 relative overflow-hidden">
       {/* Decorative background gradients */}
@@ -42,7 +43,7 @@ export default function WhatsAppCtaSection() {
         {/* Big WhatsApp Button */}
         <div className="pt-4">
           <a
-            href={`https://wa.me/${mockGuideProfile.whatsappNumber}?text=Halo%20Bli%20Gede,%20saya%20ingin%20konsultasi%20jadwal%20dan%20rencana%20liburan%20privat%20ke%20Bali.`}
+            href={waUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 rounded-full bg-emerald-600 px-8 py-4 text-base sm:text-lg font-bold text-white shadow-xl hover:bg-emerald-500 hover:shadow-2xl transition-all transform hover:-translate-y-0.5 active:translate-y-0"
