@@ -76,4 +76,5 @@ export interface Review {
 }
 
 export * from "@/lib/schemas/home-schema";
+export * from "@/lib/schemas/tour-schema";
 
