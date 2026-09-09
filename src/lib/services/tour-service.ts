@@ -51,3 +51,24 @@ export async function getActiveTourBySlug(slug: string): Promise<Tour | null> {
   const tour = mockAllTours.find((t) => t.slug === slug && t.isActive);
   return tour || null;
 }
+
+/**
+ * Server function to retrieve active featured tours for Home page.
+ * Filter: isActive === true && featured === true
+ * Sort: rating descending, reviewCount descending
+ */
+export async function getActiveFeaturedTours(limitCount: number = 3): Promise<Tour[]> {
+  const featuredTours = mockAllTours.filter(
+    (tour) => tour.isActive && tour.featured
+  );
+
+  const sorted = [...featuredTours].sort((a, b) => {
+    if (b.rating !== a.rating) {
+      return b.rating - a.rating;
+    }
+    return b.reviewCount - a.reviewCount;
+  });
+
+  return limitCount > 0 ? sorted.slice(0, limitCount) : sorted;
+}
+

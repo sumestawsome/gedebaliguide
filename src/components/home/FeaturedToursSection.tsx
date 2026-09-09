@@ -5,11 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { Clock, Users, Star, ArrowRight, MessageCircle, Sparkles, Check, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
+import { Tour } from "@/types";
 import { mockFeaturedTours } from "@/data/mock-data";
 import { getTourInquiryUrl } from "@/lib/whatsapp";
 
-export default function FeaturedToursSection() {
-  const activeFeaturedTours = mockFeaturedTours.filter(
+interface FeaturedToursSectionProps {
+  initialTours?: Tour[];
+}
+
+export default function FeaturedToursSection({ initialTours }: FeaturedToursSectionProps) {
+  const toursList = initialTours || mockFeaturedTours;
+  const activeFeaturedTours = toursList.filter(
     (tour) => tour.isActive && tour.featured
   );
 
