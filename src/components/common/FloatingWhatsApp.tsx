@@ -2,30 +2,76 @@
 
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { MessageCircle, X, Sparkles } from "lucide-react";
+import { MessageCircle, X, Sparkles, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getGeneralConsultationUrl } from "@/lib/whatsapp";
 
 export default function FloatingWhatsApp() {
   const pathname = usePathname();
-  const [showTooltip, setShowTooltip] = useState(true);
-  const [hasScrolled, setHasScrolled] = useState(false);
-  const waUrl = getGeneralConsultationUrl("floating");
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 150) {
-        setHasScrolled(true);
+    setMounted(true);
+    // Check if user previously closed the tooltip during this session
+    try {
+      const isDismissed = sessionStorage.getItem("wa_tooltip_dismissed");
+      if (!isDismissed) {
+        // Show tooltip after a slight gentle delay
+        const timer = setTimeout(() => {
+          setShowTooltip(true);
+        }, 1500);
+        return () => clearTimeout(timer);
       }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    } catch {
+      setShowTooltip(true);
+    }
   }, []);
+
+  const handleDismissTooltip = () => {
+    setShowTooltip(false);
+    try {
+      sessionStorage.setItem("wa_tooltip_dismissed", "true");
+    } catch {
+      // ignore storage errors
+    }
+  };
 
   // Hide on admin routes
   if (pathname?.startsWith("/admin")) {
     return null;
   }
+
+  // Contextual helper copy based on active route
+  const getContextualCopy = () => {
+    if (pathname?.startsWith("/tours/")) {
+      return {
+        title: "Ingin Tanya Tur Ini?",
+        desc: "Konsultasikan rute, jadwal, atau custom request langsung dengan Bli Gede.",
+      };
+    }
+    if (pathname === "/tours") {
+      return {
+        title: "Bingung Pilih Rute?",
+        desc: "Chat Bli Gede untuk rekomendasi tur privat sesuai minat Anda.",
+      };
+    }
+    if (pathname === "/contact" || pathname === "/faq") {
+      return {
+        title: "Respon Lebih Cepat",
+        desc: "Butuh jawaban segera? Bli Gede online dan siap membalas di WhatsApp.",
+      };
+    }
+    return {
+      title: "Konsultasi Tur Gratis",
+      desc: "Punya rencana liburan ke Bali? Chat langsung dengan Bli Gede ya!",
+    };
+  };
+
+  const copy = getContextualCopy();
+  const waUrl = getGeneralConsultationUrl("floating");
+
+  if (!mounted) return null;
 
   return (
     <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2.5">
@@ -33,34 +79,38 @@ export default function FloatingWhatsApp() {
       <AnimatePresence>
         {showTooltip && (
           <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.92 }}
+            initial={{ opacity: 0, y: 12, scale: 0.92 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.92 }}
+            exit={{ opacity: 0, y: 12, scale: 0.92 }}
             transition={{ duration: 0.25 }}
             className="relative max-w-xs rounded-2xl bg-white p-3.5 shadow-2xl border border-stone-200 text-stone-800"
           >
             {/* Close button */}
             <button
               type="button"
-              onClick={() => setShowTooltip(false)}
-              className="absolute -top-2 -left-2 flex h-5 w-5 items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 border border-stone-200 transition-colors shadow-xs"
+              onClick={handleDismissTooltip}
+              className="absolute -top-2 -left-2 flex h-5 w-5 items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 border border-stone-200 transition-colors shadow-xs cursor-pointer"
               aria-label="Tutup pesan bantuan"
             >
               <X className="h-3 w-3" />
             </button>
 
             <div className="flex items-start gap-2.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs">
-                WA
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 font-bold text-xs">
+                <MessageCircle className="h-4.5 w-4.5" />
               </div>
               <div className="space-y-0.5 text-xs">
-                <p className="font-bold text-stone-900 flex items-center gap-1">
-                  <span>Konsultasi Tur Gratis</span>
-                  <Sparkles className="h-3 w-3 text-amber-500" />
-                </p>
+                <div className="flex items-center gap-1.5 font-bold text-stone-900">
+                  <span>{copy.title}</span>
+                  <Sparkles className="h-3 w-3 text-amber-500 shrink-0" />
+                </div>
                 <p className="text-stone-600 leading-snug">
-                  Punya rencana liburan ke Bali? Chat langsung dengan Bli Gede ya!
+                  {copy.desc}
                 </p>
+                <div className="pt-1 flex items-center gap-1 text-[10px] font-semibold text-emerald-700">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Online • Respon Cepat</span>
+                </div>
               </div>
             </div>
 
