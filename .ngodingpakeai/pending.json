@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "7f187dd37399be3815c54b117792e928d065c0e3",
+  "generatedForCommit": "e98c7d9b828801cc8f993cc617be63a010a39a5b",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -268,7 +268,7 @@
     },
     {
       "path": "src/app/reviews/page.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 8558
     },
@@ -358,9 +358,9 @@
     },
     {
       "path": "src/components/home/TestimonialsSection.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 5350
+      "size": 8459
     },
     {
       "path": "src/components/home/TrustBar.tsx",
@@ -388,7 +388,7 @@
     },
     {
       "path": "src/components/reviews/ReviewsFilterableList.tsx",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 15658
     },
@@ -430,7 +430,7 @@
     },
     {
       "path": "src/data/mock-data.ts",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 23520
     },
