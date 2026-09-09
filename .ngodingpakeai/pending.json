@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "d91fcaebfd07932a058107a17187dba3b16839bd",
+  "generatedForCommit": "cf85fc372e92bcd27d2f668eb6e007d6d4745c84",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -243,6 +243,12 @@
       "size": 1264
     },
     {
+      "path": "src/app/gallery/page.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 6041
+    },
+    {
       "path": "src/app/globals.css",
       "reason": "needs_summary",
       "language": "css",
@@ -286,7 +292,7 @@
     },
     {
       "path": "src/components/about/AboutCredentials.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 7743
     },
@@ -310,7 +316,7 @@
     },
     {
       "path": "src/components/about/AboutVehicleFleet.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 6794
     },
@@ -319,6 +325,18 @@
       "reason": "needs_summary",
       "language": "typescript",
       "size": 4177
+    },
+    {
+      "path": "src/components/gallery/GalleryGrid.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 5754
+    },
+    {
+      "path": "src/components/gallery/GalleryLightbox.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 7692
     },
     {
       "path": "src/components/home/DestinationsSection.tsx",
@@ -346,7 +364,7 @@
     },
     {
       "path": "src/components/home/TrustBar.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 6313
     },
@@ -411,6 +429,12 @@
       "size": 21071
     },
     {
+      "path": "src/data/mock-gallery.ts",
+      "reason": "new",
+      "language": "typescript",
+      "size": 5422
+    },
+    {
       "path": "src/lib/firestore/collections.ts",
       "reason": "needs_summary",
       "language": "typescript",
@@ -472,9 +496,9 @@
     },
     {
       "path": "src/types/index.ts",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 1554
+      "size": 1779
     },
     {
       "path": "tsconfig.json",

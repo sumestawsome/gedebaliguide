@@ -432,7 +432,7 @@ export const mockPopularDestinations: Destination[] = [
 export const mockReviews: Review[] = [
   {
     id: "rev-1",
-    tourName: "Ubud Cultural Heritage",
+    tourName: "Ubud Cultural, Rice Terrace & Secret Waterfall",
     authorName: "Sarah & Mark",
     authorOrigin: "Melbourne, Australia",
     rating: 5,
@@ -444,7 +444,7 @@ export const mockReviews: Review[] = [
   },
   {
     id: "rev-2",
-    tourName: "Uluwatu Sunset & Kecak Dance",
+    tourName: "Uluwatu Cliff Sunset & Kecak Fire Dance",
     authorName: "Keluarga Budi Santoso",
     authorOrigin: "Jakarta, Indonesia",
     rating: 5,
@@ -456,8 +456,8 @@ export const mockReviews: Review[] = [
   },
   {
     id: "rev-3",
-    tourName: "Bedugul & Jatiluwih",
-    authorName: "Jean-Paul",
+    tourName: "Bedugul Ulun Danu & Jatiluwih UNESCO Rice Terrace",
+    authorName: "Jean-Paul & Claire",
     authorOrigin: "Paris, France",
     rating: 5,
     content:
@@ -466,4 +466,65 @@ export const mockReviews: Review[] = [
     isApproved: true,
     featured: true,
   },
+  {
+    id: "rev-4",
+    tourName: "Kintamani Batur Volcano & Coffee Plantation",
+    authorName: "Dewi & Hendra",
+    authorOrigin: "Surabaya, Indonesia",
+    rating: 5,
+    content:
+      "Paket Kintamani seru banget! Makan siang sambil lihat kaldera Batur indah sekali. Bli Gede tahu tempat ngopi lokal yang otentik tanpa jebakan turis. Mobil MPV-nya nyaman sekali untuk jalanan menanjak.",
+    dateOfTrip: "Februari 2026",
+    isApproved: true,
+    featured: true,
+  },
+  {
+    id: "rev-5",
+    tourName: "East Bali Lempuyang Gate of Heaven & Tirta Gangga",
+    authorName: "Kenji & Aoi Takahashi",
+    authorOrigin: "Tokyo, Japan",
+    rating: 5,
+    content:
+      "Gede-san helped us get an early queue number at Lempuyang Gate of Heaven. Very respectful, polite, and great driving through the east Bali hills. Highly recommend him for private tours!",
+    dateOfTrip: "Januari 2026",
+    isApproved: true,
+    featured: true,
+  },
+  {
+    id: "rev-6",
+    tourName: "Nusa Penida Island Tour & Snorkeling Adventure",
+    authorName: "Rian Prasetya",
+    authorOrigin: "Bandung, Indonesia",
+    rating: 5,
+    content:
+      "Pertama kali ke Nusa Penida bareng sahabat. Bli Gede mengurus tiket fastboat dan transportasi di pulau dengan sangat rapi. Kelingking Beach dan snorkeling pari manta benar-benar tak terlupakan.",
+    dateOfTrip: "Maret 2026",
+    isApproved: true,
+    featured: false,
+  },
+  {
+    id: "rev-7",
+    tourName: "Ubud Cultural, Rice Terrace & Secret Waterfall",
+    authorName: "Emma Watson & Family",
+    authorOrigin: "London, United Kingdom",
+    rating: 5,
+    content:
+      "Traveling with two toddlers can be stressful, but Gede made it effortless. The air-conditioned car was always cool with cold water bottles ready. He even helped carry our stroller at Tibumana waterfall. 5 stars well deserved!",
+    dateOfTrip: "Februari 2026",
+    isApproved: true,
+    featured: false,
+  },
+  {
+    id: "rev-8",
+    tourName: "Uluwatu Cliff Sunset & Kecak Fire Dance",
+    authorName: "Andreas & Maria",
+    authorOrigin: "Berlin, Germany",
+    rating: 5,
+    content:
+      "The Kecak sunset show in Uluwatu was magical. Gede got us great seats and then took us to a quiet local seafood restaurant in Jimbaran without tourist overpricing. Honest and genuine guide!",
+    dateOfTrip: "Maret 2026",
+    isApproved: true,
+    featured: false,
+  },
 ];
+
