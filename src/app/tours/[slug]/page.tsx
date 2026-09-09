@@ -96,53 +96,83 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
     notFound();
   }
 
-  // JSON-LD TouristTrip Schema
+  // JSON-LD TouristTrip & BreadcrumbList Schema Graph
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "TouristTrip",
-    name: tour.name,
-    description: tour.description,
-    touristType: ["Family", "Couple", "Solo Traveler", "Small Group"],
-    provider: {
-      "@type": "Person",
-      name: "Gede Sudiartana",
-      jobTitle: "Licensed Tour Guide (HPI Bali)",
-      telephone: "+6281234567890",
-      url: "https://gedebaliguide.com",
-    },
-    offers: {
-      "@type": "Offer",
-      name: tour.name,
-      price: tour.price,
-      priceCurrency: tour.currency || "IDR",
-      priceSpecification: {
-        "@type": "UnitPriceSpecification",
-        price: tour.price,
-        priceCurrency: tour.currency || "IDR",
-        unitText: tour.priceType === "per_group" ? "per mobil/grup (maks 5-6 tamu)" : "per orang",
+    "@graph": [
+      {
+        "@type": "TouristTrip",
+        "@id": `https://gedebaliguide.com/tours/${tour.slug}#trip`,
+        name: tour.name,
+        description: tour.description,
+        touristType: ["Family", "Couple", "Solo Traveler", "Small Group"],
+        provider: {
+          "@type": "Person",
+          name: "Gede Sudiartana",
+          jobTitle: "Licensed Tour Guide (HPI Bali)",
+          telephone: "+6281234567890",
+          url: "https://gedebaliguide.com",
+        },
+        offers: {
+          "@type": "Offer",
+          name: tour.name,
+          price: tour.price,
+          priceCurrency: tour.currency || "IDR",
+          priceValidUntil: "2026-12-31",
+          priceSpecification: {
+            "@type": "UnitPriceSpecification",
+            price: tour.price,
+            priceCurrency: tour.currency || "IDR",
+            unitText: tour.priceType === "per_group" ? "per mobil/grup (maks 5-6 tamu)" : "per orang",
+          },
+          availability: "https://schema.org/InStock",
+          url: `https://gedebaliguide.com/tours/${tour.slug}`,
+          validFrom: "2025-01-01",
+        },
+        itinerary: {
+          "@type": "ItemList",
+          numberOfItems: tour.itinerary?.length || 0,
+          itemListElement: tour.itinerary?.map((item, idx) => ({
+            "@type": "ListItem",
+            position: idx + 1,
+            name: `${item.time} — ${item.title}`,
+            description: item.description,
+          })),
+        },
+        image: [tour.coverImage, ...(tour.galleryImages || [])],
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: tour.rating || 5.0,
+          reviewCount: tour.reviewCount || 10,
+          bestRating: "5",
+          worstRating: "1",
+        },
       },
-      availability: "https://schema.org/InStock",
-      url: `https://gedebaliguide.com/tours/${tour.slug}`,
-      validFrom: "2025-01-01",
-    },
-    itinerary: {
-      "@type": "ItemList",
-      numberOfItems: tour.itinerary?.length || 0,
-      itemListElement: tour.itinerary?.map((item, idx) => ({
-        "@type": "ListItem",
-        position: idx + 1,
-        name: `${item.time} — ${item.title}`,
-        description: item.description,
-      })),
-    },
-    image: [tour.coverImage, ...(tour.galleryImages || [])],
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: tour.rating || 5.0,
-      reviewCount: tour.reviewCount || 10,
-      bestRating: "5",
-      worstRating: "1",
-    },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `https://gedebaliguide.com/tours/${tour.slug}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Beranda",
+            item: "https://gedebaliguide.com",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Katalog Tur",
+            item: "https://gedebaliguide.com/tours",
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: tour.name,
+            item: `https://gedebaliguide.com/tours/${tour.slug}`,
+          },
+        ],
+      },
+    ],
   };
 
   return (

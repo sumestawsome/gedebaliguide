@@ -16,6 +16,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://gedebaliguide.com"),
   title: "Gede Bali Guide — Private Tour Guide Berlisensi HPI Bali",
   description:
     "Jelajahi keindahan autentik Bali bersama Gede Sudiartana, private tour guide resmi HPI Bali. Pengalaman 10+ tahun, armada mobil ber-AC, dan konsultasi langsung via WhatsApp.",
