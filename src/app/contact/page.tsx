@@ -4,6 +4,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Sparkles, MessageCircle, Phone, Mail, MapPin, Clock, ShieldCheck, Send } from "lucide-react";
+import ContactInfoSection from "@/components/contact/ContactInfoSection";
 import { mockGuideProfile } from "@/data/mock-data";
 import { getGeneralConsultationUrl } from "@/lib/whatsapp";
 
@@ -117,73 +118,8 @@ export default function ContactPage() {
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 md:pt-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             {/* Left Column: Direct Info & WhatsApp Funnel */}
-            <div className="lg:col-span-5 space-y-6">
-              <div className="rounded-3xl border border-stone-200 bg-white p-7 sm:p-8 shadow-sm space-y-6">
-                <div className="space-y-2">
-                  <span className="text-xs uppercase tracking-wider font-bold text-blue-700">
-                    Jalur Komunikasi Utama
-                  </span>
-                  <h2 className="font-serif text-2xl font-bold text-stone-900">
-                    Respon Tercepat via WhatsApp
-                  </h2>
-                  <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                    Cara termudah dan paling direkomendasikan. Anda langsung terhubung ke ponsel pribadi Bli Gede tanpa harus menunggu balasan email.
-                  </p>
-                </div>
-
-                <a
-                  href={waUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2.5 rounded-2xl bg-emerald-600 px-6 py-4 text-sm sm:text-base font-bold text-white shadow-lg shadow-emerald-600/30 hover:bg-emerald-500 transition-all"
-                >
-                  <MessageCircle className="h-5 w-5" />
-                  <span>Chat WhatsApp Langsung</span>
-                </a>
-
-                {/* Direct Details */}
-                <div className="pt-6 border-t border-stone-100 space-y-4 text-xs sm:text-sm">
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-700 shrink-0">
-                      <Phone className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <span className="block text-stone-400 text-xs">Telepon / WhatsApp</span>
-                      <span className="font-bold text-stone-900">{mockGuideProfile.phone}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-700 shrink-0">
-                      <Mail className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <span className="block text-stone-400 text-xs">Email Korespondensi</span>
-                      <span className="font-bold text-stone-900">{mockGuideProfile.email}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 shrink-0">
-                      <Clock className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <span className="block text-stone-400 text-xs">Jam Layanan Konsultasi</span>
-                      <span className="font-bold text-stone-900">07:00 - 22:00 WITA (Setiap Hari)</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-700 shrink-0">
-                      <ShieldCheck className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <span className="block text-stone-400 text-xs">Lisensi Resmi HPI Bali</span>
-                      <span className="font-bold text-stone-900">No. {mockGuideProfile.licenseNumber}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div className="lg:col-span-5">
+              <ContactInfoSection />
             </div>
 
             {/* Right Column: Fallback Message Form */}
