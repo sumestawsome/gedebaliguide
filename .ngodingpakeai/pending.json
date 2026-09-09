@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "8332866d20d4da2db5566a3f0b86345f1ee7728a",
+  "generatedForCommit": "919975207bfcfa9175f61b01c561804ef48748a0",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -178,7 +178,7 @@
     },
     {
       "path": "src/app/globals.css",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "css",
       "size": 691
     },
@@ -193,6 +193,12 @@
       "reason": "needs_summary",
       "language": "typescript",
       "size": 1028
+    },
+    {
+      "path": "src/app/tours/page.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 3282
     },
     {
       "path": "src/components/common/FloatingWhatsApp.tsx",
@@ -244,15 +250,27 @@
     },
     {
       "path": "src/components/layout/Navbar.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
       "size": 6079
     },
     {
-      "path": "src/data/mock-data.ts",
-      "reason": "needs_summary",
+      "path": "src/components/tours/TourCard.tsx",
+      "reason": "new",
       "language": "typescript",
-      "size": 8417
+      "size": 6856
+    },
+    {
+      "path": "src/components/tours/ToursCatalog.tsx",
+      "reason": "new",
+      "language": "typescript",
+      "size": 730
+    },
+    {
+      "path": "src/data/mock-data.ts",
+      "reason": "changed",
+      "language": "typescript",
+      "size": 12339
     },
     {
       "path": "src/lib/whatsapp.ts",
