@@ -123,6 +123,27 @@ export default function FeaturedToursSection({ initialTours }: FeaturedToursSect
                   <div className="absolute bottom-3 left-3.5 text-xs font-medium text-amber-200">
                     {getCategoryLabel(tour.category)}
                   </div>
+
+                  {/* Quick WhatsApp Inquiry Action on Image */}
+                  <div
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open(waInquiryUrl, "_blank", "noopener,noreferrer");
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        window.open(waInquiryUrl, "_blank", "noopener,noreferrer");
+                      }
+                    }}
+                    aria-label={`Chat WhatsApp cepat untuk tur ${tour.name}`}
+                    title="Tanya ketersediaan tur via WhatsApp"
+                    className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-white shadow-lg hover:bg-emerald-500 hover:scale-110 active:scale-95 transition-all cursor-pointer z-10"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                  </div>
                 </Link>
 
                 {/* Card Body */}
