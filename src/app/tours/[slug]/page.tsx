@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: TourDetailPageProps): Promise
       tour.category,
     ],
     alternates: {
-      canonical: `/tours/${tour.slug}`,
+      canonical: `https://gedebaliguide.com/tours/${tour.slug}`,
     },
     openGraph: {
       title,
