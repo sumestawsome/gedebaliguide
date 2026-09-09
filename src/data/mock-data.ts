@@ -127,6 +127,7 @@ export const mockPopularDestinations: Destination[] = [
     description: "Pusat seni, budaya, hutan monyet, dan sawah bertingkat hijau asri.",
     imageUrl: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&auto=format&fit=crop&q=80",
     highlightSpot: "Tegalalang & Monkey Forest",
+    tourSlug: "ubud-cultural-heritage-waterfall",
   },
   {
     id: "dest-2",
@@ -135,6 +136,7 @@ export const mockPopularDestinations: Destination[] = [
     description: "Tebing samudra megah, pantai pasir putih, sunset dan tari kecak api.",
     imageUrl: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=600&auto=format&fit=crop&q=80",
     highlightSpot: "Pura Luhur Uluwatu",
+    tourSlug: "uluwatu-cliff-sunset-kecak-dance",
   },
   {
     id: "dest-3",
@@ -143,6 +145,7 @@ export const mockPopularDestinations: Destination[] = [
     description: "Kesejukan danau pegunungan, pura terapung, dan terasering sawah terluas.",
     imageUrl: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=600&auto=format&fit=crop&q=80",
     highlightSpot: "Danau Beratan & Jatiluwih",
+    tourSlug: "bedugul-ulun-danu-jatiluwih-unesco",
   },
   {
     id: "dest-4",
