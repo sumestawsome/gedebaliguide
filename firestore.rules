@@ -1,0 +1,41 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper to verify admin authentication
+    function isAdmin() {
+      return request.auth != null;
+    }
+
+    // Settings Collection (Home config, WhatsApp config, Guide Profile)
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Tours Collection
+    match /tours/{tourId} {
+      allow read: if resource.data.isActive == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Destinations Collection
+    match /destinations/{destId} {
+      allow read: if resource.data.isActive == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Reviews Collection
+    match /reviews/{reviewId} {
+      allow read: if resource.data.isApproved == true || isAdmin();
+      allow create: if true; // Guests can submit reviews for moderation
+      allow update, delete: if isAdmin();
+    }
+
+    // Leads Collection (incoming WhatsApp click logs / inquiries)
+    match /leads/{leadId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}
