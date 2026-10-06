@@ -1,64 +1,66 @@
 import React from "react";
 import type { Metadata } from "next";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import AboutHero from "@/components/about/AboutHero";
-import AboutStory from "@/components/about/AboutStory";
-import AboutCredentials from "@/components/about/AboutCredentials";
-import AboutVehicleFleet from "@/components/about/AboutVehicleFleet";
-import AboutComparison from "@/components/about/AboutComparison";
-import AboutCta from "@/components/about/AboutCta";
+import { getAboutPageContent } from "@/lib/services/about-service";
+import AboutPageClient from "@/components/about/AboutPageClient";
 import { mockGuideProfile } from "@/data/mock-data";
 
+// Revalidasi ISR setiap 60 detik
+export const revalidate = 60;
+
 export const metadata: Metadata = {
-  title: "Tentang Gede Sudiartana — Tour Guide Resmi Berlisensi HPI Bali",
+  title: "Mengenal Bli Gede — Pemandu Lokal Independen Berlisensi HPI Bali",
   description:
-    "Profil Gede Sudiartana, tour guide privat resmi berlisensi HPI Bali. 10+ tahun pengalaman, armada mobil ber-AC nyaman, rute santai & wawasan budaya autentik.",
+    "Mengenal Gede Sudiartana, private tour guide resmi berlisensi HPI Bali. 10+ tahun pengalaman, mobil privat ber-AC, rute santai tanpa komisi toko oleh-oleh.",
   keywords: [
     "Tentang Gede Bali Guide",
     "Gede Sudiartana",
     "Tour Guide Resmi HPI Bali",
     "Lisensi HPI Bali",
     "Pemandu Wisata Privat Bali",
-    "Sewa Mobil Ber-AC Bali",
-    "Tour Guide Ubud",
+    "Private Tour Guide Ubud",
+    "Sewa Mobil Privat Bali",
   ],
   alternates: {
     canonical: "https://gedebaliguide.com/about",
   },
   openGraph: {
-    title: "Tentang Gede Sudiartana — Tour Guide Resmi Berlisensi HPI Bali",
+    title: "Mengenal Bli Gede — Sahabat Lokal & Penjaga Cerita Bali Anda",
     description:
-      "Kenali Gede Sudiartana, private tour guide resmi berlisensi HPI Bali. Wawasan budaya mendalam, armada mobil MPV nyaman, dan tanpa komisi toko oleh-oleh.",
+      "Kenali Gede Sudiartana, private tour guide resmi berlisensi HPI Bali. Wawasan budaya autentik, kenyamanan mobil privat, dan tanpa komisi toko oleh-oleh.",
     url: "https://gedebaliguide.com/about",
     siteName: "Gede Bali Guide",
     locale: "id_ID",
     type: "profile",
     images: [
       {
-        url: mockGuideProfile.avatarUrl,
+        url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=80",
         width: 800,
-        height: 800,
+        height: 1000,
         alt: "Profil Gede Sudiartana - Tour Guide HPI Bali",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tentang Gede Sudiartana — Tour Guide Resmi Berlisensi HPI Bali",
+    title: "Mengenal Bli Gede — Pemandu Lokal Independen Berlisensi HPI Bali",
     description:
-      "Kenali Gede Sudiartana, private tour guide resmi berlisensi HPI Bali. Wawasan budaya mendalam & armada mobil MPV nyaman.",
-    images: [mockGuideProfile.avatarUrl],
+      "Kenali Gede Sudiartana, private tour guide resmi berlisensi HPI Bali. Wawasan budaya mendalam & armada mobil privat ber-AC.",
+    images: [
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=80",
+    ],
   },
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  // Fetch live content from Firestore 'settings/about_page'
+  const aboutContent = await getAboutPageContent();
+
   const personJsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
     "@id": "https://gedebaliguide.com/about#person",
-    name: mockGuideProfile.name,
-    jobTitle: "Licensed Tour Guide (HPI Bali)",
+    name: "Gede Sudiartana",
+    jobTitle: "Licensed Private Tour Guide (HPI Bali)",
     hasCredential: {
       "@type": "EducationalOccupationalCredential",
       credentialCategory: "Pramuwisata Resmi",
@@ -66,24 +68,25 @@ export default function AboutPage() {
         "@type": "Organization",
         name: "Himpunan Pramuwisata Indonesia (HPI) DPD Bali",
       },
-      identifier: mockGuideProfile.licenseNumber,
+      identifier: "HPI-BALI-2015-8849",
     },
     worksFor: {
       "@type": "TravelAgency",
       name: "Gede Bali Guide",
       url: "https://gedebaliguide.com",
     },
-    image: mockGuideProfile.avatarUrl,
+    image: aboutContent.hero.profileImage.url,
     description:
+      aboutContent.hero.introText ||
       "Private tour guide berlisensi resmi HPI Bali berpengalaman lebih dari 10 tahun memandu wisatawan dengan mobil ber-AC nyaman dan wawasan budaya autentik.",
     telephone: mockGuideProfile.phone,
     email: mockGuideProfile.email,
     knowsAbout: [
-      "Bali Culture and History",
-      "Balinese Temples",
-      "Private Tour Itinerary Planning",
-      "Tri Hita Karana",
-      "Balinese Cuisine",
+      "Bali Culture and Living Heritage",
+      "Balinese Temples and Sacred Etiquette",
+      "Tri Hita Karana Philosophy",
+      "Custom Private Itinerary Planning",
+      "Scenic Hidden Photography Spots",
     ],
     address: {
       "@type": "PostalAddress",
@@ -94,21 +97,12 @@ export default function AboutPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#fafaf9] text-stone-900 font-sans">
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
-      <Navbar />
-      <main className="flex-1">
-        <AboutHero />
-        <AboutStory />
-        <AboutCredentials />
-        <AboutVehicleFleet />
-        <AboutComparison />
-        <AboutCta />
-      </main>
-      <Footer />
-    </div>
+      <AboutPageClient initialContent={aboutContent} />
+    </>
   );
 }

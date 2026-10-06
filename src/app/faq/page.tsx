@@ -1,7 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { HelpCircle, MessageCircle } from "lucide-react";
 import FaqAccordion from "@/components/faq/FaqAccordion";
@@ -74,7 +73,6 @@ export default function FaqPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <Navbar />
 
       <main className="flex-1 pb-28 sm:pb-20">
         {/* Header Banner */}
@@ -82,15 +80,15 @@ export default function FaqPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-3.5 sm:space-y-4">
             {/* Breadcrumb */}
             <nav className="flex items-center justify-center gap-2 text-xs text-stone-500 font-medium mb-1 sm:mb-2">
-              <Link href="/" className="hover:text-blue-700 transition-colors">
+              <Link href="/" className="hover:text-[#1878B8] transition-colors">
                 Beranda
               </Link>
               <span>/</span>
               <span className="text-stone-800 font-semibold">Tanya Jawab (FAQ)</span>
             </nav>
 
-            <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-200/80 px-3 py-1 sm:px-3.5 sm:py-1 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-blue-800">
-              <HelpCircle className="h-3.5 w-3.5 text-blue-600" />
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#EAF5FC] border border-[#1878B8]/30 px-3 py-1 sm:px-3.5 sm:py-1 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#1878B8]">
+              <HelpCircle className="h-3.5 w-3.5 text-[#1878B8]" />
               <span>Panduan Lengkap Calon Wisatawan</span>
             </div>
 
@@ -121,7 +119,7 @@ export default function FaqPage() {
                 href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-emerald-600 px-7 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-white shadow-lg hover:bg-emerald-500 transition-colors"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-[#E67E22] hover:bg-[#D35400] px-7 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-white shadow-lg shadow-[#E67E22]/30 transition-colors cursor-pointer"
               >
                 <MessageCircle className="h-5 w-5" />
                 <span>Tanya Bli Gede via WhatsApp</span>

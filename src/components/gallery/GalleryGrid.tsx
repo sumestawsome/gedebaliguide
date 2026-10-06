@@ -2,147 +2,195 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { MapPin, Eye, Camera, Sparkles } from "lucide-react";
+import { MapPin, Maximize2, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GalleryItem } from "@/types";
 import GalleryLightbox from "@/components/gallery/GalleryLightbox";
 
 interface GalleryGridProps {
   initialItems: GalleryItem[];
+  lang?: "id" | "en";
 }
 
-export default function GalleryGrid({ initialItems }: GalleryGridProps) {
+export default function GalleryGrid({ initialItems, lang = "id" }: GalleryGridProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
 
+  const isEn = lang === "en";
+
+  const isMatchCategory = (cat: string, targetId: string) => {
+    if (targetId === "all") return true;
+    const c = (cat || "").toLowerCase();
+    if (targetId === "culture")
+      return c === "culture" || c.includes("budaya") || c.includes("pura");
+    if (targetId === "nature")
+      return c === "nature" || c.includes("alam") || c.includes("terjun");
+    if (targetId === "guests")
+      return c === "guests" || c.includes("tamu") || c.includes("momen");
+    if (targetId === "activity")
+      return c === "activity" || c.includes("aktivitas") || c.includes("seru");
+    return c === targetId.toLowerCase();
+  };
+
   const categories = [
-    { id: "all", label: "Semua Foto", count: initialItems.length },
+    {
+      id: "all",
+      label: isEn ? "All Photos" : "Semua Foto",
+      count: initialItems.length,
+    },
     {
       id: "culture",
-      label: "Budaya & Pura",
-      count: initialItems.filter((i) => i.category === "culture").length,
+      label: isEn ? "Culture & Temples" : "Budaya & Pura",
+      count: initialItems.filter((i) => isMatchCategory(i.category, "culture")).length,
     },
     {
       id: "nature",
-      label: "Alam & Air Terjun",
-      count: initialItems.filter((i) => i.category === "nature").length,
+      label: isEn ? "Nature & Waterfalls" : "Alam & Air Terjun",
+      count: initialItems.filter((i) => isMatchCategory(i.category, "nature")).length,
     },
     {
       id: "guests",
-      label: "Momen Tamu",
-      count: initialItems.filter((i) => i.category === "guests").length,
+      label: isEn ? "Guest Moments" : "Momen Tamu",
+      count: initialItems.filter((i) => isMatchCategory(i.category, "guests")).length,
     },
     {
       id: "activity",
-      label: "Aktivitas Seru",
-      count: initialItems.filter((i) => i.category === "activity").length,
+      label: isEn ? "Exciting Activities" : "Aktivitas Seru",
+      count: initialItems.filter((i) => isMatchCategory(i.category, "activity")).length,
     },
   ];
 
   const filteredItems =
     selectedCategory === "all"
       ? initialItems
-      : initialItems.filter((item) => item.category === selectedCategory);
+      : initialItems.filter((item) => isMatchCategory(item.category, selectedCategory));
+
+  // Variasi aspect ratio editorial majalah (pola potret 4:5 dan lanskap 16:10)
+  const getAspectRatioClass = (index: number) => {
+    return index % 2 === 0 ? "aspect-[4/5]" : "aspect-[16/10]";
+  };
 
   return (
-    <section className="py-12 md:py-16">
+    <section className="py-8 sm:py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`inline-flex items-center gap-2 rounded-full px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold transition-all ${
-                selectedCategory === cat.id
-                  ? "bg-stone-900 text-white shadow-md scale-105"
-                  : "bg-white text-stone-600 border border-stone-200/80 hover:bg-stone-100 hover:text-stone-900"
-              }`}
-            >
-              <span>{cat.label}</span>
-              <span
-                className={`rounded-full px-1.5 py-0.2 text-[11px] ${
-                  selectedCategory === cat.id
-                    ? "bg-white/20 text-white"
-                    : "bg-stone-100 text-stone-500"
+        {/* ========================================================
+            3. FILTER TAB KATEGORI YANG RAMPING & ELEGAN
+            ======================================================== */}
+        <div className="flex items-center justify-start sm:justify-center overflow-x-auto pb-4 mb-8 sm:mb-12 gap-2.5 sm:gap-3 no-scrollbar">
+          {categories.map((cat) => {
+            const isActive = selectedCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0 ${
+                  isActive
+                    ? cat.id === "nature" || cat.id === "culture"
+                      ? "bg-[#0C8C5E] text-white shadow-sm"
+                      : "bg-[#1878B8] text-white shadow-sm"
+                    : "bg-[#F4F1EA] text-[#5E6965] hover:bg-[#EBE7DE] hover:text-[#1F2B26]"
                 }`}
               >
-                {cat.count}
-              </span>
-            </button>
-          ))}
+                <span>{cat.label}</span>
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${
+                    isActive ? "bg-white/20 text-white" : "bg-[#E6E1D6] text-[#5E6965]"
+                  }`}
+                >
+                  {cat.count}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Gallery Grid */}
+        {/* ========================================================
+            4. KISI FOTO EDITORIAL (TRUE MASONRY COLUMNS)
+            ======================================================== */}
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6"
         >
           <AnimatePresence>
-            {filteredItems.map((item, index) => (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.35, delay: index * 0.04 }}
-                onClick={() => setActiveItem(item)}
-                className="group relative cursor-pointer overflow-hidden rounded-3xl bg-stone-200 shadow-sm border border-stone-200/80 hover:shadow-xl transition-all duration-300 aspect-[4/3]"
-              >
-                <Image
-                  src={item.imageUrl}
-                  alt={item.title}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                />
+            {filteredItems.map((item, index) => {
+              const aspectClass = getAspectRatioClass(index);
+              return (
+                <motion.div
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.35, delay: index * 0.03 }}
+                  onClick={() => setActiveItem(item)}
+                  className={`break-inside-avoid inline-block w-full mb-6 group relative overflow-hidden rounded-2xl bg-stone-100 border border-[#EBE9E6] shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer ${aspectClass}`}
+                >
+                  {/* Foto Utama dengan transisi zoom halus */}
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.alt || item.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
 
-                {/* Dark Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity" />
+                  {/* Tag Lokasi di Sudut Kiri Atas (Backdrop-blur) */}
+                  <div className="absolute top-3.5 left-3.5 z-10">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-[#08090A] bg-white/85 backdrop-blur-md border border-white/40 shadow-xs">
+                      <MapPin className="w-3.5 h-3.5 text-[#1878B8]" />
+                      <span className="line-clamp-1">{item.location}</span>
+                    </span>
+                  </div>
 
-                {/* Top Location Tag */}
-                <div className="absolute top-3.5 left-3.5 rounded-full bg-stone-900/80 backdrop-blur-xs px-2.5 py-0.5 text-[10px] font-semibold text-amber-300 border border-white/10 flex items-center gap-1">
-                  <MapPin className="h-3 w-3 text-amber-400" />
-                  <span>{item.location}</span>
-                </div>
+                  {/* Indikator Klik: Ikon Zoom / Expand di Sudut Kanan Atas */}
+                  <div className="absolute top-3.5 right-3.5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-8 h-8 rounded-full bg-black/50 backdrop-blur-md text-white flex items-center justify-center shadow-md">
+                      <Maximize2 className="w-4 h-4" />
+                    </div>
+                  </div>
 
-                {/* Eye Icon Hover Indicator */}
-                <div className="absolute top-3.5 right-3.5 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-xs text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Eye className="h-4 w-4" />
-                </div>
-
-                {/* Bottom Content on Image */}
-                <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
-                  <h3 className="font-serif text-base sm:text-lg font-bold leading-snug drop-shadow-xs">
-                    {item.title}
-                  </h3>
-                  <p className="text-[11px] text-stone-300 line-clamp-1 mt-0.5">
-                    {item.caption}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+                  {/* Scrim Gradien Gelap di Bagian Bawah */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent flex flex-col justify-end p-5 sm:p-6 text-white transition-opacity duration-300">
+                    <div className="space-y-1.5 transform transition-transform duration-300 group-hover:-translate-y-1">
+                      <h3 className="font-serif text-lg sm:text-xl font-bold leading-snug drop-shadow-sm text-white">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-stone-200 line-clamp-2 leading-relaxed font-sans drop-shadow-xs">
+                        {item.caption}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </motion.div>
 
+        {/* Empty state jika filter tidak ada data */}
         {filteredItems.length === 0 && (
-          <div className="py-20 text-center space-y-3">
-            <Camera className="h-10 w-10 text-stone-300 mx-auto" />
-            <p className="text-stone-500 font-medium">
-              Belum ada foto untuk kategori ini.
+          <div className="text-center py-16">
+            <p className="text-[#5E6965] text-base">
+              {isEn
+                ? "No photos found in this category."
+                : "Tidak ada foto dalam kategori ini."}
             </p>
           </div>
         )}
       </div>
 
-      {/* Lightbox Modal */}
-      <GalleryLightbox
-        item={activeItem}
-        items={filteredItems}
-        onClose={() => setActiveItem(null)}
-        onNavigate={(newItem) => setActiveItem(newItem)}
-      />
+      {/* ========================================================
+          5. MODAL LIGHTBOX INTERAKTIF
+          ======================================================== */}
+      {activeItem && (
+        <GalleryLightbox
+          item={activeItem}
+          items={filteredItems}
+          onClose={() => setActiveItem(null)}
+          onNavigate={(newItem) => setActiveItem(newItem)}
+          lang={lang}
+        />
+      )}
     </section>
   );
 }

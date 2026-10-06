@@ -14,7 +14,7 @@ export default function ContactInfoSection() {
       {/* Profile Card */}
       <div className="rounded-3xl border border-stone-200 bg-white p-5 sm:p-7 shadow-sm space-y-6">
         <div className="flex items-center gap-3.5 sm:gap-4">
-          <div className="relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-full border-2 border-blue-600 shadow-md">
+          <div className="relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-full border-2 border-[#1878B8] shadow-md">
             <Image
               src={mockGuideProfile.avatarUrl}
               alt={mockGuideProfile.name}
@@ -27,12 +27,12 @@ export default function ContactInfoSection() {
               <h3 className="font-serif text-base sm:text-xl font-bold text-stone-900 truncate">
                 {mockGuideProfile.name}
               </h3>
-              <ShieldCheck className="h-4 w-4 text-blue-600 shrink-0" />
+              <ShieldCheck className="h-4 w-4 text-[#1878B8] shrink-0" />
             </div>
             <p className="text-xs text-stone-500 truncate">
               Pemandu Wisata Resmi HPI Bali
             </p>
-            <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">
+            <p className="text-[11px] font-semibold text-[#0C8C5E] mt-0.5">
               No. Lisensi: {mockGuideProfile.licenseNumber}
             </p>
           </div>
@@ -134,7 +134,7 @@ export default function ContactInfoSection() {
           href={waUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-emerald-600 px-6 py-4 text-sm sm:text-base font-bold text-white shadow-lg shadow-emerald-600/30 hover:bg-emerald-500 transition-all active:scale-[0.98]"
+          className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-[#E67E22] hover:bg-[#D35400] px-6 py-4 text-sm sm:text-base font-bold text-white shadow-lg shadow-[#E67E22]/30 transition-all active:scale-[0.98] cursor-pointer"
         >
           <MessageCircle className="h-5 w-5" />
           <span>Chat WhatsApp Sekarang</span>

@@ -1,7 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Sparkles } from "lucide-react";
 import ContactInfoSection from "@/components/contact/ContactInfoSection";
@@ -86,7 +85,6 @@ export default function ContactPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(contactJsonLd) }}
       />
-      <Navbar />
 
       <main className="flex-1 pb-28 sm:pb-20">
         {/* Header Banner */}

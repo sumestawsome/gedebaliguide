@@ -1,10 +1,44 @@
+import { queryFirestoreCollection } from "@/lib/firestore/rest-client";
 import { mockAllTours } from "@/data/mock-data";
 import { Tour } from "@/types";
+import { FirestoreTourDocument, mapFirestoreDocToTour } from "@/lib/schemas/tour-schema";
 
 export interface TourFilterOptions {
   category?: string;
   area?: string;
   featured?: boolean;
+}
+
+/**
+ * Mengambil data seluruh paket tur aktif dari koleksi Firestore 'tours'
+ * dengan filter isActive == true dan fallback ke mock data jika koneksi gagal.
+ */
+async function fetchActiveToursFromFirestore(): Promise<Tour[]> {
+  try {
+    const rawDocs = await queryFirestoreCollection<FirestoreTourDocument>(
+      "tours",
+      "isActive",
+      true
+    );
+
+    if (rawDocs && rawDocs.length > 0) {
+      const seenSlugs = new Set<string>();
+      const tours: Tour[] = [];
+      for (const doc of rawDocs) {
+        if (doc.slug && !seenSlugs.has(doc.slug)) {
+          seenSlugs.add(doc.slug);
+          tours.push(mapFirestoreDocToTour(doc));
+        }
+      }
+      if (tours.length > 0) {
+        return tours;
+      }
+    }
+  } catch (error) {
+    console.warn("Gagal mengambil data tur dari Firestore, menggunakan fallback mock:", error);
+  }
+
+  return mockAllTours.filter((tour) => tour.isActive);
 }
 
 /**
@@ -18,7 +52,8 @@ export async function getActiveToursSortedByPopularity(
 ): Promise<Tour[]> {
   const { category, area, featured } = options;
 
-  let tours = mockAllTours.filter((tour) => tour.isActive);
+  const allActiveTours = await fetchActiveToursFromFirestore();
+  let tours = allActiveTours;
 
   if (category && category !== "all") {
     tours = tours.filter((tour) => tour.category === category);
@@ -45,10 +80,11 @@ export async function getActiveToursSortedByPopularity(
 }
 
 /**
- * Retrieves a single active tour by its unique slug.
+ * Retrieves a single active tour by its unique slug from Firestore.
  */
 export async function getActiveTourBySlug(slug: string): Promise<Tour | null> {
-  const tour = mockAllTours.find((t) => t.slug === slug && t.isActive);
+  const allActiveTours = await fetchActiveToursFromFirestore();
+  const tour = allActiveTours.find((t) => t.slug === slug && t.isActive);
   return tour || null;
 }
 
@@ -58,7 +94,8 @@ export async function getActiveTourBySlug(slug: string): Promise<Tour | null> {
  * Sort: rating descending, reviewCount descending
  */
 export async function getActiveFeaturedTours(limitCount: number = 3): Promise<Tour[]> {
-  const featuredTours = mockAllTours.filter(
+  const allActiveTours = await fetchActiveToursFromFirestore();
+  const featuredTours = allActiveTours.filter(
     (tour) => tour.isActive && tour.featured
   );
 
@@ -71,4 +108,3 @@ export async function getActiveFeaturedTours(limitCount: number = 3): Promise<To
 
   return limitCount > 0 ? sorted.slice(0, limitCount) : sorted;
 }
-

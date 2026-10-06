@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Libre_Baskerville, Inter } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/layout/Navbar";
 import FloatingWhatsApp from "@/components/common/FloatingWhatsApp";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const libreBaskerville = Libre_Baskerville({
+  weight: ["400", "700"],
+  variable: "--font-serif",
   subsets: ["latin"],
   display: "swap",
 });
@@ -28,8 +30,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${fraunces.variable} ${inter.variable} h-full`}>
-      <body className="min-h-full flex flex-col antialiased selection:bg-amber-100 selection:text-amber-900">
+    <html lang="id" className={`${libreBaskerville.variable} ${inter.variable} h-full`}>
+      <body className="min-h-full flex flex-col antialiased selection:bg-amber-100 selection:text-amber-900 bg-[#FEFDFB] text-[#121715]">
+        <Navbar />
         {children}
         <FloatingWhatsApp />
       </body>

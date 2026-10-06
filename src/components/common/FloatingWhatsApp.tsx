@@ -5,26 +5,44 @@ import { usePathname } from "next/navigation";
 import { MessageCircle, X, Sparkles, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getGeneralConsultationUrl } from "@/lib/whatsapp";
+import { handleWhatsAppClick } from "@/lib/lead-tracker";
 
 export default function FloatingWhatsApp() {
   const pathname = usePathname();
   const [showTooltip, setShowTooltip] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleMenuChange = (e: Event) => {
+      const customEvent = e as CustomEvent<{ open?: boolean }>;
+      setIsMobileMenuOpen(!!customEvent.detail?.open);
+    };
+
+    window.addEventListener("mobileMenuChange", handleMenuChange);
+    return () => {
+      window.removeEventListener("mobileMenuChange", handleMenuChange);
+    };
+  }, []);
 
   useEffect(() => {
     setMounted(true);
-    // Check if user previously closed the tooltip during this session
     try {
       const isDismissed = sessionStorage.getItem("wa_tooltip_dismissed");
       if (!isDismissed) {
-        // Show tooltip after a slight gentle delay
-        const timer = setTimeout(() => {
-          setShowTooltip(true);
-        }, 1500);
-        return () => clearTimeout(timer);
+        setShowTooltip(true);
+        // Otomatis menghilang (fade-out/hidden) setelah 3000ms (3 detik)
+        const autoHideTimer = setTimeout(() => {
+          setShowTooltip(false);
+        }, 3000);
+        return () => clearTimeout(autoHideTimer);
       }
     } catch {
       setShowTooltip(true);
+      const autoHideTimer = setTimeout(() => {
+        setShowTooltip(false);
+      }, 3000);
+      return () => clearTimeout(autoHideTimer);
     }
   }, []);
 
@@ -37,8 +55,8 @@ export default function FloatingWhatsApp() {
     }
   };
 
-  // Hide on admin routes
-  if (pathname?.startsWith("/admin")) {
+  // Hide on admin routes or when mobile drawer menu is open
+  if (pathname?.startsWith("/admin") || isMobileMenuOpen) {
     return null;
   }
 
@@ -96,19 +114,19 @@ export default function FloatingWhatsApp() {
             </button>
 
             <div className="flex items-start gap-2.5">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 font-bold text-xs">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#E8F7F1] text-[#006B49] font-bold text-xs">
                 <MessageCircle className="h-4.5 w-4.5" />
               </div>
               <div className="space-y-0.5 text-xs">
                 <div className="flex items-center gap-1.5 font-bold text-stone-900">
                   <span>{copy.title}</span>
-                  <Sparkles className="h-3 w-3 text-amber-500 shrink-0" />
+                  <Sparkles className="h-3 w-3 text-[#E67E22] shrink-0" />
                 </div>
                 <p className="text-stone-600 leading-snug">
                   {copy.desc}
                 </p>
-                <div className="pt-1 flex items-center gap-1 text-[10px] font-semibold text-emerald-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <div className="pt-1 flex items-center gap-1 text-[10px] font-semibold text-[#0C8C5E]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#0C8C5E] animate-pulse" />
                   <span>Online • Respon Cepat</span>
                 </div>
               </div>
@@ -121,19 +139,18 @@ export default function FloatingWhatsApp() {
       </AnimatePresence>
 
       {/* Floating Action Button */}
-      <motion.a
-        href={waUrl}
-        target="_blank"
-        rel="noopener noreferrer"
+      <motion.button
+        type="button"
+        onClick={() => handleWhatsAppClick(`Floating Widget (${pathname || "/"})`)}
         aria-label="Chat WhatsApp dengan Gede Sudiartana"
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        className="group relative flex h-14 w-14 sm:h-15 sm:w-15 items-center justify-center rounded-full bg-emerald-600 text-white shadow-xl shadow-emerald-700/30 hover:bg-emerald-500 transition-colors focus:outline-none focus:ring-4 focus:ring-emerald-400/40"
+        className="group relative flex h-14 w-14 sm:h-15 sm:w-15 items-center justify-center rounded-full bg-[#0C8C5E] hover:bg-[#006B49] text-white shadow-xl shadow-[#0C8C5E]/30 transition-colors focus:outline-none focus:ring-4 focus:ring-[#0C8C5E]/40 cursor-pointer"
       >
         {/* Radar ping animation */}
         <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80" />
-          <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-400 border-2 border-white" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0C8C5E] opacity-80" />
+          <span className="relative inline-flex rounded-full h-4 w-4 bg-[#0C8C5E] border-2 border-white" />
         </span>
 
         <MessageCircle className="h-7 w-7 transition-transform group-hover:rotate-12" />
@@ -142,7 +159,7 @@ export default function FloatingWhatsApp() {
         <span className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-lg bg-stone-900 px-3 py-1.5 text-xs font-semibold text-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity md:block">
           Tanya via WhatsApp
         </span>
-      </motion.a>
+      </motion.button>
     </div>
   );
 }

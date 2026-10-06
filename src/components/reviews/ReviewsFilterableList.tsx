@@ -125,9 +125,9 @@ export default function ReviewsFilterableList({ initialReviews }: ReviewsFiltera
               <button
                 key={f.id}
                 onClick={() => setSelectedFilter(f.id)}
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs sm:text-sm font-semibold transition-all ${
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                   selectedFilter === f.id
-                    ? "bg-blue-700 text-white shadow-sm"
+                    ? "bg-[#1878B8] text-white shadow-sm"
                     : "bg-white text-stone-600 border border-stone-200/80 hover:bg-stone-100 hover:text-stone-900"
                 }`}
               >
@@ -145,9 +145,9 @@ export default function ReviewsFilterableList({ initialReviews }: ReviewsFiltera
 
           <button
             onClick={() => setModalOpen(true)}
-            className="inline-flex items-center gap-2 rounded-xl bg-white border border-stone-300 px-4 py-2.5 text-xs sm:text-sm font-semibold text-stone-800 shadow-xs hover:bg-stone-50 hover:border-stone-400 transition-all shrink-0"
+            className="inline-flex items-center gap-2 rounded-xl bg-white border border-stone-300 px-4 py-2.5 text-xs sm:text-sm font-semibold text-stone-800 shadow-xs hover:bg-stone-50 hover:border-stone-400 transition-all shrink-0 cursor-pointer"
           >
-            <MessageSquarePlus className="h-4 w-4 text-emerald-600" />
+            <MessageSquarePlus className="h-4 w-4 text-[#0C8C5E]" />
             <span>Tulis Pengalaman Liburan Anda</span>
           </button>
         </div>
@@ -166,14 +166,14 @@ export default function ReviewsFilterableList({ initialReviews }: ReviewsFiltera
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.35, delay: idx * 0.04 }}
-                className="relative flex flex-col justify-between rounded-3xl border border-stone-200/90 bg-white p-7 shadow-xs hover:shadow-xl hover:border-amber-300/70 transition-all duration-300"
+                className="relative flex flex-col justify-between rounded-3xl border border-stone-200/90 bg-white p-7 shadow-xs hover:shadow-xl hover:border-[#1878B8]/40 transition-all duration-300"
               >
                 <div>
                   {/* Top Card: Rating & Quote */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-1">
                       {[...Array(review.rating)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                        <Star key={i} className="h-4 w-4 fill-[#E67E22] text-[#E67E22]" />
                       ))}
                       <span className="ml-1 text-xs font-bold text-stone-800">
                         {review.rating}.0
@@ -196,7 +196,7 @@ export default function ReviewsFilterableList({ initialReviews }: ReviewsFiltera
                   <div className="min-w-0">
                     <h3 className="font-serif text-base font-bold text-stone-900 flex items-center gap-1.5 truncate">
                       <span className="truncate">{review.authorName}</span>
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                      <CheckCircle2 className="h-3.5 w-3.5 text-[#0C8C5E] shrink-0" />
                     </h3>
                     <p className="text-xs text-stone-500 mt-0.5 truncate">
                       {review.authorOrigin} {review.dateOfTrip && `• ${review.dateOfTrip}`}
@@ -204,7 +204,7 @@ export default function ReviewsFilterableList({ initialReviews }: ReviewsFiltera
                   </div>
 
                   {review.tourName && (
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-md shrink-0 truncate max-w-[180px]">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#1878B8] bg-[#EAF5FC] border border-[#1878B8]/20 px-2.5 py-1 rounded-md shrink-0 truncate max-w-[180px]">
                       {review.tourName}
                     </span>
                   )}
@@ -348,7 +348,7 @@ export default function ReviewsFilterableList({ initialReviews }: ReviewsFiltera
 
                   <button
                     type="submit"
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 py-3 text-xs sm:text-sm font-semibold text-white shadow-md hover:bg-blue-800 transition-colors"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#E67E22] hover:bg-[#D35400] py-3 text-xs sm:text-sm font-semibold text-white shadow-md shadow-[#E67E22]/20 transition-colors cursor-pointer"
                   >
                     <Send className="h-4 w-4" />
                     <span>Kirim Ulasan untuk Moderasi</span>

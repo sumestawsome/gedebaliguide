@@ -148,7 +148,7 @@ export default function ContactMessageForm() {
                 href={waFollowUpUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3.5 text-xs sm:text-sm font-bold text-white shadow-lg shadow-emerald-600/30 hover:bg-emerald-500 transition-colors"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#E67E22] hover:bg-[#D35400] px-6 py-3.5 text-xs sm:text-sm font-bold text-white shadow-lg shadow-[#E67E22]/30 transition-all cursor-pointer"
               >
                 <MessageCircle className="h-4 w-4" />
                 <span>Teruskan ke WhatsApp Sekarang</span>
@@ -299,14 +299,14 @@ export default function ContactMessageForm() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Ceritakan preferensi Anda: lokasi hotel penjemputan, ada anak kecil/lansia, atau tempat khusus yang ingin dikunjungi..."
-                  className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
+                  className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 focus:border-[#1878B8] focus:outline-hidden transition-colors"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 py-3.5 text-sm sm:text-base font-semibold text-white shadow-md hover:bg-blue-800 disabled:opacity-75 transition-all active:scale-[0.99]"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#E67E22] hover:bg-[#D35400] py-3.5 text-sm sm:text-base font-semibold text-white shadow-md shadow-[#E67E22]/20 disabled:opacity-75 transition-all active:scale-[0.99] cursor-pointer"
               >
                 {isLoading ? (
                   <>

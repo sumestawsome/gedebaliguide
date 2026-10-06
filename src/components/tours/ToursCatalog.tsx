@@ -1,102 +1,125 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { Tour } from "@/types";
-import { mockAllTours } from "@/data/mock-data";
 import TourCard from "./TourCard";
-import {
-  Filter,
-  RotateCcw,
-  MapPin,
-  Tag,
-  Compass,
-  MessageCircle,
-  Search,
-  X,
-  SlidersHorizontal,
-  ArrowUpDown,
-  Sparkles,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { Search, SlidersHorizontal, RotateCcw, MessageCircle, Sparkles } from "lucide-react";
+import { handleWhatsAppClick } from "@/lib/lead-tracker";
 
 interface ToursCatalogProps {
   initialTours?: Tour[];
+  lang?: "id" | "en";
 }
 
-type SortOption = "popular" | "price_asc" | "price_desc" | "rating";
+type SortOption = "popular" | "price_asc" | "price_desc" | "duration";
 
-const quickSuggestions = [
-  "Ubud",
-  "Kecak Uluwatu",
-  "Lempuyang",
-  "Kintamani",
-  "Bedugul",
-  "Nusa Penida",
-];
-
-export default function ToursCatalog({ initialTours = mockAllTours }: ToursCatalogProps) {
+export default function ToursCatalog({
+  initialTours = [],
+  lang = "id",
+}: ToursCatalogProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedArea, setSelectedArea] = useState<string>("all");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedArea, setSelectedArea] = useState<string>("all");
   const [sortBy, setSortBy] = useState<SortOption>("popular");
 
-  const activeTours = useMemo(() => {
-    return initialTours.filter((tour) => tour.isActive);
-  }, [initialTours]);
-
-  // Extract unique areas and categories with counts
-  const areas = useMemo(() => {
-    const set = new Set<string>();
-    activeTours.forEach((t) => {
-      if (t.area) set.add(t.area);
-    });
-    return Array.from(set);
-  }, [activeTours]);
-
-  const categories = useMemo(() => {
-    const set = new Set<string>();
-    activeTours.forEach((t) => {
-      if (t.category) set.add(t.category);
-    });
-    return Array.from(set);
-  }, [activeTours]);
-
-  const getCategoryLabel = (cat: string) => {
-    switch (cat) {
-      case "culture":
-        return "Budaya";
-      case "adventure":
-        return "Petualangan";
-      case "nature":
-        return "Alam & Hutan";
-      case "heritage":
-        return "Warisan Sejarah";
-      case "honeymoon":
-        return "Romantis";
-      default:
-        return cat;
-    }
+  const dictionary = {
+    id: {
+      searchPlaceholder: "Cari paket tur (contoh: Ubud, Kecak Uluwatu, Melukat)...",
+      sortLabel: "Urutkan:",
+      sortOptions: {
+        popular: "Paling Populer",
+        price_asc: "Harga Terendah",
+        price_desc: "Harga Tertinggi",
+        duration: "Durasi Tur",
+      },
+      categories: [
+        { id: "all", label: "Semua Kategori" },
+        { id: "culture", label: "Budaya" },
+        { id: "nature", label: "Alam & Hutan" },
+        { id: "adventure", label: "Petualangan" },
+        { id: "heritage", label: "Warisan Sejarah" },
+      ],
+      areas: [
+        { id: "all", label: "Semua Wilayah" },
+        { id: "ubud", label: "Ubud" },
+        { id: "bedugul", label: "Bedugul" },
+        { id: "uluwatu", label: "Uluwatu" },
+        { id: "bali timur", label: "Bali Timur" },
+        { id: "kintamani", label: "Kintamani" },
+        { id: "nusa penida", label: "Nusa Penida" },
+      ],
+      counter: (count: number, total: number) =>
+        `Menampilkan ${count} dari ${total} paket tur privat`,
+      resetFilter: "Reset Filter",
+      emptyTitle: "Tidak Ditemukan Paket Tur yang Cocok",
+      emptyDesc:
+        "Coba gunakan kata kunci lain, atau ceritakan destinasi impian Anda agar Bli Gede bisa merancang rute khusus untuk Anda.",
+      emptyBtnWa: "Konsultasi Custom Itinerary via WhatsApp",
+    },
+    en: {
+      searchPlaceholder: "Search tour packages (e.g. Ubud, Kecak, Waterfalls)...",
+      sortLabel: "Sort by:",
+      sortOptions: {
+        popular: "Most Popular",
+        price_asc: "Lowest Price",
+        price_desc: "Highest Price",
+        duration: "Tour Duration",
+      },
+      categories: [
+        { id: "all", label: "All Categories" },
+        { id: "culture", label: "Culture" },
+        { id: "nature", label: "Nature & Forest" },
+        { id: "adventure", label: "Adventure" },
+        { id: "heritage", label: "Heritage" },
+      ],
+      areas: [
+        { id: "all", label: "All Regions" },
+        { id: "ubud", label: "Ubud" },
+        { id: "bedugul", label: "Bedugul" },
+        { id: "uluwatu", label: "Uluwatu" },
+        { id: "bali timur", label: "East Bali" },
+        { id: "kintamani", label: "Kintamani" },
+        { id: "nusa penida", label: "Nusa Penida" },
+      ],
+      counter: (count: number, total: number) =>
+        `Showing ${count} of ${total} private tour packages`,
+      resetFilter: "Reset Filters",
+      emptyTitle: "No Matching Tour Packages Found",
+      emptyDesc:
+        "Try adjusting your search criteria, or chat with Bli Gede directly to craft a personalized custom itinerary.",
+      emptyBtnWa: "Request Custom Itinerary via WhatsApp",
+    },
   };
 
-  // Filtered & Sorted tours
+  const t = dictionary[lang];
+
+  // Filtered & Sorted Tours
   const filteredTours = useMemo(() => {
-    const list = activeTours.filter((tour) => {
-      const matchArea =
-        selectedArea === "all" ||
-        tour.area.toLowerCase() === selectedArea.toLowerCase();
+    const list = initialTours.filter((tour) => {
+      // Filter status
+      if (!tour.isActive) return false;
+
+      // Filter category
       const matchCategory =
         selectedCategory === "all" || tour.category === selectedCategory;
 
+      // Filter area
+      const matchArea =
+        selectedArea === "all" ||
+        tour.area.toLowerCase().includes(selectedArea.toLowerCase());
+
+      // Filter search
       const q = searchQuery.toLowerCase().trim();
       const matchSearch =
         q === "" ||
         tour.name.toLowerCase().includes(q) ||
         tour.tagline.toLowerCase().includes(q) ||
+        tour.description.toLowerCase().includes(q) ||
         tour.area.toLowerCase().includes(q) ||
-        tour.highlights.some((h) => h.toLowerCase().includes(q));
+        (tour.highlights &&
+          tour.highlights.some((hl) => hl.toLowerCase().includes(q)));
 
-      return matchArea && matchCategory && matchSearch;
+      return matchCategory && matchArea && matchSearch;
     });
 
     // Sorting
@@ -104,7 +127,7 @@ export default function ToursCatalog({ initialTours = mockAllTours }: ToursCatal
       if (sortBy === "popular") {
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
-        return b.rating - a.rating;
+        return (b.rating || 5) - (a.rating || 5);
       }
       if (sortBy === "price_asc") {
         return a.price - b.price;
@@ -112,453 +135,304 @@ export default function ToursCatalog({ initialTours = mockAllTours }: ToursCatal
       if (sortBy === "price_desc") {
         return b.price - a.price;
       }
-      if (sortBy === "rating") {
-        if (b.rating !== a.rating) return b.rating - a.rating;
-        return b.reviewCount - a.reviewCount;
+      if (sortBy === "duration") {
+        return a.duration.localeCompare(b.duration);
       }
       return 0;
     });
-  }, [activeTours, selectedArea, selectedCategory, searchQuery, sortBy]);
+  }, [initialTours, selectedCategory, selectedArea, searchQuery, sortBy]);
 
-  const isFilterActive =
-    selectedArea !== "all" ||
-    selectedCategory !== "all" ||
+  const isFiltered =
     searchQuery.trim() !== "" ||
+    selectedCategory !== "all" ||
+    selectedArea !== "all" ||
     sortBy !== "popular";
 
-  const resetFilters = () => {
-    setSelectedArea("all");
-    setSelectedCategory("all");
+  const handleReset = () => {
     setSearchQuery("");
+    setSelectedCategory("all");
+    setSelectedArea("all");
     setSortBy("popular");
   };
 
-  const handleQuickSuggestionClick = (keyword: string) => {
-    if (searchQuery.toLowerCase() === keyword.toLowerCase()) {
-      setSearchQuery("");
-    } else {
-      setSearchQuery(keyword);
-    }
-  };
-
-  const emptyWaUrl = buildWhatsAppUrl({
-    customNote: `Halo Bli Gede, saya mencari paket tur dengan kriteria: wilayah ${
-      selectedArea !== "all" ? selectedArea : "bebas"
-    }, kategori ${
-      selectedCategory !== "all" ? getCategoryLabel(selectedCategory) : "bebas"
-    }${searchQuery ? `, pencarian "${searchQuery}"` : ""}. Apakah bisa custom itinerary khusus?`,
-    source: "custom_itinerary",
-  });
-
   return (
-    <div className="space-y-8">
-      {/* Filter & Search Bar Controls */}
-      <div className="rounded-3xl border border-stone-200/80 bg-white p-5 sm:p-7 shadow-sm space-y-5">
-        {/* Top Control Header: Search Bar & Sort Dropdown */}
-        <div className="space-y-3 pb-4 border-b border-stone-100">
-          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-            {/* Keyword Search */}
-            <div className="relative flex-1 max-w-lg">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400 pointer-events-none" />
+    <div className="space-y-8 sm:space-y-10">
+      {/* ========================================================
+          KONTROL PENCARIAN & FILTER TERPADU (RESPONSIF DESKTOP & MOBILE)
+          ======================================================== */}
+      <div className="bg-white border border-[#EBE9E6] rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-7 shadow-[0_4px_20px_rgba(12,140,94,0.05)] space-y-4 sm:space-y-5">
+        {/* DESKTOP LAYOUT (>= 1024px) */}
+        <div className="hidden lg:block space-y-4">
+          {/* Baris 1: Search Bar Membentang Luas (Kiri) + Dropdown Sort (Kanan) */}
+          <div className="flex items-center gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-[#5E6965] pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari rute tur atau destinasi (misal: Kecak, Ubud, Danau, Air Terjun)..."
-                className="w-full rounded-2xl border border-stone-300 bg-stone-50/50 pl-10 pr-9 py-2.5 text-base sm:text-xs text-stone-900 placeholder:text-stone-400 focus:border-blue-700 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-100 transition-all"
+                placeholder={t.searchPlaceholder}
+                className="w-full pl-10 pr-9 py-3 rounded-xl bg-[#FEFDFB] border border-[#EBE9E6] text-sm text-[#08090A] placeholder-[#5E6965] focus:outline-none focus:border-[#1878B8] focus:ring-2 focus:ring-[#1878B8]/20 transition-all font-sans"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 text-stone-400 hover:text-stone-700 rounded-full"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5E6965] hover:text-[#08090A] p-1 cursor-pointer"
                   aria-label="Hapus pencarian"
                 >
-                  <X className="h-3.5 w-3.5" />
+                  ✕
                 </button>
               )}
             </div>
 
-            {/* Sort Selector & Reset Button */}
-            <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-              <div className="flex items-center gap-2">
-                <ArrowUpDown className="h-3.5 w-3.5 text-stone-500 shrink-0" />
+            {/* Dropdown Sort Desktop */}
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-xs font-semibold text-[#5E6965]">
+                {t.sortLabel}
+              </span>
+              <div className="relative">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  aria-label="Urutkan Tur"
-                  className="rounded-xl border border-stone-300 bg-white px-3 py-2 text-xs font-semibold text-stone-700 focus:border-blue-700 focus:outline-hidden cursor-pointer"
+                  className="appearance-none bg-[#FEFDFB] border border-[#EBE9E6] rounded-xl px-4 py-3 pr-9 text-sm font-semibold text-[#08090A] focus:outline-none focus:border-[#0C8C5E] cursor-pointer"
+                  aria-label={t.sortLabel}
                 >
-                  <option value="popular">Paling Populer</option>
-                  <option value="price_asc">Harga: Termurah</option>
-                  <option value="price_desc">Harga: Tertinggi</option>
-                  <option value="rating">Rating Tertinggi</option>
+                  <option value="popular">{t.sortOptions.popular}</option>
+                  <option value="price_asc">{t.sortOptions.price_asc}</option>
+                  <option value="price_desc">{t.sortOptions.price_desc}</option>
+                  <option value="duration">{t.sortOptions.duration}</option>
                 </select>
+                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#5E6965]">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </div>
               </div>
-
-              {isFilterActive && (
-                <button
-                  type="button"
-                  onClick={resetFilters}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors cursor-pointer"
-                >
-                  <RotateCcw className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">Reset Filter</span>
-                  <span className="sm:hidden">Reset</span>
-                </button>
-              )}
             </div>
           </div>
 
-          {/* Quick Search Suggestions */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 text-xs">
-            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
-              <Sparkles className="h-3 w-3 text-amber-500" />
-              <span>Pencarian Cepat:</span>
-            </span>
-            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-              {quickSuggestions.map((suggestion) => {
-                const isActive =
-                  searchQuery.toLowerCase() === suggestion.toLowerCase();
+          {/* Baris 2: Tab Pills Kategori Wisata Netral (Kiri) + Dropdown Wilayah (Kanan) */}
+          <div className="flex items-center justify-between gap-4 pt-1">
+            {/* Tab Pills Kategori Wisata */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {t.categories.map((cat) => {
+                const active = selectedCategory === cat.id;
                 return (
                   <button
-                    key={suggestion}
+                    key={cat.id}
                     type="button"
-                    onClick={() => handleQuickSuggestionClick(suggestion)}
-                    className={`rounded-full px-2.5 py-1 text-[11px] font-medium whitespace-nowrap transition-all cursor-pointer ${
-                      isActive
-                        ? "bg-amber-500 text-white shadow-xs font-bold"
-                        : "bg-stone-100 text-stone-600 hover:bg-stone-200/80"
+                    onClick={() => setSelectedCategory(cat.id)}
+                    className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                      active
+                        ? cat.id === "all"
+                          ? "bg-[#1878B8] text-white shadow-xs"
+                          : "bg-[#0C8C5E] text-white shadow-xs"
+                        : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
                     }`}
                   >
-                    {suggestion}
+                    {cat.label}
                   </button>
                 );
               })}
+            </div>
+
+            {/* Dropdown Wilayah Desktop */}
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-xs font-semibold text-[#5E6965]">
+                {lang === "id" ? "Wilayah:" : "Region:"}
+              </span>
+              <div className="relative">
+                <select
+                  value={selectedArea}
+                  onChange={(e) => setSelectedArea(e.target.value)}
+                  className="appearance-none bg-[#FEFDFB] border border-[#EBE9E6] rounded-xl px-4 py-2 pr-9 text-xs font-semibold text-[#08090A] focus:outline-none focus:border-[#1878B8] cursor-pointer"
+                  aria-label={lang === "id" ? "Pilih Wilayah" : "Select Region"}
+                >
+                  {t.areas.map((area) => (
+                    <option key={area.id} value={area.id}>
+                      {area.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#5E6965]">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Filter Rows: Kategori & Wilayah */}
-        <div className="space-y-4 text-xs sm:text-sm">
-          {/* Category Filter */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[11px] text-stone-500">
-                <Tag className="h-3.5 w-3.5 text-stone-400" />
-                Kategori Wisata
-              </span>
-              <span className="text-[11px] text-stone-400">
-                {selectedCategory === "all"
-                  ? "Semua Kategori"
-                  : getCategoryLabel(selectedCategory)}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 sm:flex-wrap no-scrollbar -mx-2 px-2 sm:mx-0 sm:px-0">
-              <button
-                type="button"
-                onClick={() => setSelectedCategory("all")}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
-                  selectedCategory === "all"
-                    ? "bg-blue-700 text-white shadow-xs"
-                    : "bg-stone-100 text-stone-700 hover:bg-stone-200/70"
-                }`}
-              >
-                <span>Semua Kategori</span>
-                <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                    selectedCategory === "all"
-                      ? "bg-white/20 text-white"
-                      : "bg-stone-200/80 text-stone-600"
-                  }`}
-                >
-                  {activeTours.length}
-                </span>
-              </button>
-              {categories.map((cat) => {
-                const count = activeTours.filter((t) => t.category === cat).length;
-                const isSelected = selectedCategory === cat;
-                return (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
-                      isSelected
-                        ? "bg-blue-700 text-white shadow-xs"
-                        : "bg-stone-100 text-stone-700 hover:bg-stone-200/70"
-                    }`}
-                  >
-                    <span>{getCategoryLabel(cat)}</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                        isSelected
-                          ? "bg-white/20 text-white"
-                          : "bg-stone-200/80 text-stone-600"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Area Filter */}
-          <div className="space-y-2 pt-3 border-t border-stone-100">
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[11px] text-stone-500">
-                <MapPin className="h-3.5 w-3.5 text-stone-400" />
-                Wilayah & Destinasi Bali
-              </span>
-              <span className="text-[11px] text-stone-400">
-                {selectedArea === "all" ? "Semua Wilayah" : selectedArea}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 sm:flex-wrap no-scrollbar -mx-2 px-2 sm:mx-0 sm:px-0">
-              <button
-                type="button"
-                onClick={() => setSelectedArea("all")}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
-                  selectedArea === "all"
-                    ? "bg-stone-900 text-white shadow-xs"
-                    : "bg-stone-100 text-stone-700 hover:bg-stone-200/70"
-                }`}
-              >
-                <span>Semua Wilayah</span>
-                <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                    selectedArea === "all"
-                      ? "bg-white/20 text-white"
-                      : "bg-stone-200/80 text-stone-600"
-                  }`}
-                >
-                  {activeTours.length}
-                </span>
-              </button>
-              {areas.map((area) => {
-                const count = activeTours.filter(
-                  (t) => t.area.toLowerCase() === area.toLowerCase()
-                ).length;
-                const isSelected =
-                  selectedArea.toLowerCase() === area.toLowerCase();
-                return (
-                  <button
-                    key={area}
-                    type="button"
-                    onClick={() => setSelectedArea(area)}
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
-                      isSelected
-                        ? "bg-stone-900 text-white shadow-xs"
-                        : "bg-stone-100 text-stone-700 hover:bg-stone-200/70"
-                    }`}
-                  >
-                    <span>{area}</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                        isSelected
-                          ? "bg-white/20 text-white"
-                          : "bg-stone-200/80 text-stone-600"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Active Filter Badges Bar */}
-        {isFilterActive && (
-          <div className="pt-3 border-t border-stone-100 flex flex-wrap items-center gap-2 text-xs">
-            <span className="text-stone-400 font-semibold text-[11px] uppercase tracking-wider">
-              Filter Aktif:
-            </span>
-
+        {/* MOBILE & TABLET LAYOUT (< 1024px) */}
+        <div className="block lg:hidden space-y-3">
+          {/* Mobile Baris 1: Search Bar Penuh */}
+          <div className="relative w-full">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-[#5E6965] pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t.searchPlaceholder}
+              className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-[#FEFDFB] border border-[#EBE9E6] text-xs sm:text-sm text-[#08090A] placeholder-[#5E6965] focus:outline-none focus:border-[#1878B8] focus:ring-2 focus:ring-[#1878B8]/20 transition-all font-sans"
+            />
             {searchQuery && (
-              <span className="inline-flex items-center gap-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200/80 px-2.5 py-1 text-xs">
-                <span>Kata Kunci: &ldquo;{searchQuery}&rdquo;</span>
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery("")}
-                  className="p-0.5 hover:text-blue-950 rounded-full"
-                  aria-label="Hapus kata kunci"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            )}
-
-            {selectedCategory !== "all" && (
-              <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/80 px-2.5 py-1 text-xs">
-                <span>Kategori: {getCategoryLabel(selectedCategory)}</span>
-                <button
-                  type="button"
-                  onClick={() => setSelectedCategory("all")}
-                  className="p-0.5 hover:text-emerald-950 rounded-full"
-                  aria-label="Hapus filter kategori"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            )}
-
-            {selectedArea !== "all" && (
-              <span className="inline-flex items-center gap-1 rounded-lg bg-stone-100 text-stone-800 border border-stone-300 px-2.5 py-1 text-xs">
-                <span>Wilayah: {selectedArea}</span>
-                <button
-                  type="button"
-                  onClick={() => setSelectedArea("all")}
-                  className="p-0.5 hover:text-stone-950 rounded-full"
-                  aria-label="Hapus filter wilayah"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            )}
-
-            {sortBy !== "popular" && (
-              <span className="inline-flex items-center gap-1 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-1 text-xs">
-                <span>
-                  Urut:{" "}
-                  {sortBy === "price_asc"
-                    ? "Harga Termurah"
-                    : sortBy === "price_desc"
-                    ? "Harga Tertinggi"
-                    : "Rating"}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setSortBy("popular")}
-                  className="p-0.5 hover:text-amber-950 rounded-full"
-                  aria-label="Reset urutan"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5E6965] hover:text-[#08090A] p-1 cursor-pointer"
+                aria-label="Hapus pencarian"
+              >
+                ✕
+              </button>
             )}
           </div>
-        )}
 
-        {/* Results Counter Subtext */}
-        <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
-          <span>
-            Menampilkan <strong>{filteredTours.length}</strong> dari{" "}
-            <strong>{activeTours.length}</strong> paket tur privat
+          {/* Mobile Baris 2: 2 Dropdown Select Sejajar (Dropdown Kategori di kiri, Dropdown Wilayah di kanan) */}
+          <div className="grid grid-cols-2 gap-2.5">
+            {/* Dropdown Kategori */}
+            <div className="relative w-full">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="w-full appearance-none bg-[#FEFDFB] border border-[#EBE9E6] rounded-xl px-3 py-2.5 pr-8 text-xs font-semibold text-[#08090A] focus:outline-none focus:border-[#1878B8] cursor-pointer truncate"
+                aria-label={lang === "id" ? "Pilih Kategori" : "Select Category"}
+              >
+                {t.categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#5E6965]">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Dropdown Wilayah */}
+            <div className="relative w-full">
+              <select
+                value={selectedArea}
+                onChange={(e) => setSelectedArea(e.target.value)}
+                className="w-full appearance-none bg-[#FEFDFB] border border-[#EBE9E6] rounded-xl px-3 py-2.5 pr-8 text-xs font-semibold text-[#08090A] focus:outline-none focus:border-[#1878B8] cursor-pointer truncate"
+                aria-label={lang === "id" ? "Pilih Wilayah" : "Select Region"}
+              >
+                {t.areas.map((area) => (
+                  <option key={area.id} value={area.id}>
+                    {area.label}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#5E6965]">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Baris Bawah: Counter Dinamis & Tombol Reset Filter / Urutan Mobile */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#EBE9E6] text-xs text-[#5E6965]">
+          <span className="font-medium">
+            {t.counter(filteredTours.length, initialTours.length)}
           </span>
-          {isFilterActive && (
-            <span className="text-blue-700 font-medium hidden sm:inline">
-              Filter aktif diterapkan
-            </span>
-          )}
+
+          <div className="flex items-center gap-3">
+            {/* Sort Dropdown Ringkas Khusus Mobile */}
+            <div className="lg:hidden flex items-center gap-1.5">
+              <span className="text-[11px] font-semibold text-[#5E6965]">
+                {t.sortLabel}
+              </span>
+              <div className="relative">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  className="appearance-none bg-[#FEFDFB] border border-[#EBE9E6] rounded-lg px-2.5 py-1.5 pr-7 text-xs font-semibold text-[#08090A] focus:outline-none focus:border-[#0C8C5E] cursor-pointer"
+                  aria-label={t.sortLabel}
+                >
+                  <option value="popular">{t.sortOptions.popular}</option>
+                  <option value="price_asc">{t.sortOptions.price_asc}</option>
+                  <option value="price_desc">{t.sortOptions.price_desc}</option>
+                  <option value="duration">{t.sortOptions.duration}</option>
+                </select>
+                <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[#5E6965]">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {isFiltered && (
+              <button
+                type="button"
+                onClick={handleReset}
+                className="inline-flex items-center gap-1.5 text-[#E67E22] hover:text-[#D35400] font-semibold cursor-pointer transition-colors"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                <span>{t.resetFilter}</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Empty State vs Tours Grid */}
-      {filteredTours.length === 0 ? (
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-3xl border border-dashed border-stone-300 bg-white p-8 sm:p-12 text-center space-y-6 shadow-xs"
-        >
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 border border-amber-200">
-            <Compass className="h-8 w-8" />
+      {/* ========================================================
+          RESPONSIVE GRID KARTU PAKET TUR
+          - Mobile (< 768px): 1 kolom
+          - Tablet (768px - 1023px): WAJIB 2 kolom (md:grid-cols-2)
+          - Desktop (>= 1024px): 3 kolom (lg:grid-cols-3)
+          ======================================================== */}
+      {filteredTours.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+          {filteredTours.map((tour, index) => (
+            <TourCard
+              key={tour.id || tour.slug || index}
+              tour={tour}
+              priority={index < 3}
+              lang={lang}
+            />
+          ))}
+        </div>
+      ) : (
+        /* Empty State yang Hangat */
+        <div className="text-center py-16 px-6 bg-white border border-[#EBE9E6] rounded-3xl max-w-2xl mx-auto shadow-xs">
+          <div className="w-12 h-12 rounded-full bg-[#FFF5EB] text-[#E67E22] flex items-center justify-center mx-auto mb-4">
+            <Sparkles className="h-6 w-6" />
           </div>
-
-          <div className="space-y-2 max-w-md mx-auto">
-            <h3 className="font-serif text-2xl font-bold text-stone-900">
-              Tidak Ada Tur yang Sesuai
-            </h3>
-            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
-              Tidak ada paket tur yang cocok dengan kombinasi filter Anda
-              {searchQuery && (
-                <>
-                  {" "}
-                  (pencarian: &ldquo;<strong>{searchQuery}</strong>&rdquo;)
-                </>
-              )}
-              {selectedCategory !== "all" && (
-                <>
-                  {" "}
-                  kategori <strong>{getCategoryLabel(selectedCategory)}</strong>
-                </>
-              )}
-              {selectedArea !== "all" && (
-                <>
-                  {" "}
-                  wilayah <strong>{selectedArea}</strong>
-                </>
-              )}
-              . Coba reset filter atau konsultasikan rute kustom Anda langsung bersama Bli Gede.
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
+          <h3 className="font-serif text-xl sm:text-2xl font-normal text-[#08090A] mb-2">
+            {t.emptyTitle}
+          </h3>
+          <p className="text-xs sm:text-sm text-[#5E6965] leading-relaxed max-w-md mx-auto mb-6">
+            {t.emptyDesc}
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
               type="button"
-              onClick={resetFilters}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 px-6 py-3.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-blue-800 transition-all cursor-pointer"
+              onClick={handleReset}
+              className="px-5 py-2.5 rounded-xl border border-[#CFCDCA] text-xs sm:text-sm font-semibold text-[#08090A] hover:bg-[#FAF8F5] transition-colors cursor-pointer w-full sm:w-auto"
             >
-              <RotateCcw className="h-4 w-4" />
-              <span>Reset Filter & Tampilkan Semua Tur</span>
+              {t.resetFilter}
             </button>
-
-            <a
-              href={emptyWaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 transition-all cursor-pointer"
+            <button
+              type="button"
+              onClick={() =>
+                handleWhatsAppClick(
+                  "/tours - Empty State",
+                  undefined,
+                  `Halo Bli Gede, saya mencari paket tur dengan kriteria khusus (${searchQuery || selectedCategory}). Apakah bisa request rute kustom?`
+                )
+              }
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-[#E67E22] hover:bg-[#D35400] text-white text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer w-full sm:w-auto"
             >
               <MessageCircle className="h-4 w-4" />
-              <span>Tanya Custom Itinerary via WA</span>
-            </a>
+              <span>{t.emptyBtnWa}</span>
+            </button>
           </div>
-
-          {/* Quick Recommendations when Empty */}
-          <div className="pt-6 border-t border-stone-200/80 max-w-2xl mx-auto text-left">
-            <p className="text-xs font-bold uppercase tracking-wider text-stone-400 mb-3 text-center">
-              Atau Jelajahi Rekomendasi Tur Terfavorit Wisatawan:
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {activeTours.slice(0, 3).map((recTour) => (
-                <div
-                  key={recTour.id}
-                  className="rounded-2xl border border-stone-200/80 bg-stone-50/70 p-3.5 hover:border-blue-300 hover:bg-white transition-all text-xs space-y-1.5"
-                >
-                  <p className="font-serif font-bold text-stone-900 line-clamp-1">
-                    {recTour.name}
-                  </p>
-                  <p className="text-[11px] text-stone-500">
-                    {recTour.area} • {recTour.duration}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      resetFilters();
-                      setSearchQuery(recTour.area);
-                    }}
-                    className="text-[11px] font-bold text-blue-700 hover:underline inline-block pt-0.5 cursor-pointer"
-                  >
-                    Lihat Tur Ini →
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      ) : (
-        /* Tours Grid */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <AnimatePresence mode="popLayout">
-            {filteredTours.map((tour, index) => (
-              <TourCard key={tour.id} tour={tour} priority={index < 3} />
-            ))}
-          </AnimatePresence>
         </div>
       )}
     </div>

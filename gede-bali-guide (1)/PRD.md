@@ -16,7 +16,7 @@ Membangun personal branding website untuk Gede yang:
 
 **Pendekatan desain**
 
-Luxury Travel Editorial yang hangat dan ramah khas Bali, mobile-first, dengan warna *warm off-white*, biru ocean, hijau WhatsApp, dan aksen sunset orange. Judul memakai serif editoial Fraunces, sedangkan teks dan UI memakai Inter.
+Luxury Travel Editorial yang hangat, elegan, dan ramah khas Bali, mobile-first, dengan warna kanvas *warm cream* (`#FEFDFB`), dominan hijau alam Bali (`#0C8C5E`), biru ocean trust (`#1878B8`), dan aksen tombol CTA WhatsApp Sunset Amber (`#E67E22`). Judul memakai serif editorial **Libre Baskerville**, sedangkan teks dan UI memakai **Inter**.
 
 **Kemenangan pertama produk**
 
@@ -31,7 +31,7 @@ Berikut persyaratan utama yang menjadi acuan pengembangan:
 **Halaman publik**
 - Tersedia halaman: Home (`/`), Katalog Tur (`/tours`), Detail Tur (`/tours/[slug]`), About (`/about`), Gallery (`/gallery`), Reviews (`/reviews`), Contact (`/contact`), dan FAQ (`/faq`).
 - Semua halaman publik harus mobile-first dan nyaman digunakan di perangkat HP.
-- Tombol WhatsApp mengambang berwarna hijau harus selalu terlihat di semua halaman publik.
+- Tombol WhatsApp mengambang bernuansa Sunset Amber (#E67E22) dengan aksen hijau alam harus selalu terlihat di semua halaman publik.
 
 **Funnel pemesanan langsung**
 - Tombol CTA pada kartu tur maupun halaman detail tur mengarah ke WhatsApp Gede.
@@ -68,7 +68,7 @@ Fitur-fitur di bawah mengikuti roadmap yang telah disepakati dan dikelompokkan p
 - **Kepercayaan Sekilas** — Memperlihatkan pengalaman, lisensi HPI, dan kendaraan ber-AC.
 - **Tur & Destinasi Pilihan** — Menyorot beberapa tur favorit dan destinasi populer.
 - **Testimoni Singkat** — Menampilkan kesan tamu sebelumnya sebagai bukti sosial.
-- **Ajakan WhatsApp** — Tombol hijau untuk langsung tanya atau pesan ke Gede.
+- **Ajakan WhatsApp** — Tombol Sunset Amber (#E67E22) untuk langsung tanya atau pesan ke Gede.
 
 **Halaman Utama**
 - **Hero & Pesan Utama** — Foto Bali yang hangat dengan kalimat jelas bahwa tur privat bisa dipesan langsung bersama Gede.
@@ -89,7 +89,7 @@ Fitur-fitur di bawah mengikuti roadmap yang telah disepakati dan dikelompokkan p
 - **Detail Harga & Kuota** — Harga per orang/kelompok serta jumlah tamu minimum dan maksimum.
 
 **Pesan WhatsApp**
-- **Tombol WhatsApp Mengambang** — Tombol hijau di pojok layar pada semua halaman publik.
+- **Tombol WhatsApp Mengambang** — Tombol Sunset Amber (#E67E22) di pojok layar pada semua halaman publik.
 - **Pesan Otomatis untuk Tur** — Saat CTA di halaman tur diklik, WhatsApp terbuka dengan pesan berisi nama tur.
 - **Isi Tanggal & Jumlah Tamu** — Form singkat untuk memilih tanggal dan jumlah tamu lalu diarahkan ke chat Gede.
 - **Langsung Tanya Tanpa Isi Form** — Pengunjung tetap bisa chat WhatsApp tanpa mengisi data apa pun.
@@ -412,13 +412,15 @@ Catatan: karena Firestore adalah database NoSQL, diagram di atas menggambarkan r
 
 **Desain Visual**
 - Palet warna utama dijadikan Tailwind theme tokens:
-  - Background: Warm Off-White `#FAFAF9`
-  - Primary: Ocean Blue `#1D4ED8`
-  - Secondary CTA WhatsApp: Green `#16A34A`
-  - Accent: Sunset Orange `#F97316`
+  - Background Canvas: `#FEFDFB`
+  - Brand Dominan (Bali Green): `#0C8C5E`
+  - Primary Trust (Ocean Blue): `#1878B8`
+  - Accent / Primary CTA (Sunset Amber): `#E67E22`
+  - Tombol CTA WhatsApp: Sunset Amber (`#E67E22`) dengan aksen hijau alam (`#0C8C5E`)
 - Tipografi:
-  - Judul: **Fraunces**
-  - Teks/UI: **Inter**
+  - Judul / Display: **Libre Baskerville** (serif editorial)
+  - Teks / UI: **Inter**
+  - Teknis / Monospace: **Geist Mono**
 
 **SEO & Metadata**
 - `generateMetadata` di setiap halaman.

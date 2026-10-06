@@ -14,6 +14,7 @@ export const FIRESTORE_COLLECTIONS = {
 export const FIRESTORE_DOCS = {
   HOME_CONFIG: "home_config",
   GUIDE_PROFILE: "guide_profile",
+  ABOUT_PAGE: "about_page",
   WHATSAPP_CONFIG: "whatsapp_config",
   DIRECT_BOOKING: "direct_booking",
 } as const;

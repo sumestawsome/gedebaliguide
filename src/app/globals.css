@@ -1,21 +1,34 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafaf9;
-  --foreground: #1c1917;
-  --primary: #1d4ed8;
-  --whatsapp: #16a34a;
-  --accent: #f97316;
+  --background: #fefdfb;
+  --foreground: #121715;
+  --color-canvas: #fefdfb;
+  --color-surface: #ffffff;
+  --color-border: #ebe9e6;
+  --color-brand: #1878b8;
+  --color-primary: #1878b8;
+  --color-ocean: #1878b8;
+  --color-secondary: #0c8c5e;
+  --color-bali-green: #0c8c5e;
+  --color-accent: #e67e22;
+  --color-sunset: #e67e22;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-ocean: #1d4ed8;
-  --color-whatsapp: #16a34a;
-  --color-sunset: #f97316;
-  --font-serif: var(--font-fraunces), serif;
-  --font-sans: var(--font-inter), sans-serif;
+  --color-canvas: #fefdfb;
+  --color-surface: #ffffff;
+  --color-brand: #1878b8;
+  --color-primary: #1878b8;
+  --color-ocean: #1878b8;
+  --color-secondary: #0c8c5e;
+  --color-bali-green: #0c8c5e;
+  --color-accent: #e67e22;
+  --color-sunset: #e67e22;
+  --font-serif: var(--font-serif), "Libre Baskerville", Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", sans-serif;
 }
 
 html {

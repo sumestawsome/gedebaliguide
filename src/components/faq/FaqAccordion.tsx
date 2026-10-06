@@ -111,12 +111,12 @@ export default function FaqAccordion() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari pertanyaan... misal: DP, rute, mobil, jam jemput"
-            className="w-full rounded-2xl border border-stone-300 bg-white pl-12 pr-10 py-3.5 text-base sm:text-sm text-stone-900 placeholder:text-stone-400 focus:border-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-100 transition-all shadow-xs"
+            className="w-full rounded-2xl border border-stone-300 bg-white pl-12 pr-10 py-3.5 text-base sm:text-sm text-stone-900 placeholder:text-stone-400 focus:border-[#1878B8] focus:outline-hidden focus:ring-2 focus:ring-[#1878B8]/20 transition-all shadow-xs"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-700 rounded-full"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-700 rounded-full cursor-pointer"
               aria-label="Hapus pencarian"
             >
               <X className="h-4 w-4" />
@@ -137,9 +137,9 @@ export default function FaqAccordion() {
               <button
                 key={cat.key}
                 onClick={() => setActiveCategory(cat.key)}
-                className={`inline-flex items-center gap-2 rounded-full px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold whitespace-nowrap shrink-0 transition-all ${
+                className={`inline-flex items-center gap-2 rounded-full px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                   isActive
-                    ? "bg-blue-700 text-white shadow-md shadow-blue-700/20"
+                    ? "bg-[#1878B8] text-white shadow-md shadow-[#1878B8]/20"
                     : "bg-white text-stone-600 border border-stone-200 hover:border-stone-300 hover:bg-stone-50"
                 }`}
               >
@@ -171,14 +171,14 @@ export default function FaqAccordion() {
           <div className="flex items-center gap-3">
             <button
               onClick={expandAll}
-              className="font-medium text-blue-700 hover:underline hover:text-blue-800"
+              className="font-medium text-[#1878B8] hover:underline cursor-pointer"
             >
               Buka Semua
             </button>
             <span>•</span>
             <button
               onClick={collapseAll}
-              className="font-medium text-stone-500 hover:underline hover:text-stone-700"
+              className="font-medium text-[#1878B8] hover:underline cursor-pointer"
             >
               Tutup Semua
             </button>
@@ -186,9 +186,9 @@ export default function FaqAccordion() {
         </div>
       </div>
 
-      {/* Accordion Items List */}
+      {/* Accordion Cards */}
       {filteredItems.length > 0 ? (
-        <div className="space-y-3.5">
+        <div className="space-y-3 sm:space-y-4">
           {filteredItems.map((item, index) => {
             const isOpen = openItemIds.includes(item.id);
             const badge = getCategoryBadge(item.category);
@@ -196,9 +196,9 @@ export default function FaqAccordion() {
             return (
               <div
                 key={item.id}
-                className={`rounded-2xl border transition-all duration-200 overflow-hidden bg-white ${
+                className={`rounded-2xl sm:rounded-3xl border bg-white overflow-hidden transition-all duration-200 ${
                   isOpen
-                    ? "border-blue-300 shadow-md ring-1 ring-blue-100"
+                    ? "border-[#1878B8]/40 shadow-md ring-1 ring-[#1878B8]/15"
                     : "border-stone-200/80 shadow-xs hover:border-stone-300"
                 }`}
               >
@@ -207,7 +207,7 @@ export default function FaqAccordion() {
                   type="button"
                   onClick={() => toggleItem(item.id)}
                   aria-expanded={isOpen}
-                  className="w-full text-left p-4 sm:p-6 flex items-start justify-between gap-3 sm:gap-4 select-none focus:outline-hidden"
+                  className="w-full text-left p-4 sm:p-6 flex items-start justify-between gap-3 sm:gap-4 select-none focus:outline-hidden cursor-pointer"
                 >
                   <div className="space-y-2 flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -230,7 +230,7 @@ export default function FaqAccordion() {
                   <div
                     className={`shrink-0 mt-1 sm:mt-2 h-7 w-7 sm:h-8 sm:w-8 rounded-full flex items-center justify-center transition-transform duration-200 ${
                       isOpen
-                        ? "bg-blue-50 text-blue-700 rotate-180"
+                        ? "bg-[#EAF5FC] text-[#1878B8] rotate-180"
                         : "bg-stone-100 text-stone-500 hover:bg-stone-200"
                     }`}
                   >
@@ -350,7 +350,7 @@ export default function FaqAccordion() {
               href={waAskUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-emerald-500 transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#E67E22] hover:bg-[#D35400] px-5 py-2.5 text-xs font-bold text-white shadow-md transition-colors"
             >
               <MessageCircle className="h-4 w-4" />
               <span>Tanya Bli Gede Sekarang</span>

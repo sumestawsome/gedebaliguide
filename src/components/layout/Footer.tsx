@@ -1,109 +1,120 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
-import { MessageCircle, ShieldCheck, MapPin, Mail, Phone, Heart } from "lucide-react";
-import { mockGuideProfile } from "@/data/mock-data";
-import { getGeneralConsultationUrl } from "@/lib/whatsapp";
+import { handleWhatsAppClick } from "@/lib/lead-tracker";
 
 export default function Footer() {
-  const waUrl = getGeneralConsultationUrl("footer");
   return (
-    <footer className="border-t border-stone-200 bg-stone-900 text-stone-300">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Col 1: Bio & License */}
-          <div className="space-y-4 md:col-span-2">
-            <div className="flex items-center gap-2">
-              <span className="font-serif text-2xl font-bold text-stone-100">
-                {mockGuideProfile.name}
-              </span>
+    <footer className="bg-[#08090A] text-white pt-14 pb-12 px-4 sm:px-6 lg:px-8 mt-auto border-t border-white/10">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-white/10">
+        {/* Kolom 1: Profil Brand & Lisensi */}
+        <div className="md:col-span-5">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#1878B8] to-[#0F4C81] flex items-center justify-center text-white shadow-xs">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
+                <path d="M12 6v6l4 2" />
+              </svg>
             </div>
-            <p className="text-sm text-stone-400 max-w-md leading-relaxed">
-              Pemandu wisata privat profesional berlisensi resmi HPI Bali. Memandu liburan keluarga, pasangan, dan grup kecil dengan keramahan autentik Bali, kenyamanan mobil ber-AC, dan rute fleksibel tanpa komisi perantara.
-            </p>
-            <div className="flex items-center gap-2 text-xs text-stone-400">
-              <ShieldCheck className="h-4 w-4 text-emerald-400" />
-              <span>Lisensi No: <strong className="text-stone-200">{mockGuideProfile.licenseNumber}</strong> (Himpunan Pramuwisata Indonesia)</span>
+            <div className="font-serif font-bold text-lg text-white tracking-tight">
+              Gede Bali Guide
             </div>
           </div>
-
-          {/* Col 2: Navigasi Cepat */}
-          <div>
-            <h4 className="font-serif text-base font-semibold text-stone-100 mb-4">Navigasi</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/tours" className="hover:text-amber-400 transition-colors">
-                  Paket Tur Populer
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-amber-400 transition-colors">
-                  Profil & Lisensi Gede
-                </Link>
-              </li>
-              <li>
-                <Link href="/gallery" className="hover:text-amber-400 transition-colors">
-                  Dokumentasi Galeri
-                </Link>
-              </li>
-              <li>
-                <Link href="/reviews" className="hover:text-amber-400 transition-colors">
-                  Testimoni Tamu
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="hover:text-amber-400 transition-colors">
-                  Tanya Jawab (FAQ)
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-amber-400 transition-colors">
-                  Hubungi Gede
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Col 3: Kontak Langsung */}
-          <div>
-            <h4 className="font-serif text-base font-semibold text-stone-100 mb-4">Kontak Langsung</h4>
-            <ul className="space-y-3 text-sm text-stone-400">
-              <li className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-amber-400 shrink-0" />
-                <span>Denpasar & Seluruh Wilayah Bali</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-amber-400 shrink-0" />
-                <a href={`tel:${mockGuideProfile.phone}`} className="hover:text-stone-200">
-                  {mockGuideProfile.phone}
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-amber-400 shrink-0" />
-                <a href={`mailto:${mockGuideProfile.email}`} className="hover:text-stone-200">
-                  {mockGuideProfile.email}
-                </a>
-              </li>
-              <li className="pt-2">
-                <a
-                  href={waUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-emerald-700 transition-colors"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  <span>Kirim Pesan WhatsApp</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-12 border-t border-stone-800 pt-6 text-center text-xs text-stone-500 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} Gede Bali Guide. Seluruh hak cipta dilindungi.</p>
-          <p className="flex items-center justify-center gap-1">
-            Dibuat dengan rasa cinta untuk pariwisata Bali yang autentik & berkelanjutan.
+          <p className="text-xs sm:text-sm text-[#969E9B] leading-relaxed mb-4 max-w-sm">
+            Pemandu wisata privat profesional berlisensi resmi HPI Bali (No. Lisensi: HPI-BALI-2015-8849). Menyajikan liburan keluarga dan pasangan dengan kenyamanan mobil ber-AC, rute fleksibel, dan tanpa komisi toko oleh-oleh.
           </p>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-[#1878B8]">
+            <span className="w-2 h-2 rounded-full bg-[#1878B8]" />
+            <span className="font-medium text-white/90">
+              Pemandu Wisata Resmi Bersertifikat HPI Bali
+            </span>
+          </div>
         </div>
+
+        {/* Kolom 2: Tautan Cepat */}
+        <div className="md:col-span-3">
+          <div className="font-semibold text-sm mb-4 tracking-wide uppercase text-white/80">
+            Tautan Cepat
+          </div>
+          <ul className="space-y-2.5 text-xs sm:text-sm text-[#969E9B]">
+            <li>
+              <Link href="/" className="hover:text-white transition-colors">
+                Beranda
+              </Link>
+            </li>
+            <li>
+              <Link href="/tours" className="hover:text-white transition-colors">
+                Katalog Tur
+              </Link>
+            </li>
+            <li>
+              <Link href="/about" className="hover:text-white transition-colors">
+                Tentang Gede
+              </Link>
+            </li>
+            <li>
+              <Link href="/gallery" className="hover:text-white transition-colors">
+                Galeri
+              </Link>
+            </li>
+            <li>
+              <Link href="/reviews" className="hover:text-white transition-colors">
+                Ulasan Tamu
+              </Link>
+            </li>
+            <li>
+              <Link href="/faq" className="hover:text-white transition-colors">
+                FAQ
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Kolom 3: Kontak Langsung */}
+        <div className="md:col-span-4">
+          <div className="font-semibold text-sm mb-4 tracking-wide uppercase text-white/80">
+            Kontak Langsung
+          </div>
+          <div className="space-y-2.5 text-xs sm:text-sm text-[#969E9B]">
+            <div className="flex items-start gap-2.5">
+              <span className="text-white font-medium">WhatsApp:</span>
+              <a
+                href="https://wa.me/6281234567890"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleWhatsAppClick("Footer Direct Contact");
+                }}
+                className="text-[#E67E22] hover:underline cursor-pointer"
+              >
+                +62 812-3456-7890
+              </a>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <span className="text-white font-medium">Wilayah Layanan:</span>
+              <span>Denpasar, Badung, Gianyar, Tabanan, Buleleng</span>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <span className="text-white font-medium">Jam Operasional:</span>
+              <span>07:00 – 22:00 WITA (GMT+8)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Bottom */}
+      <div className="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#717D79]">
+        <div>© 2026 Gede Bali Guide (Gede Sudiartana). Seluruh hak cipta dilindungi.</div>
+        <div className="font-mono text-[11px]">No. Lisensi: HPI-BALI-2015-8849</div>
       </div>
     </footer>
   );

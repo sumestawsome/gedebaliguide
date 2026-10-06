@@ -1,151 +1,1521 @@
-import React from "react";
-import type { Metadata } from "next";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import HeroSection from "@/components/home/HeroSection";
-import TrustBar from "@/components/home/TrustBar";
-import FeaturedToursSection from "@/components/home/FeaturedToursSection";
-import DestinationsSection from "@/components/home/DestinationsSection";
-import TestimonialsSection from "@/components/home/TestimonialsSection";
-import WhatsAppCtaSection from "@/components/home/WhatsAppCtaSection";
-import { mockGuideProfile } from "@/data/mock-data";
-import { getUnifiedHomeContent } from "@/lib/services/home-service";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Gede Bali Guide — Private Tour Guide Berlisensi HPI Bali",
-  description:
-    "Jelajahi keindahan autentik Bali bersama Gede Sudiartana, private tour guide resmi HPI Bali. Mobil ber-AC terawat, rute santai fleksibel & tanpa biaya perantara.",
-  keywords: [
-    "Tour Guide Bali",
-    "Private Tour Guide Bali",
-    "Gede Bali Guide",
-    "Gede Sudiartana",
-    "Sewa Mobil Bali Supir",
-    "Paket Wisata Bali",
-    "HPI Bali",
-    "Tour Bali Keluarga",
-  ],
-  alternates: {
-    canonical: "https://gedebaliguide.com",
-  },
-  openGraph: {
-    title: "Gede Bali Guide — Private Tour Guide Berlisensi HPI Bali",
-    description:
-      "Jelajahi keindahan autentik Bali bersama Gede Sudiartana, private tour guide resmi HPI Bali. Mobil ber-AC terawat, rute santai fleksibel & tanpa biaya perantara.",
-    url: "https://gedebaliguide.com",
-    siteName: "Gede Bali Guide",
-    locale: "id_ID",
-    type: "website",
-    images: [
+import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { handleWhatsAppClick } from "@/lib/lead-tracker";
+import { getActiveFeaturedTours } from "@/lib/services/tour-service";
+import { getFeaturedFiveStarReviews } from "@/lib/services/review-service";
+import { getActiveFaqs } from "@/lib/services/faq-service";
+import { Tour, Review, FAQItem } from "@/types";
+
+// -------------------------------------------------------------
+// Kamus Konten Dwibahasa (ID & EN)
+// -------------------------------------------------------------
+const CONTENT = {
+  id: {
+    nav: {
+      home: "Beranda",
+      tours: "Katalog Tur",
+      about: "Tentang Gede",
+      gallery: "Galeri",
+      reviews: "Ulasan Tamu",
+      faq: "FAQ",
+      contact: "Kontak",
+      whatsapp: "WhatsApp",
+      drawerTitle: "Menu Navigasi",
+      languageLabel: "Bahasa",
+      consultWa: "Konsultasi via WhatsApp",
+    },
+    hero: {
+      badge: "Pemandu Lokal Resmi HPI",
+      greeting: "“Om Swastyastu! Selamat Datang di Bali”",
+      headlineLead: "Jelajahi Pesona Asli Bali Bersama ",
+      name: "Gede Sudiartana",
+      description:
+        "Pemandu lokal ramah berlisensi resmi HPI Bali dengan pengalaman 10+ tahun. Nikmati perjalanan privat santai dengan armada mobil ber-AC bersih, rute fleksibel murni eksplorasi budaya dan panorama alam tanpa paksaan belanja oleh-oleh.",
+      btnWa: "Konsultasi via WhatsApp",
+      btnCatalog: "Lihat Katalog Tur",
+    },
+    trustBar: [
       {
-        url: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=80",
-        width: 1200,
-        height: 630,
-        alt: "Gede Bali Guide - Private Tour Guide Bali",
+        title: "100% Tur Privat",
+        desc: "Tanpa digabung peserta lain",
+      },
+      {
+        title: "Armada Mobil Ber-AC",
+        desc: "Bersih, sejuk & wangi terawat",
+      },
+      {
+        title: "Bebas Request Spot Foto",
+        desc: "Berhenti kapan saja sesuka hati",
+      },
+      {
+        title: "Rating 5.0 / 5.0",
+        desc: "Dipercaya 1.200+ wisatawan",
       },
     ],
+    pillars: {
+      tag: "Jaminan Kenyamanan Anda",
+      title: "Tiga Pilar Utama Layanan",
+      subtitle:
+        "Komitmen profesionalitas untuk memastikan liburan Bali Anda berkesan, aman, dan sarat wawasan budaya luhur.",
+      items: [
+        {
+          title: "10+ Tahun Pengalaman",
+          desc: "Menguasai rute terbaik bebas macet, estimasi waktu ideal di setiap pura dan atraksi, serta spot foto tersembunyi agar momen Anda santai tanpa terburu-buru.",
+        },
+        {
+          title: "Lisensi Resmi HPI Bali",
+          desc: "Wawasan budaya autentik, tata krama pura, dan kisah sejarah Bali yang valid langsung dari pemandu bersertifikasi resmi Himpunan Pramuwisata Indonesia (No. HPI-BALI-2015-8849).",
+        },
+        {
+          title: "Armada Mobil Nyaman Ber-AC",
+          desc: "Kendaraan MPV/SUV bersih, sejuk, wangi, terawat dengan servis berkala demi kenyamanan maksimal seluruh keluarga, termasuk anak-anak dan lansia.",
+        },
+      ],
+    },
+    tours: {
+      tag: "Pilihan Terpopuler",
+      title: "Katalog Paket Tur Favorit",
+      subtitle:
+        "Tarif transparan per mobil (kapasitas hingga 5 orang), sudah termasuk bahan bakar mobil ber-AC dan jasa pemandu ramah.",
+      priceUnit: "per mobil · kapasitas s.d. 5 orang",
+      btnBook: "Pesan via WhatsApp",
+      btnAllTours: "Lihat Semua Paket Tur →",
+      items: [
+        {
+          badge: "Favorit Budaya",
+          title: "Ubud Cultural, Rice Terrace & Secret Waterfall",
+          price: "Rp 650.000",
+          duration: "Full Day (8 - 10 Jam) · Rute Fleksibel",
+          highlights: [
+            "Hutan Monyet Ubud (Sacred Monkey Forest)",
+            "Terasering Sawah Tegalalang & Ayunan Foto",
+            "Pura Tirta Empul (Ritual Penyucian Melukat)",
+            "Air Terjun Eksotis Kanto Lampo",
+            "Perkebunan Kopi Luwak Tradisional",
+          ],
+          waMessage:
+            "Halo Bli Gede, saya tertarik dengan Paket Ubud Cultural, Rice Terrace & Secret Waterfall",
+        },
+        {
+          badge: "Warisan UNESCO",
+          title: "Bedugul Ulun Danu & Jatiluwih Rice Terrace",
+          price: "Rp 750.000",
+          duration: "Full Day (9 - 10 Jam) · Sejuk & Alami",
+          highlights: [
+            "Pura Ulun Danu Beratan (Pura Danau Ikonik)",
+            "Lanskap Terasering Sawah Jatiluwih UNESCO",
+            "Gerbang Ikonik Handara Gate",
+            "Pasar Buah & Rempah Segar Candikuning",
+            "Danau Kembar Buyan & Tamblingan View",
+          ],
+          waMessage:
+            "Halo Bli Gede, saya tertarik dengan Paket Bedugul Ulun Danu & Jatiluwih",
+        },
+        {
+          badge: "Sunset Terbaik",
+          title: "Uluwatu Sunset Cliff, Melasti & Tari Kecak",
+          price: "Rp 700.000",
+          duration: "Half / Full Day (7 - 9 Jam) · Sore Romantis",
+          highlights: [
+            "Pantai Pasir Putih & Tebing Karang Melasti",
+            "Pura Luhur Uluwatu di Atas Tebing Samudra Hindia",
+            "Magis Pertunjukan Tari Kecak & Api saat Senja",
+            "Makan Malam Romantis Seafood Jimbaran Bay",
+            "Penjemputan & Pengantaran Kembali ke Hotel",
+          ],
+          waMessage:
+            "Halo Bli Gede, saya tertarik dengan Paket Uluwatu Sunset Cliff & Tari Kecak",
+        },
+      ],
+    },
+    regions: {
+      tag: "Destinasi Utama",
+      title: "Wilayah Populer Eksplorasi",
+      subtitle:
+        "Rute dapat digabungkan atau disesuaikan dengan lokasi penginapan dan preferensi rombongan Anda.",
+      items: [
+        {
+          badge: "Budaya & Alam",
+          title: "Ubud & Gianyar",
+          desc: "Pusat kesenian tradisional, pura suci berwibawa, sawah bertingkat hijau asri, serta lembah air terjun tropis alami.",
+        },
+        {
+          badge: "Pantai & Tebing",
+          title: "Uluwatu & Jimbaran",
+          desc: "Tebing kapur dramatis menjorok ke samudra lepas, pantai pasir putih tersembunyi, sunset legendaris, dan hidangan laut segar.",
+        },
+        {
+          badge: "Sejuk Pegunungan",
+          title: "Bedugul & Jatiluwih",
+          desc: "Udara dingin menyegarkan, pura danau berkabut yang menentramkan jiwa, serta keagungan sawah terasering warisan UNESCO.",
+        },
+        {
+          badge: "Panorama Kaldera",
+          title: "Kintamani & Batur",
+          desc: "Pemandangan megah Gunung dan Danau Batur, kafe estetik di atas awan, serta desa kuno yang kaya tradisi asli Bali.",
+        },
+      ],
+    },
+    reviews: {
+      tag: "Testimoni Asli",
+      title: "Ulasan Wisatawan",
+      subtitle:
+        "Cerita nyata dari tamu domestik dan mancanegara yang telah menjelajah Bali bersama Gede Sudiartana.",
+      btnAllReviews: "Lihat Semua Ulasan Tamu →",
+      items: [
+        {
+          rating: 5,
+          text: "“Gede made our Bali holiday completely unforgettable. As a family with two kids, his patience, warm stories about Balinese culture, and comfortable car were top-tier. No tourist traps at all!”",
+          author: "Sarah & Mark",
+          origin: "Sydney, Australia",
+          tourType: "Family Tour",
+        },
+        {
+          rating: 5,
+          text: "“Sangat puas dengan pelayanan Bli Gede. Mobilnya bersih dan wangi, rutenya sangat santai bisa request berhenti kapan saja untuk foto anak-anak. Paham sekali spot-spot makan halal yang enak di Bali!”",
+          author: "Keluarga Budi Santoso",
+          origin: "Jakarta, Indonesia",
+          tourType: "Liburan Keluarga",
+        },
+        {
+          rating: 5,
+          text: "“Le meilleur guide de Bali! Gede est passionné par la culture balinaise, très ponctuel et extrêmement prudent sur la route. Nous recommandons à 100%.”",
+          author: "Jean-Paul & Claire",
+          origin: "Lyon, Prancis",
+          tourType: "Couple Explorer",
+        },
+      ],
+    },
+    faq: {
+      tag: "Bantuan & Informasi",
+      title: "Pertanyaan yang Sering Diajukan",
+      subtitle:
+        "Informasi lengkap dan transparan untuk kenyamanan perencanaan liburan Anda di Pulau Dewata.",
+      btnAllFaq: "Lihat Semua Tanya Jawab (15 Pertanyaan Lengkap) →",
+      items: [
+        {
+          q: "Bagaimana sistem pembayaran turnya?",
+          a: "Sangat mudah dan aman tanpa risiko. Anda tidak perlu membayar uang muka (DP) atau memasukkan kartu kredit saat reservasi. Pembayaran dilakukan secara langsung kepada Bli Gede di akhir perjalanan wisata setelah tur selesai dinikmati, baik secara tunai (Rupiah) maupun transfer bank/QRIS.",
+        },
+        {
+          q: "Apakah rute perjalanan bisa kami atur sendiri?",
+          a: "Sangat bisa! Seluruh tur kami bersifat 100% privat. Anda memiliki fleksibilitas penuh untuk menentukan jam penjemputan, memodifikasi urutan destinasi, atau menambahkan spot wisata baru yang ingin dikunjungi sepanjang masih satu arah rute perjalanan.",
+        },
+        {
+          q: "Fasilitas apa saja yang sudah termasuk dalam harga sewa mobil?",
+          a: "Tarif per mobil sudah mencakup sewa armada pribadi ber-AC sejuk (kapasitas s.d. 5 penumpang), bahan bakar (BBM), jasa pemandu wisata berlisensi resmi HPI Bali, air mineral dingin selama perjalanan, dan biaya parkir standar di tempat wisata. (Tiket masuk objek wisata dan pengeluaran pribadi dibayar terpisah di lokasi).",
+        },
+        {
+          q: "Apakah melayani penjemputan di bandara atau hotel luar Denpasar?",
+          a: "Ya! Penjemputan dan pengantaran kembali sudah termasuk tanpa biaya tambahan untuk area Kuta, Seminyak, Legian, Canggu, Sanur, Nusa Dua, Jimbaran, dan Ubud. Untuk penjemputan area jauh (seperti Amed, Lovina, atau Candidasa), silakan hubungi kami untuk penyesuaian rute yang nyaman.",
+        },
+      ],
+    },
+    cta: {
+      title: "Ingin Rute Khusus Sesuai Selera Anda?",
+      desc: "Punya destinasi impian sendiri, kebutuhan durasi berbeda, atau perlu penjemputan khusus bandara dan hotel? Konsultasikan rencana perjalanan Anda bersama Bli Gede secara gratis tanpa komitmen.",
+      btn: "Konsultasi Rute Gratis via WhatsApp",
+    },
+    footer: {
+      bio: "Pemandu tur privat berlisensi resmi HPI Bali (No. HPI-BALI-2015-8849). Menyajikan pengalaman liburan autentik, nyaman, dan ramah dengan rute fleksibel di seluruh penjuru pulau dewata.",
+      hpiBadge: "Terdaftar Resmi di HPI Bali",
+      quickLinks: "Navigasi Cepat",
+      directContact: "Hubungi Langsung",
+      areaLabel: "Wilayah:",
+      areaValue: "Denpasar, Badung, Gianyar, Tabanan, Buleleng",
+      hoursLabel: "Operasional:",
+      hoursValue: "07.00 - 22.00 WITA",
+      copyright: "© 2026 Gede Bali Guide (Gede Sudiartana). All rights reserved.",
+      license: "Lisensi: HPI-BALI-2015-8849",
+    },
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Gede Bali Guide — Private Tour Guide Berlisensi HPI Bali",
-    description:
-      "Jelajahi keindahan autentik Bali bersama Gede Sudiartana, private tour guide resmi HPI Bali. Rute santai & fleksibel.",
-    images: [
-      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=80",
+  en: {
+    nav: {
+      home: "Home",
+      tours: "Tour Packages",
+      about: "About Gede",
+      gallery: "Gallery",
+      reviews: "Reviews",
+      faq: "FAQ",
+      contact: "Contact",
+      whatsapp: "WhatsApp",
+      drawerTitle: "Navigation Menu",
+      languageLabel: "Language",
+      consultWa: "Consult via WhatsApp",
+    },
+    hero: {
+      badge: "Official HPI Licensed Local Guide",
+      greeting: "“Om Swastyastu! Welcome to Bali”",
+      headlineLead: "Discover Authentic Bali with ",
+      name: "Gede Sudiartana",
+      description:
+        "Friendly local guide officially licensed by HPI Bali with 10+ years of experience. Enjoy a relaxed private journey in a clean air-conditioned car, with flexible itineraries focused purely on culture and nature without forced shopping stops.",
+      btnWa: "Consult via WhatsApp",
+      btnCatalog: "View Tour Packages",
+    },
+    trustBar: [
+      {
+        title: "100% Private Tours",
+        desc: "Never shared with strangers",
+      },
+      {
+        title: "Air-Conditioned Fleet",
+        desc: "Clean, cool & well-maintained",
+      },
+      {
+        title: "Flexible Photo Stops",
+        desc: "Stop anytime at your own pace",
+      },
+      {
+        title: "5.0 / 5.0 Rating",
+        desc: "Trusted by 1,200+ travelers",
+      },
     ],
+    pillars: {
+      tag: "Your Peace of Mind",
+      title: "Three Pillars of Our Service",
+      subtitle:
+        "Professional commitment to ensure your Balinese holiday is memorable, safe, and rich in cultural wisdom.",
+      items: [
+        {
+          title: "10+ Years of Experience",
+          desc: "Mastering the best traffic-free routes, optimal timing for every temple and attraction, and secret photo viewpoints for an unhurried, peaceful trip.",
+        },
+        {
+          title: "Licensed by HPI Bali",
+          desc: "Authentic cultural stories, sacred temple etiquette, and verified historical insights from an officially certified guide (License No. HPI-BALI-2015-8849).",
+        },
+        {
+          title: "Comfortable Air-Con Fleet",
+          desc: "Clean, fresh, and regularly serviced private MPV/SUV vehicles for maximum comfort for families, toddlers, and senior travelers.",
+        },
+      ],
+    },
+    tours: {
+      tag: "Most Popular Choices",
+      title: "Featured Tour Packages",
+      subtitle:
+        "Transparent pricing per car (up to 5 persons), including private AC vehicle, fuel, and friendly licensed guide services.",
+      priceUnit: "per private car · up to 5 persons",
+      btnBook: "Book via WhatsApp",
+      btnAllTours: "View All Tour Packages →",
+      items: [
+        {
+          badge: "Cultural Favorite",
+          title: "Ubud Cultural, Rice Terrace & Secret Waterfall",
+          price: "IDR 650,000 (~$42 USD)",
+          duration: "Full Day (8 - 10 Hours) · Flexible Itinerary",
+          highlights: [
+            "Ubud Sacred Monkey Forest Sanctuary",
+            "Tegalalang Rice Terrace & Jungle Swings",
+            "Tirta Empul Holy Water Purification Temple",
+            "Scenic Kanto Lampo Waterfall",
+            "Traditional Balinese Luwak Coffee Plantation",
+          ],
+          waMessage:
+            "Hi Gede, I am interested in booking the Ubud Cultural, Rice Terrace & Secret Waterfall tour",
+        },
+        {
+          badge: "UNESCO Heritage",
+          title: "Bedugul Ulun Danu & Jatiluwih Rice Terrace",
+          price: "IDR 750,000 (~$48 USD)",
+          duration: "Full Day (9 - 10 Hours) · Cool Mountain Breeze",
+          highlights: [
+            "Ulun Danu Beratan Iconic Floating Temple",
+            "Jatiluwih UNESCO World Heritage Rice Terraces",
+            "Handara Gate Iconic Landmark",
+            "Candikuning Fresh Fruit & Spices Market",
+            "Twin Lakes (Buyan & Tamblingan) Scenic Viewpoint",
+          ],
+          waMessage:
+            "Hi Gede, I am interested in booking the Bedugul Ulun Danu & Jatiluwih tour",
+        },
+        {
+          badge: "Sunset Classic",
+          title: "Uluwatu Sunset Cliff, Melasti & Kecak Fire Dance",
+          price: "IDR 700,000 (~$45 USD)",
+          duration: "Half / Full Day (7 - 9 Hours) · Romantic Sunset",
+          highlights: [
+            "Melasti White Sand Beach & Limestone Cliffs",
+            "Uluwatu Cliff Temple overlooking Indian Ocean",
+            "Magical Kecak & Fire Dance at Sunset",
+            "Romantic Jimbaran Bay Seafood Candlelit Dinner",
+            "Complimentary Hotel Pick-up & Drop-off",
+          ],
+          waMessage:
+            "Hi Gede, I am interested in booking the Uluwatu Sunset Cliff & Kecak tour",
+        },
+      ],
+    },
+    regions: {
+      tag: "Key Destinations",
+      title: "Popular Regions to Explore",
+      subtitle:
+        "Routes can be combined or custom-tailored to your hotel location and group preferences.",
+      items: [
+        {
+          badge: "Culture & Nature",
+          title: "Ubud & Gianyar",
+          desc: "Heart of Balinese arts, spiritual temples, lush emerald terraces, and refreshing tropical waterfall gorges.",
+        },
+        {
+          badge: "Beaches & Cliffs",
+          title: "Uluwatu & Jimbaran",
+          desc: "Dramatic limestone ocean cliffs, secluded turquoise bays, legendary sunsets, and oceanfront fresh seafood.",
+        },
+        {
+          badge: "Cool Highlands",
+          title: "Bedugul & Jatiluwih",
+          desc: "Refreshing mountain climate, serene mist-kissed lake shrines, and majestic UNESCO terraced landscapes.",
+        },
+        {
+          badge: "Caldera Panorama",
+          title: "Kintamani & Batur",
+          desc: "Awe-inspiring vistas of Mount Batur and its crater lake, trendy hilltop cafes above the clouds, and ancient villages.",
+        },
+      ],
+    },
+    reviews: {
+      tag: "Verified Experiences",
+      title: "Guest Reviews",
+      subtitle:
+        "Real testimonials from domestic and international travelers who explored Bali with Gede Sudiartana.",
+      btnAllReviews: "View All Guest Reviews →",
+      items: [
+        {
+          rating: 5,
+          text: "“Gede made our Bali holiday completely unforgettable. As a family with two kids, his patience, warm stories about Balinese culture, and comfortable car were top-tier. No tourist traps at all!”",
+          author: "Sarah & Mark",
+          origin: "Sydney, Australia",
+          tourType: "Family Tour",
+        },
+        {
+          rating: 5,
+          text: "“Extremely satisfied with Bli Gede's service. The car was spotless, the schedule was relaxed, and we could stop anytime for photos with the kids. He also knows fantastic local halal dining spots!”",
+          author: "Budi Santoso Family",
+          origin: "Jakarta, Indonesia",
+          tourType: "Family Vacation",
+        },
+        {
+          rating: 5,
+          text: "“Le meilleur guide de Bali! Gede est passionné par la culture balinaise, très ponctuel et extrêmement prudent sur la route. Nous recommandons à 100%.”",
+          author: "Jean-Paul & Claire",
+          origin: "Lyon, France",
+          tourType: "Couple Explorer",
+        },
+      ],
+    },
+    faq: {
+      tag: "Help & Information",
+      title: "Frequently Asked Questions",
+      subtitle:
+        "Clear and transparent details to help you plan an effortless holiday in Bali.",
+      btnAllFaq: "View All FAQs (15 Complete Questions) →",
+      items: [
+        {
+          q: "How does the tour payment work?",
+          a: "It's 100% risk-free. No advance deposit (DP) or credit card is required to reserve. You simply pay directly to Bli Gede at the end of the tour in cash (IDR) or via bank transfer/QRIS once you are satisfied.",
+        },
+        {
+          q: "Can we customize our own itinerary?",
+          a: "Absolutely! All our tours are 100% private. You have full freedom to set your preferred pick-up time, adjust destination order, or add new stops along the same direction.",
+        },
+        {
+          q: "What is included in the private car tour price?",
+          a: "The rate includes a comfortable air-conditioned private car (up to 5 guests), fuel, licensed HPI Balinese driver-guide, chilled bottled mineral water, and standard parking fees. (Attraction entry tickets and personal meals are paid separately at each spot).",
+        },
+        {
+          q: "Do you provide airport and outer-region hotel pick-up?",
+          a: "Yes! Pick-up and drop-off are included at no extra charge across Kuta, Seminyak, Legian, Canggu, Sanur, Nusa Dua, Jimbaran, and Ubud. For distant areas like Amed, Lovina, or Candidasa, please reach out for customized arrangements.",
+        },
+      ],
+    },
+    cta: {
+      title: "Want a Custom Itinerary Tailored to You?",
+      desc: "Have your own bucket-list spots, unique trip durations, or need dedicated airport and inter-hotel transfers? Chat with Bli Gede for free, no-obligation itinerary advice.",
+      btn: "Free WhatsApp Consultation",
+    },
+    footer: {
+      bio: "Officially licensed private tour guide by HPI Bali (License No. HPI-BALI-2015-8849). Delivering authentic, comfortable, and tailored Balinese holiday journeys across the island of gods.",
+      hpiBadge: "Officially Certified HPI Bali Guide",
+      quickLinks: "Quick Links",
+      directContact: "Direct Contact",
+      areaLabel: "Area Covered:",
+      areaValue: "Denpasar, Badung, Gianyar, Tabanan, Buleleng",
+      hoursLabel: "Operating Hours:",
+      hoursValue: "07:00 - 22:00 WITA (GMT+8)",
+      copyright: "© 2026 Gede Bali Guide (Gede Sudiartana). All rights reserved.",
+      license: "License: HPI-BALI-2015-8849",
+    },
   },
 };
 
-export default async function HomePage() {
-  const homeData = await getUnifiedHomeContent();
+const DESTINATION_SLIDES = [
+  {
+    id: 1,
+    title: "Pura Ulun Danu Beratan, Bedugul",
+    tag: "Ulun Danu Beratan, Bedugul",
+    imageUrl:
+      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1000&auto=format&fit=crop&q=85",
+  },
+  {
+    id: 2,
+    title: "Terasering Tegalalang, Ubud",
+    tag: "Tegalalang Rice Terrace, Ubud",
+    imageUrl:
+      "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=1000&auto=format&fit=crop&q=85",
+  },
+  {
+    id: 3,
+    title: "Tebing Sunset Pura Luhur Uluwatu, Badung",
+    tag: "Tebing Sunset Uluwatu, Badung",
+    imageUrl:
+      "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=1000&auto=format&fit=crop&q=85",
+  },
+  {
+    id: 4,
+    title: "Air Terjun Eksotis Kanto Lampo, Gianyar",
+    tag: "Air Terjun Kanto Lampo, Gianyar",
+    imageUrl:
+      "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?w=1000&auto=format&fit=crop&q=85",
+  },
+];
 
-  const localBusinessJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "TravelAgency",
-    "@id": "https://gedebaliguide.com/#organization",
-    name: "Gede Bali Guide",
-    alternateName: `Private Tour Guide Bali - ${homeData.hero.guideName}`,
-    description:
-      "Layanan pemandu wisata privat resmi berlisensi HPI Bali berpengalaman lebih dari 10 tahun dengan armada mobil ber-AC nyaman.",
-    url: "https://gedebaliguide.com",
-    telephone: homeData.whatsApp.phoneNumber || "+6281234567890",
-    priceRange: "Rp 500.000 - Rp 950.000",
-    image: homeData.hero.heroImageUrl || "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=80",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "Jl. Raya Ubud No. 88",
-      addressLocality: "Ubud, Gianyar",
-      addressRegion: "Bali",
-      postalCode: "80571",
-      addressCountry: "ID",
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: -8.506854,
-      longitude: 115.260846,
-    },
-    openingHoursSpecification: {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-      ],
-      opens: "06:00",
-      closes: "22:00",
-    },
-    founder: {
-      "@type": "Person",
-      name: homeData.hero.guideName,
-      jobTitle: "Licensed Bali Tour Guide (HPI Bali)",
-      licenseNumber: homeData.hero.licenseNumber,
-      url: "https://gedebaliguide.com/about",
-    },
-    areaServed: [
-      "Bali",
-      "Ubud",
-      "Uluwatu",
-      "Bedugul",
-      "Kintamani",
-      "Nusa Penida",
-      "Canggu",
-      "Seminyak",
-    ],
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "5.0",
-      reviewCount: "48",
-      bestRating: "5",
-      worstRating: "1",
-    },
+export default function HomePage() {
+  const [lang, setLang] = useState<"id" | "en">("id");
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const touchStartXRef = useRef<number>(0);
+  const touchEndXRef = useRef<number>(0);
+
+  // Live Data dari Cloud Firestore
+  const [firestoreTours, setFirestoreTours] = useState<Tour[] | null>(null);
+  const [firestoreReviews, setFirestoreReviews] = useState<Review[] | null>(null);
+  const [firestoreFaqs, setFirestoreFaqs] = useState<FAQItem[] | null>(null);
+
+  const t = CONTENT[lang];
+
+  // Mengambil 3 Tur Unggulan, 3 Ulasan Tamu, dan 4 FAQ dari Firestore
+  useEffect(() => {
+    let isMounted = true;
+    async function loadFirestoreData() {
+      try {
+        const [tours, reviews, faqs] = await Promise.all([
+          getActiveFeaturedTours(3),
+          getFeaturedFiveStarReviews(3),
+          getActiveFaqs(),
+        ]);
+        if (isMounted) {
+          if (tours && tours.length > 0) setFirestoreTours(tours);
+          if (reviews && reviews.length > 0) setFirestoreReviews(reviews);
+          if (faqs && faqs.length > 0) setFirestoreFaqs(faqs.slice(0, 4));
+        }
+      } catch (err) {
+        console.warn("Gagal memuat live data Firestore di HomePage:", err);
+      }
+    }
+    loadFirestoreData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Auto-slide effect every 4.5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % DESTINATION_SLIDES.length);
+    }, 4500);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Sync language with global Navbar
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("app_lang");
+      if (saved === "id" || saved === "en") setLang(saved);
+    } catch {}
+    const handleLang = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.lang === "id" || detail?.lang === "en") {
+        setLang(detail.lang);
+      }
+    };
+    window.addEventListener("appLanguageChange", handleLang);
+    return () => window.removeEventListener("appLanguageChange", handleLang);
+  }, []);
+
+  // Touch handlers for mobile swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.changedTouches[0].screenX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    touchEndXRef.current = e.changedTouches[0].screenX;
+    const diff = touchStartXRef.current - touchEndXRef.current;
+    if (diff > 45) {
+      setCurrentSlide((prev) => (prev + 1) % DESTINATION_SLIDES.length);
+    } else if (diff < -45) {
+      setCurrentSlide(
+        (prev) => (prev - 1 + DESTINATION_SLIDES.length) % DESTINATION_SLIDES.length
+      );
+    }
+  };
+
+  const toggleFaq = (index: number) => {
+    setOpenFaqIndex((prev) => (prev === index ? null : index));
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#fafaf9] text-stone-900 font-sans">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
-      />
-      <Navbar />
-      <main className="flex-1">
-        <HeroSection
-          heroConfig={homeData.hero}
-          whatsAppConfig={homeData.whatsApp}
-        />
-        <TrustBar items={homeData.trustItems} />
-        <FeaturedToursSection initialTours={homeData.featuredTours} />
-        <DestinationsSection initialDestinations={homeData.destinations} />
-        <TestimonialsSection reviews={homeData.testimonials} />
-        <WhatsAppCtaSection
-          directBooking={homeData.directBooking}
-          whatsApp={homeData.whatsApp}
-        />
-      </main>
-      <Footer />
+    <div className="min-h-screen bg-[#FEFDFB] text-[#121715] flex flex-col font-sans selection:bg-amber-100 selection:text-amber-900">
+      {/* ========================================================
+          2. HERO SECTION (Luxury Travel Editorial)
+          ======================================================== */}
+      <section
+        id="beranda"
+        className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16 lg:pt-16 lg:pb-20"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+            {/* Kolom Teks Kiri */}
+            <div className="lg:col-span-7 flex flex-col justify-center text-left">
+              <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 mb-4 sm:mb-5">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-[#1878B8] border border-blue-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1878B8]" />
+                  {t.hero.badge}
+                </span>
+                <span className="font-serif italic text-sm sm:text-base text-[#1878B8]">
+                  {t.hero.greeting}
+                </span>
+              </div>
+
+              {/* H1 Headline Editorial */}
+              <h1 className="font-serif text-[32px] sm:text-[42px] lg:text-[50px] leading-[1.14] sm:leading-[1.1] tracking-[-0.035em] text-[#08090A] font-normal mb-5">
+                {t.hero.headlineLead}
+                <span className="text-[#1878B8] font-semibold underline decoration-[#1878B8]/20 underline-offset-8">
+                  {t.hero.name}
+                </span>
+              </h1>
+
+              {/* Deskripsi Ringkas */}
+              <p className="text-[#5E6965] text-base sm:text-[17px] leading-relaxed mb-8 max-w-xl">
+                {t.hero.description}
+              </p>
+
+              {/* 2 Tombol CTA Berdampingan */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4">
+                <button
+                  type="button"
+                  onClick={() => handleWhatsAppClick("Hero Section CTA")}
+                  className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-[#1878B8] hover:bg-[#0F4C81] text-white font-medium text-sm shadow-[0_2px_8px_rgba(24,120,184,0.25)] transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 text-center cursor-pointer"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                  </svg>
+                  <span>{t.hero.btnWa}</span>
+                </button>
+
+                <Link
+                  href="/tours"
+                  className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-white hover:bg-[#FAF8F5] text-[#08090A] border border-[#D3D8D6] font-medium text-sm transition-colors text-center"
+                >
+                  <span>{t.hero.btnCatalog}</span>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+
+            {/* Kolom Visual Kanan: Frameless Destination Slideshow
+                - Tablet (768px - 1023px): aspect-video membentang lebar w-full tanpa batasan kaku max-w-[480px]
+                - Mobile (< 768px): aspect-[4/5] vertikal proporsional
+                - Tag: Minimal Map Pin SVG + Nama Destinasi
+            */}
+            <div className="lg:col-span-5 w-full flex flex-col items-center">
+              <div
+                id="hero-slideshow-frame"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                className="relative w-full aspect-[4/5] md:aspect-video lg:aspect-[4/5] max-w-[420px] md:max-w-none lg:max-w-[440px] rounded-[32px_32px_16px_16px] md:rounded-3xl lg:rounded-[36px_36px_18px_18px] overflow-hidden shadow-[0_20px_48px_-12px_rgba(12,140,94,0.24)] bg-[#FAF8F5] select-none cursor-grab active:cursor-grabbing"
+              >
+                {DESTINATION_SLIDES.map((slide, idx) => {
+                  const isActive = idx === currentSlide;
+                  return (
+                    <div
+                      key={slide.id}
+                      className={`absolute inset-0 transition-all duration-700 ease-out ${
+                        isActive
+                          ? "opacity-100 scale-100 visible pointer-events-auto"
+                          : "opacity-0 scale-105 invisible pointer-events-none"
+                      }`}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={slide.imageUrl}
+                        alt={slide.title}
+                        className="w-full h-full object-cover object-center pointer-events-none"
+                        loading={idx === 0 ? "eager" : "lazy"}
+                      />
+
+                      {/* Floating Minimalist Glassmorphism Tag */}
+                      <div className="absolute bottom-5 left-5 right-auto bg-black/60 backdrop-blur-md text-white text-xs sm:text-sm font-medium px-4 py-2 rounded-full border border-white/20 shadow-lg flex items-center gap-2 pointer-events-none">
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-[#E67E22] shrink-0"
+                        >
+                          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                          <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        <span className="truncate">{slide.tag}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Dash Indicators */}
+              <div
+                className="flex items-center justify-center gap-2 mt-4 pt-1"
+                role="tablist"
+                aria-label="Slideshow Indikator"
+              >
+                {DESTINATION_SLIDES.map((slide, idx) => {
+                  const isActive = idx === currentSlide;
+                  return (
+                    <button
+                      key={slide.id}
+                      type="button"
+                      onClick={() => setCurrentSlide(idx)}
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-label={`Slide ${idx + 1}: ${slide.title}`}
+                      className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                        isActive
+                          ? "w-10 bg-[#1878B8]"
+                          : "w-6 bg-[#CFCDCA] hover:bg-[#969E9B]"
+                      }`}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SEKSI 2: BAR KEPERCAYAAN (Trust Bar)
+          - 1 kolom di mobile, 2x2 di tablet, 4 kolom di desktop
+          ======================================================== */}
+      <section
+        className="bg-white border-y border-[#EBE9E6] py-6 px-4 sm:px-6 lg:px-8"
+        aria-label="Keunggulan Layanan"
+      >
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-center">
+          {/* Item 1 - Aksen Biru */}
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-lg bg-blue-50 text-[#1878B8] flex items-center justify-center shrink-0">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <div>
+              <div className="font-bold text-sm text-[#08090A] leading-tight">
+                {t.trustBar[0].title}
+              </div>
+              <div className="text-xs text-[#5E6965] mt-0.5">
+                {t.trustBar[0].desc}
+              </div>
+            </div>
+          </div>
+
+          {/* Item 2 - Aksen Hijau */}
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-lg bg-emerald-50 text-[#0C8C5E] flex items-center justify-center shrink-0">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="1" y="3" width="15" height="13" />
+                <polygon points="16 8 20 8 23 11 23 16 16 16 8" />
+                <circle cx="5.5" cy="18.5" r="2.5" />
+                <circle cx="18.5" cy="18.5" r="2.5" />
+              </svg>
+            </div>
+            <div>
+              <div className="font-bold text-sm text-[#08090A] leading-tight">
+                {t.trustBar[1].title}
+              </div>
+              <div className="text-xs text-[#5E6965] mt-0.5">
+                {t.trustBar[1].desc}
+              </div>
+            </div>
+          </div>
+
+          {/* Item 3 - Aksen Oranye */}
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-lg bg-amber-50 text-[#E67E22] flex items-center justify-center shrink-0">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
+            </div>
+            <div>
+              <div className="font-bold text-sm text-[#08090A] leading-tight">
+                {t.trustBar[2].title}
+              </div>
+              <div className="text-xs text-[#5E6965] mt-0.5">
+                {t.trustBar[2].desc}
+              </div>
+            </div>
+          </div>
+
+          {/* Item 4 - Aksen Oranye Emas */}
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-lg bg-amber-50 text-[#E67E22] flex items-center justify-center shrink-0">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                stroke="none"
+              >
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+            </div>
+            <div>
+              <div className="font-bold text-sm text-[#08090A] leading-tight">
+                {t.trustBar[3].title}
+              </div>
+              <div className="text-xs text-[#5E6965] mt-0.5">
+                {t.trustBar[3].desc}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SEKSI 3: TIGA PILAR UTAMA LAYANAN
+          ======================================================== */}
+      <section
+        id="tentang"
+        className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full"
+      >
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#1878B8] block mb-2">
+            {t.pillars.tag}
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl text-[#08090A] font-normal mb-3">
+            {t.pillars.title}
+          </h2>
+          <p className="text-[#5E6965] text-sm sm:text-base leading-relaxed">
+            {t.pillars.subtitle}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7">
+          {/* Pilar 1 - Aksen Biru */}
+          <article className="bg-white border border-[#EBE9E6] rounded-2xl p-7 sm:p-8 shadow-[0_4px_20px_rgba(24,120,184,0.06)] hover:-translate-y-1 transition-all duration-200 hover:border-[#1878B8]">
+            <div className="w-12 h-12 rounded-xl bg-blue-50 text-[#1878B8] flex items-center justify-center mb-5">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <h3 className="font-bold text-lg text-[#08090A] mb-2.5">
+              {t.pillars.items[0].title}
+            </h3>
+            <p className="text-sm text-[#5E6965] leading-relaxed">
+              {t.pillars.items[0].desc}
+            </p>
+          </article>
+
+          {/* Pilar 2 - Aksen Hijau */}
+          <article className="bg-white border border-[#EBE9E6] rounded-2xl p-7 sm:p-8 shadow-[0_4px_20px_rgba(12,140,94,0.06)] hover:-translate-y-1 transition-all duration-200 hover:border-[#0C8C5E]">
+            <div className="w-12 h-12 rounded-xl bg-emerald-50 text-[#0C8C5E] flex items-center justify-center mb-5">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h3 className="font-bold text-lg text-[#08090A] mb-2.5">
+              {t.pillars.items[1].title}
+            </h3>
+            <p className="text-sm text-[#5E6965] leading-relaxed">
+              {t.pillars.items[1].desc}
+            </p>
+          </article>
+
+          {/* Pilar 3 - Aksen Oranye */}
+          <article className="bg-white border border-[#EBE9E6] rounded-2xl p-7 sm:p-8 shadow-[0_4px_20px_rgba(230,126,34,0.06)] hover:-translate-y-1 transition-all duration-200 hover:border-[#E67E22]">
+            <div className="w-12 h-12 rounded-xl bg-amber-50 text-[#E67E22] flex items-center justify-center mb-5">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="1" y="3" width="15" height="13" />
+                <polygon points="16 8 20 8 23 11 23 16 16 16 8" />
+                <circle cx="5.5" cy="18.5" r="2.5" />
+                <circle cx="18.5" cy="18.5" r="2.5" />
+              </svg>
+            </div>
+            <h3 className="font-bold text-lg text-[#08090A] mb-2.5">
+              {t.pillars.items[2].title}
+            </h3>
+            <p className="text-sm text-[#5E6965] leading-relaxed">
+              {t.pillars.items[2].desc}
+            </p>
+          </article>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SEKSI 4: KATALOG PAKET TUR FAVORIT
+          - Grid: 1 col on mobile, 2 cols on tablet, 3 cols on desktop
+          - 1 badge flexbox elegan di kiri atas
+          - Harga bertingkat 2 baris
+          - Tombol sekunder "Lihat Semua Paket Tur →" di tengah ke /tours
+          ======================================================== */}
+      <section
+        id="katalog"
+        className="py-16 sm:py-20 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full"
+      >
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#1878B8] block mb-2">
+            {t.tours.tag}
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl text-[#08090A] font-normal mb-3">
+            {t.tours.title}
+          </h2>
+          <p className="text-[#5E6965] text-sm sm:text-base leading-relaxed">
+            {t.tours.subtitle}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+          {(() => {
+            const toursList =
+              lang === "id" && firestoreTours && firestoreTours.length > 0
+                ? firestoreTours.map((ft, idx) => ({
+                    badge:
+                      ft.category === "culture"
+                        ? "Favorit Budaya"
+                        : ft.category === "heritage"
+                        ? "Warisan UNESCO"
+                        : "Sunset Terbaik",
+                    title: ft.name,
+                    price: `Rp ${Number(ft.price).toLocaleString("id-ID")}`,
+                    duration: ft.duration,
+                    highlights:
+                      ft.highlights && ft.highlights.length > 0
+                        ? ft.highlights.slice(0, 5)
+                        : [
+                            "Mobil Ber-AC Dingin & Bersih",
+                            "Pemandu Lokal Resmi HPI",
+                            "Jadwal Fleksibel Santai",
+                            "Bebas Request Spot Foto",
+                            "Tanpa Komisi Toko Oleh-Oleh",
+                          ],
+                  }))
+                : t.tours.items;
+
+              return toursList.map((tour, index) => {
+                const isThirdCard = index === 2;
+                // Pola Ritme 3 Warna: Kartu 1 Biru, Kartu 2 Hijau, Kartu 3 Oranye
+                const badgeColorClass =
+                  index === 0
+                    ? "bg-blue-50 text-[#1878B8] border-blue-200"
+                    : index === 1
+                    ? "bg-emerald-50 text-[#0C8C5E] border-emerald-200"
+                    : "bg-amber-50 text-[#E67E22] border-amber-200";
+
+                const ctaBtnColorClass =
+                  index === 0
+                    ? "bg-[#1878B8] hover:bg-[#0F4C81] text-white shadow-[0_2px_8px_rgba(24,120,184,0.25)]"
+                    : index === 1
+                    ? "bg-[#0C8C5E] hover:bg-[#09734C] text-white shadow-[0_2px_8px_rgba(12,140,94,0.25)]"
+                    : "bg-[#E67E22] hover:bg-[#D35400] text-white shadow-[0_2px_8px_rgba(230,126,34,0.25)]";
+
+                return (
+                  <article
+                    key={index}
+                    className={`bg-white border border-[#EBE9E6] rounded-2xl flex flex-col justify-between overflow-hidden shadow-[0_4px_20px_rgba(12,140,94,0.06)] hover:-translate-y-1.5 hover:shadow-[0_12px_36px_rgba(0,0,0,0.08)] transition-all duration-200 ${
+                      isThirdCard ? "md:col-span-2 lg:col-span-1" : ""
+                    }`}
+                  >
+                    <div>
+                      {/* Header Kartu */}
+                      <div className="p-6 pb-5 border-b border-[#EBE9E6]">
+                        <div className="flex items-center mb-3">
+                          <span
+                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${badgeColorClass}`}
+                          >
+                            {tour.badge}
+                          </span>
+                        </div>
+                        <h3 className="font-bold text-lg text-[#08090A] mb-4 leading-snug">
+                          {tour.title}
+                        </h3>
+                        {/* Penataan Harga (2 Baris Bertingkat) */}
+                        <div className="flex flex-col">
+                          <span className="text-2xl sm:text-[26px] font-extrabold text-[#08090A] tracking-tight">
+                            {tour.price}
+                          </span>
+                          <span className="text-[12px] sm:text-[13px] text-[#5E6965] mt-0.5">
+                            {t.tours.priceUnit}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Isi Rute & Highlight */}
+                      <div className="p-6">
+                        <div className="flex items-center gap-1.5 text-xs font-semibold text-[#1878B8] mb-4">
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                          >
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                          </svg>
+                          <span>{tour.duration}</span>
+                        </div>
+
+                        <ul className="space-y-2.5 text-xs sm:text-[13px] text-[#121715]">
+                          {tour.highlights.map((item, hIdx) => (
+                            <li key={hIdx} className="flex items-start gap-2">
+                              <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                className="text-[#0C8C5E] shrink-0 mt-0.5"
+                              >
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Tombol Pesan via WhatsApp (Ukuran Seragam h-11 text-sm font-medium) */}
+                    <div className="p-5 pt-4 border-t border-[#EBE9E6] bg-[#FAF8F5]">
+                      <button
+                        type="button"
+                        onClick={() => handleWhatsAppClick(`Kartu Tur: ${tour.title}`, tour.title)}
+                        className={`w-full flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer ${ctaBtnColorClass}`}
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                        </svg>
+                        <span>{t.tours.btnBook}</span>
+                      </button>
+                    </div>
+                  </article>
+                );
+              });
+            })()}
+          </div>
+
+        {/* Tombol Sekunder di Bawah Grid Paket Tur -> href="/tours" (h-11, px-6, text-sm font-medium, border-blue-600 text-[#1878B8]) */}
+        <div className="mt-10 sm:mt-12 text-center">
+          <Link
+            href="/tours"
+            className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-white hover:bg-blue-50 text-[#1878B8] border border-blue-600 font-medium text-sm shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+          >
+            <span>{t.tours.btnAllTours}</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SEKSI 5: WILAYAH POPULER EKSPLORASI
+          ======================================================== */}
+      <section className="bg-white border-y border-[#EBE9E6] py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#1878B8] block mb-2">
+              {t.regions.tag}
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-[#08090A] font-normal mb-3">
+              {t.regions.title}
+            </h2>
+            <p className="text-[#5E6965] text-sm sm:text-base leading-relaxed">
+              {t.regions.subtitle}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+            {t.regions.items.map((region, idx) => {
+              // Pola Ritme: Kartu 1 Biru, Kartu 2 Hijau, Kartu 3 Oranye, Kartu 4 Biru
+              const badgeBg =
+                idx === 0 || idx === 3
+                  ? "bg-blue-50 text-[#1878B8] border border-blue-200"
+                  : idx === 1
+                  ? "bg-emerald-50 text-[#0C8C5E] border border-emerald-200"
+                  : "bg-amber-50 text-[#E67E22] border border-amber-200";
+              return (
+                <div
+                  key={idx}
+                  className="bg-[#FEFDFB] border border-[#EBE9E6] rounded-xl p-6 hover:border-[#1878B8] hover:-translate-y-1 transition-all duration-200"
+                >
+                  <span
+                    className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold mb-3 ${badgeBg}`}
+                  >
+                    {region.badge}
+                  </span>
+                  <h3 className="font-bold text-lg text-[#08090A] mb-1.5">
+                    {region.title}
+                  </h3>
+                  <p className="text-xs text-[#5E6965] leading-relaxed">
+                    {region.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SEKSI 6: ULASAN WISATAWAN (Testimoni Tamu)
+          - 3 Kartu Ulasan Bintang Lima Amber (Live Firestore)
+          - Tombol Sekunder di Tengah: "Lihat Semua Ulasan Tamu →" ke /reviews
+          ======================================================== */}
+      <section
+        id="ulasan"
+        className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full"
+      >
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#1878B8] block mb-2">
+            {t.reviews.tag}
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl text-[#08090A] font-normal mb-3">
+            {t.reviews.title}
+          </h2>
+          <p className="text-[#5E6965] text-sm sm:text-base leading-relaxed">
+            {t.reviews.subtitle}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7">
+          {(() => {
+            const reviewsList =
+              lang === "id" && firestoreReviews && firestoreReviews.length > 0
+                ? firestoreReviews.map((fr) => ({
+                    rating: fr.rating || 5,
+                    text: `“${fr.content}”`,
+                    author: fr.authorName,
+                    origin: fr.authorOrigin,
+                    tourType: fr.tourName || "Tur Privat",
+                  }))
+                : t.reviews.items;
+
+            return reviewsList.map((rev, idx) => {
+              const badgeBg =
+                idx === 0
+                  ? "bg-[#E8F7F1] text-[#006B49]"
+                  : idx === 1
+                  ? "bg-[#FFF5EB] text-[#D35400]"
+                  : "bg-[#EAF5FC] text-[#0A5C94]";
+              return (
+                <article
+                  key={idx}
+                  className="bg-white border border-[#EBE9E6] rounded-2xl p-7 flex flex-col justify-between shadow-[0_4px_20px_rgba(12,140,94,0.06)]"
+                >
+                  <div>
+                    <div className="text-[#E67E22] text-base mb-3.5 tracking-wider">
+                      ★★★★★
+                    </div>
+                    <p className="text-sm sm:text-[15px] text-[#121715] leading-relaxed italic mb-5">
+                      {rev.text}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between pt-4 border-t border-[#EBE9E6]">
+                    <div>
+                      <div className="font-bold text-sm text-[#08090A]">
+                        {rev.author}
+                      </div>
+                      <div className="text-xs text-[#5E6965]">{rev.origin}</div>
+                    </div>
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeBg}`}
+                    >
+                      {rev.tourType}
+                    </span>
+                  </div>
+                </article>
+              );
+            });
+          })()}
+        </div>
+
+        {/* Tombol Sekunder di Bawah Ulasan -> href="/reviews" (Ukuran Seragam h-11) */}
+        <div className="mt-10 sm:mt-12 text-center">
+          <Link
+            href="/reviews"
+            className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-white hover:bg-blue-50 text-[#1878B8] border border-blue-600 font-medium text-sm shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+          >
+            <span>{t.reviews.btnAllReviews}</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SEKSI 7: PERTANYAAN YANG SERING DIAJUKAN (FAQ)
+          - Akordeon interaktif buka-tutup (Live Firestore)
+          - 4 pertanyaan esensial
+          - Tombol sekunder "Lihat Semua Tanya Jawab (15 Pertanyaan Lengkap) →" ke /faq
+          ======================================================== */}
+      <section
+        id="faq"
+        className="bg-[#FAF8F5] border-y border-[#EBE9E6] py-16 sm:py-20 px-4 sm:px-6 lg:px-8"
+      >
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#1878B8] block mb-2">
+              {t.faq.tag}
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-[#08090A] font-normal mb-3">
+              {t.faq.title}
+            </h2>
+            <p className="text-[#5E6965] text-sm sm:text-base leading-relaxed">
+              {t.faq.subtitle}
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {(() => {
+              const faqList =
+                lang === "id" && firestoreFaqs && firestoreFaqs.length > 0
+                  ? firestoreFaqs.map((ff) => ({
+                      q: ff.question,
+                      a: ff.answer,
+                    }))
+                  : t.faq.items;
+
+              return faqList.map((item, index) => {
+                const isOpen = openFaqIndex === index;
+                return (
+                  <div
+                    key={index}
+                    className="bg-white border border-[#EBE9E6] rounded-2xl overflow-hidden shadow-xs transition-all duration-200"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toggleFaq(index)}
+                      aria-expanded={isOpen}
+                      className="w-full flex items-center justify-between gap-4 p-5 sm:p-6 text-left cursor-pointer hover:bg-[#F2FAF6]/40 transition-colors"
+                    >
+                      <span className="font-bold text-base sm:text-lg text-[#08090A] pr-2">
+                        {item.q}
+                      </span>
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                          isOpen
+                            ? "bg-[#1878B8] text-white rotate-180"
+                            : "bg-[#EAF5FC] text-[#1878B8]"
+                        }`}
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                      </div>
+                    </button>
+
+                    {isOpen && (
+                      <div className="px-5 sm:px-6 pb-6 pt-1 text-sm sm:text-[15px] text-[#5E6965] leading-relaxed border-t border-[#F2FAF6]">
+                        <p>{item.a}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              });
+            })()}
+          </div>
+
+          {/* Tombol Sekunder di Bawah FAQ -> href="/faq" (Ukuran Seragam h-11) */}
+          <div className="mt-10 sm:mt-12 text-center">
+            <Link
+              href="/faq"
+              className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-white hover:bg-blue-50 text-[#1878B8] border border-blue-600 font-medium text-sm shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+            >
+              <span>{t.faq.btnAllFaq}</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SEKSI 8: BOTTOM CTA BANNER (Rute Khusus)
+          - Konsultasi WhatsApp Interaktif (Lead Logging)
+          ======================================================== */}
+      <section
+        id="kontak"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-16 sm:my-20 w-full"
+      >
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0F4C81] to-[#1878B8] text-white p-8 sm:p-12 lg:p-14 shadow-xl flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+          <div className="max-w-2xl relative z-10">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal leading-tight mb-4">
+              {t.cta.title}
+            </h2>
+            <p className="text-sm sm:text-base text-white/90 leading-relaxed">
+              {t.cta.desc}
+            </p>
+          </div>
+
+          <div className="relative z-10 shrink-0">
+            <button
+              type="button"
+              onClick={() =>
+                handleWhatsAppClick(
+                  "Bottom CTA Banner",
+                  undefined,
+                  "Halo Bli Gede, saya ingin konsultasi gratis rute custom itinerary untuk liburan privat di Bali."
+                )
+              }
+              className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-[#E67E22] hover:bg-[#D35400] text-white font-medium text-sm shadow-[0_4px_16px_rgba(230,126,34,0.3)] transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+              </svg>
+              <span>{t.cta.btn}</span>
+            </button>
+          </div>
+
+          <div
+            className="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-[#E67E22]/20 blur-3xl pointer-events-none"
+            aria-hidden="true"
+          />
+        </div>
+      </section>
+
+      {/* ========================================================
+          SEKSI 9: FOOTER LENGKAP
+          - Legalitas HPI-BALI-2015-8849
+          - Tautan navigasi internal aktif (/about, /tours, /gallery, /reviews, /faq)
+          - Jam operasional & kontak
+          - Padding ekstra bawah
+          ======================================================== */}
+      <footer className="bg-[#08090A] text-white pt-14 pb-12 px-4 sm:px-6 lg:px-8 mt-auto">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-white/10">
+          {/* Kolom 1: Profil Brand & Lisensi */}
+          <div className="md:col-span-5">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#1878B8] to-[#0F4C81] flex items-center justify-center text-white shadow-xs">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+              </div>
+              <span className="font-bold text-lg tracking-tight">Gede Bali Guide</span>
+            </div>
+            <p className="text-[#969E9B] text-xs sm:text-sm leading-relaxed max-w-sm mb-4">
+              {t.footer.bio}
+            </p>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-white/10 text-xs text-[#1878B8]">
+              <span className="w-2 h-2 rounded-full bg-[#1878B8]" />
+              {t.footer.hpiBadge}
+            </div>
+          </div>
+
+          {/* Kolom 2: Navigasi Cepat */}
+          <div className="md:col-span-3">
+            <div className="font-semibold text-sm mb-4 tracking-wide uppercase text-white/80">
+              {t.footer.quickLinks}
+            </div>
+            <ul className="space-y-2.5 text-xs sm:text-sm text-[#969E9B]">
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  {t.nav.home}
+                </Link>
+              </li>
+              <li>
+                <Link href="/tours" className="hover:text-white transition-colors">
+                  {t.nav.tours}
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="hover:text-white transition-colors">
+                  {t.nav.about}
+                </Link>
+              </li>
+              <li>
+                <Link href="/gallery" className="hover:text-white transition-colors">
+                  {t.nav.gallery}
+                </Link>
+              </li>
+              <li>
+                <Link href="/reviews" className="hover:text-white transition-colors">
+                  {t.nav.reviews}
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="hover:text-white transition-colors">
+                  {t.nav.faq}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Kolom 3: Kontak Langsung */}
+          <div className="md:col-span-4">
+            <div className="font-semibold text-sm mb-4 tracking-wide uppercase text-white/80">
+              {t.footer.directContact}
+            </div>
+            <div className="space-y-2.5 text-xs sm:text-sm text-[#969E9B]">
+              <div className="flex items-start gap-2.5">
+                <span className="text-white font-medium">WhatsApp:</span>
+                <a
+                  href="https://wa.me/6281234567890"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleWhatsAppClick("Footer Direct Contact");
+                  }}
+                  className="text-[#E67E22] hover:underline cursor-pointer"
+                >
+                  +62 812-3456-7890
+                </a>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <span className="text-white font-medium">{t.footer.areaLabel}</span>
+                <span>{t.footer.areaValue}</span>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <span className="text-white font-medium">{t.footer.hoursLabel}</span>
+                <span>{t.footer.hoursValue}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Bottom */}
+        <div className="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#717D79]">
+          <div>{t.footer.copyright}</div>
+          <div className="font-mono text-[11px]">{t.footer.license}</div>
+        </div>
+      </footer>
     </div>
   );
 }

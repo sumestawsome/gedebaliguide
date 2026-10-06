@@ -1,7 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ReviewsFilterableList from "@/components/reviews/ReviewsFilterableList";
 import { mockReviews, mockGuideProfile } from "@/data/mock-data";
@@ -93,14 +92,13 @@ export default function ReviewsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewsJsonLd) }}
       />
-      <Navbar />
 
       <main className="flex-1 pb-20">
         {/* Breadcrumb Navigation */}
         <div className="border-b border-stone-200/80 bg-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3.5">
             <nav className="flex items-center gap-2 text-xs font-medium text-stone-500">
-              <Link href="/" className="hover:text-blue-700 transition-colors">
+              <Link href="/" className="hover:text-[#1878B8] transition-colors">
                 Beranda
               </Link>
               <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
@@ -114,8 +112,8 @@ export default function ReviewsPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-7 space-y-4">
-                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-200/80 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-emerald-800">
-                  <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+                <div className="inline-flex items-center gap-2 rounded-full bg-[#E8F7F1] border border-[#0C8C5E]/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#006B49]">
+                  <Sparkles className="h-3.5 w-3.5 text-[#0C8C5E]" />
                   <span>Testimoni Autentik & Terverifikasi</span>
                 </div>
                 <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-stone-900 leading-tight">
@@ -133,7 +131,7 @@ export default function ReviewsPage() {
                     <span className="font-serif text-5xl font-bold text-stone-900">{averageRating}</span>
                     <div className="flex items-center gap-1 justify-center mt-2">
                       {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                        <Star key={s} className="h-4 w-4 fill-[#E67E22] text-[#E67E22]" />
                       ))}
                     </div>
                     <span className="block text-[11px] text-stone-400 mt-1 font-semibold uppercase tracking-wider">
@@ -146,7 +144,7 @@ export default function ReviewsPage() {
                     <p className="text-stone-500 leading-relaxed">
                       Diambil dari {approvedReviews.length} ulasan terverifikasi wisatawan keluarga, pasangan, dan solo traveler.
                     </p>
-                    <div className="pt-1 flex items-center gap-2 text-emerald-700 font-semibold">
+                    <div className="pt-1 flex items-center gap-2 text-[#0C8C5E] font-semibold">
                       <ShieldCheck className="h-4 w-4 shrink-0" />
                       <span>Lisensi Resmi HPI Bali Terverifikasi</span>
                     </div>
@@ -164,7 +162,7 @@ export default function ReviewsPage() {
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-10">
           <div className="rounded-3xl bg-stone-900 text-white p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
             <div className="space-y-2 max-w-xl text-center md:text-left">
-              <span className="text-xs uppercase tracking-wider text-amber-300 font-semibold">
+              <span className="text-xs uppercase tracking-wider text-[#E67E22] font-semibold">
                 Rute Eksklusif Keluarga Anda
               </span>
               <h2 className="font-serif text-2xl sm:text-3xl font-bold">
@@ -179,7 +177,7 @@ export default function ReviewsPage() {
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-emerald-600 px-7 py-4 text-sm sm:text-base font-bold text-white shadow-xl shadow-emerald-700/30 hover:bg-emerald-500 active:scale-95 transition-all shrink-0"
+              className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-[#E67E22] hover:bg-[#D35400] px-7 py-4 text-sm sm:text-base font-bold text-white shadow-xl shadow-[#E67E22]/30 active:scale-95 transition-all shrink-0 cursor-pointer"
             >
               <MessageCircle className="h-5 w-5" />
               <span>Konsultasi Tur via WhatsApp</span>

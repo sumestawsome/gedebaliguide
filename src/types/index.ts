@@ -78,12 +78,143 @@ export interface Review {
 export interface GalleryItem {
   id: string;
   title: string;
-  category: "culture" | "nature" | "guests" | "activity";
+  category: "culture" | "nature" | "guests" | "activity" | string;
   location: string;
   imageUrl: string;
   caption: string;
+  alt?: string;
+  sortOrder?: number;
   tourSlug?: string;
   featured?: boolean;
+}
+
+export interface ThemeColorPalette {
+  brand: string;
+  accent: string;
+  trust: string;
+  secondary?: string;
+  canvas: string;
+  surface: string;
+  textPrimary: string;
+  textMuted: string;
+}
+
+export interface ThemePreset {
+  id: string;
+  name: string;
+  colors: ThemeColorPalette;
+}
+
+export interface ThemeSettings {
+  activePreset: string;
+  presets: ThemePreset[];
+  typography: {
+    headingFont: string;
+    bodyFont: string;
+  };
+  updatedAt?: string;
+}
+
+export interface FullGuideProfile {
+  name: string;
+  licenseNumber: string;
+  role: string;
+  email: string;
+  phone: string;
+  avatarUrl: string;
+  avatarPublicId?: string;
+  operatingHours: string;
+  bioShort: string;
+  bioLong: string;
+  stats: {
+    experienceYears: number;
+    guestsGuided: number;
+    rating: number;
+    satisfactionPercent: number;
+  };
+  socialLinks: {
+    instagram?: string;
+    facebook?: string;
+  };
+  updatedAt?: string;
+}
+
+export interface Lead {
+  id?: string;
+  guestName: string;
+  phone: string;
+  email?: string;
+  tripDate?: string;
+  guestCount?: number;
+  selectedTour?: string;
+  notes?: string;
+  sourcePage?: string;
+  leadType: "whatsapp" | "contact_form";
+  status: "new" | "contacted" | "converted";
+  createdAt: string;
+}
+
+export interface FAQItem {
+  id: string;
+  question: string;
+  answer: string;
+  category: "Pemesanan & Biaya" | "Rute & Fleksibilitas" | "Armada Mobil" | "Budaya & Lisensi HPI" | string;
+  sortOrder: number;
+  isActive: boolean;
+  updatedAt?: string;
+}
+
+export interface StatItem {
+  id: string;
+  value: string;
+  label: string;
+}
+
+export interface PillarItem {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface AboutPageContent {
+  hero: {
+    badge: string;
+    title: string;
+    introText: string;
+    profileImage: {
+      url: string;
+      publicId: string;
+      alt: string;
+    };
+    imageCaption: string;
+    stats: StatItem[];
+  };
+  story: {
+    sectionTag: string;
+    title: string;
+    paragraphs: string[];
+    quote: string;
+    quoteAuthor: string;
+    storyImage: {
+      url: string;
+      publicId: string;
+      alt: string;
+    };
+  };
+  guidingStyle: {
+    sectionTag: string;
+    title: string;
+    subtitle: string;
+    pillars: PillarItem[];
+  };
+  trustStrip: TrustItem[];
+  cta: {
+    title: string;
+    subtitle: string;
+    buttonText: string;
+  };
+  updatedAt?: string;
 }
 
 export * from "@/lib/schemas/home-schema";

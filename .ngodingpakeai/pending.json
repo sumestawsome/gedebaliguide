@@ -1,6 +1,6 @@
 {
   "repo": "client",
-  "generatedForCommit": "1135bdeabaad7a9127341dab90e58b95653d469b",
+  "generatedForCommit": "100c296999a26523fd2a959c46c24605a2d6500d",
   "files": [
     {
       "path": ".claude/skills/ngodingpakeai/SKILL.md",
@@ -244,15 +244,15 @@
     },
     {
       "path": "src/app/contact/page.tsx",
-      "reason": "changed",
+      "reason": "needs_summary",
       "language": "typescript",
-      "size": 9233
+      "size": 5657
     },
     {
       "path": "src/app/faq/page.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 6208
+      "size": 5661
     },
     {
       "path": "src/app/gallery/page.tsx",
@@ -288,13 +288,13 @@
       "path": "src/app/tours/page.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 3186
+      "size": 6344
     },
     {
       "path": "src/app/tours/[slug]/page.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 13939
+      "size": 13964
     },
     {
       "path": "src/components/about/AboutComparison.tsx",
@@ -340,9 +340,27 @@
     },
     {
       "path": "src/components/contact/ContactInfoSection.tsx",
-      "reason": "new",
+      "reason": "needs_summary",
       "language": "typescript",
-      "size": 6468
+      "size": 6604
+    },
+    {
+      "path": "src/components/contact/ContactMessageForm.tsx",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 15042
+    },
+    {
+      "path": "src/components/contact/ContactSocialCta.tsx",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 8084
+    },
+    {
+      "path": "src/components/faq/FaqAccordion.tsx",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 15665
     },
     {
       "path": "src/components/gallery/GalleryGrid.tsx",
@@ -411,6 +429,12 @@
       "size": 15658
     },
     {
+      "path": "src/components/tours/DirectPricingBanner.tsx",
+      "reason": "needs_summary",
+      "language": "typescript",
+      "size": 3832
+    },
+    {
       "path": "src/components/tours/TourBookingCard.tsx",
       "reason": "needs_summary",
       "language": "typescript",
@@ -420,19 +444,19 @@
       "path": "src/components/tours/TourCard.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 6936
+      "size": 7403
     },
     {
       "path": "src/components/tours/TourInclusions.tsx",
-      "reason": "needs_summary",
+      "reason": "changed",
       "language": "typescript",
-      "size": 3794
+      "size": 4461
     },
     {
       "path": "src/components/tours/TourItinerary.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 2476
+      "size": 6348
     },
     {
       "path": "src/components/tours/TourMap.tsx",
@@ -444,7 +468,7 @@
       "path": "src/components/tours/ToursCatalog.tsx",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 9405
+      "size": 22878
     },
     {
       "path": "src/data/mock-data.ts",
@@ -456,7 +480,7 @@
       "path": "src/data/mock-faq.ts",
       "reason": "needs_summary",
       "language": "typescript",
-      "size": 3878
+      "size": 6990
     },
     {
       "path": "src/data/mock-gallery.ts",
