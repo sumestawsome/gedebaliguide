@@ -38,56 +38,57 @@ export default function AboutComparison() {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-stone-50/80">
+    <section className="py-16 md:py-24 bg-[#FEFDFB] border-t border-[#EBE9E6]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 border border-amber-200 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-amber-800">
-            <Sparkles className="h-3.5 w-3.5 text-amber-600" />
-            <span>Perbandingan Layanan</span>
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-3">
+          <div className="mb-2">
+            <span className="font-serif italic text-base sm:text-lg text-[#0C8C5E] font-normal tracking-wide block">
+              “Perbandingan Layanan”
+            </span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-stone-900 leading-tight">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-[-0.03em] text-[#08090A] leading-tight">
             Mengapa Wisatawan Memilih Bli Gede Dibandingkan Marketplace Umum?
           </h2>
 
-          <p className="text-stone-600 text-sm sm:text-base leading-relaxed font-sans">
+          <p className="text-[#5E6965] text-sm sm:text-base leading-relaxed font-sans">
             Menghilangkan perantara agen korporat berarti Anda mendapatkan harga yang jujur, pelayanan personal yang hangat, dan kepastian siapa yang akan memandu keluarga Anda.
           </p>
         </div>
 
         {/* Comparison Table for Desktop, Card list for Mobile */}
-        <div className="overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-xl">
-          <div className="grid grid-cols-1 md:grid-cols-12 border-b border-stone-200 bg-stone-100/70 p-4 sm:p-5 text-sm font-bold text-stone-900">
-            <div className="md:col-span-4 text-stone-600 uppercase text-xs tracking-wider">
+        <div className="overflow-hidden rounded-3xl border border-[#EBE9E6] bg-white shadow-xs">
+          <div className="grid grid-cols-1 md:grid-cols-12 border-b border-[#EBE9E6] bg-[#FAF8F5] p-4 sm:p-5 text-sm font-bold text-[#08090A]">
+            <div className="md:col-span-4 text-[#5E6965] uppercase text-xs tracking-wider">
               Aspek Layanan
             </div>
-            <div className="md:col-span-4 text-emerald-800 flex items-center gap-2 mt-2 md:mt-0 font-serif text-base">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            <div className="md:col-span-4 text-[#0C8C5E] flex items-center gap-2 mt-2 md:mt-0 font-serif text-base font-bold">
+              <span className="h-2 w-2 rounded-full bg-[#0C8C5E]" />
               Bersama Bli Gede (Direct)
             </div>
-            <div className="md:col-span-4 text-stone-500 flex items-center gap-2 mt-2 md:mt-0 text-xs sm:text-sm">
-              <span className="h-2 w-2 rounded-full bg-stone-400" />
+            <div className="md:col-span-4 text-[#5E6965] flex items-center gap-2 mt-2 md:mt-0 text-xs sm:text-sm">
+              <span className="h-2 w-2 rounded-full bg-[#CFCDCA]" />
               Marketplace Tur Online Massal
             </div>
           </div>
 
-          <div className="divide-y divide-stone-100">
+          <div className="divide-y divide-[#EBE9E6]">
             {comparisons.map((row, idx) => (
               <div
                 key={idx}
-                className="grid grid-cols-1 md:grid-cols-12 p-4 sm:p-5 text-xs sm:text-sm gap-3 items-center hover:bg-stone-50/50 transition-colors"
+                className="grid grid-cols-1 md:grid-cols-12 p-4 sm:p-5 text-xs sm:text-sm gap-3 items-center hover:bg-[#FAF8F5]/50 transition-colors"
               >
-                <div className="md:col-span-4 font-semibold text-stone-900">
+                <div className="md:col-span-4 font-semibold text-[#08090A]">
                   {row.aspect}
                 </div>
-                <div className="md:col-span-4 text-stone-800 flex items-start gap-2.5">
-                  <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                <div className="md:col-span-4 text-[#08090A] flex items-start gap-2.5">
+                  <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#E8F6F0] text-[#0C8C5E]">
                     <Check className="h-3.5 w-3.5 stroke-[3]" />
                   </div>
                   <span className="leading-relaxed">{row.gede}</span>
                 </div>
-                <div className="md:col-span-4 text-stone-500 flex items-start gap-2.5">
-                  <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-stone-100 text-stone-400">
+                <div className="md:col-span-4 text-[#5E6965] flex items-start gap-2.5">
+                  <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#FAF8F5] text-[#5E6965] border border-[#EBE9E6]">
                     <X className="h-3.5 w-3.5 stroke-[2.5]" />
                   </div>
                   <span className="leading-relaxed">{row.others}</span>

@@ -22,6 +22,13 @@ export const metadata: Metadata = {
   title: "Gede Bali Guide — Private Tour Guide Berlisensi HPI Bali",
   description:
     "Jelajahi keindahan autentik Bali bersama Gede Sudiartana, private tour guide resmi HPI Bali. Pengalaman 10+ tahun, armada mobil ber-AC, dan konsultasi langsung via WhatsApp.",
+  icons: {
+    icon: [
+      { url: "/assets/gede-logo.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico" },
+    ],
+    apple: "/assets/gede-logo.svg",
+  },
 };
 
 export default function RootLayout({
@@ -30,8 +37,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${libreBaskerville.variable} ${inter.variable} h-full`}>
-      <body className="min-h-full flex flex-col antialiased selection:bg-amber-100 selection:text-amber-900 bg-[#FEFDFB] text-[#121715]">
+    <html lang="en" className={`${libreBaskerville.variable} ${inter.variable} h-full`}>
+      <body className="min-h-full flex flex-col antialiased selection:bg-[#EBF5FB] selection:text-[#1878B8] bg-[#FEFDFB] text-[#121715]">
         <Navbar />
         {children}
         <FloatingWhatsApp />

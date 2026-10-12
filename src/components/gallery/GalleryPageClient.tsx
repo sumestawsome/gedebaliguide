@@ -13,12 +13,16 @@ interface GalleryPageClientProps {
 }
 
 export default function GalleryPageClient({ initialItems }: GalleryPageClientProps) {
-  const [lang, setLang] = useState<"id" | "en">("id");
+  const [lang, setLang] = useState<"id" | "en">("en");
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem("app_lang");
-      if (saved === "id" || saved === "en") setLang(saved);
+      if (saved === "id" || saved === "en") {
+        setLang(saved);
+      } else {
+        setLang("en");
+      }
     } catch {}
     const handleLang = (e: Event) => {
       const detail = (e as CustomEvent).detail;
@@ -72,7 +76,7 @@ export default function GalleryPageClient({ initialItems }: GalleryPageClientPro
   const t = content[lang];
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#FEFDFB] text-[#08090A] font-sans selection:bg-amber-100 selection:text-amber-900">
+    <div className="flex min-h-screen flex-col bg-[#FEFDFB] text-[#08090A] font-sans selection:bg-[#EBF5FB] selection:text-[#1878B8]">
       <main className="flex-1">
         {/* ========================================================
             2. HEADER EDITORIAL BERSIH & HANGAT
@@ -106,10 +110,11 @@ export default function GalleryPageClient({ initialItems }: GalleryPageClientPro
 
             {/* Header Content */}
             <div className="max-w-3xl space-y-4">
-              {/* Badge Tipis Hijau #0C8C5E */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#E8F6F0] text-[#0C8C5E] border border-[#0C8C5E]/20">
-                <Sparkles className="w-3.5 h-3.5 text-[#0C8C5E]" />
-                <span>{t.badge}</span>
+              {/* Aksen Teks Editorial Bersih Tanpa Shape */}
+              <div className="mb-2">
+                <span className="font-serif italic text-base sm:text-lg text-[#0C8C5E] font-normal tracking-wide">
+                  “{t.badge}”
+                </span>
               </div>
 
               {/* Headline Display (Libre Baskerville) */}
@@ -140,8 +145,8 @@ export default function GalleryPageClient({ initialItems }: GalleryPageClientPro
             <div className="absolute -bottom-20 -right-20 w-60 h-60 rounded-full bg-[#E67E22]/5 blur-2xl pointer-events-none" />
 
             <div className="relative max-w-2xl mx-auto space-y-4">
-              <span className="inline-block px-3 py-1 rounded-full bg-[#E8F6F0] text-[#0C8C5E] text-xs font-semibold tracking-wider uppercase border border-[#0C8C5E]/20">
-                {t.bottomSection.badge}
+              <span className="block font-serif italic text-base sm:text-lg text-[#0C8C5E] font-normal tracking-wide">
+                “{t.bottomSection.badge}”
               </span>
 
               <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#08090A] leading-tight">

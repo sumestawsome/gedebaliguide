@@ -34,12 +34,16 @@ interface TourDetailClientProps {
 }
 
 export default function TourDetailClient({ tour }: TourDetailClientProps) {
-  const [lang, setLang] = useState<"id" | "en">("id");
+  const [lang, setLang] = useState<"id" | "en">("en");
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem("app_lang");
-      if (saved === "id" || saved === "en") setLang(saved);
+      if (saved === "id" || saved === "en") {
+        setLang(saved);
+      } else {
+        setLang("en");
+      }
     } catch {}
     const handleLang = (e: Event) => {
       const detail = (e as CustomEvent).detail;
@@ -84,8 +88,8 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
       breadcrumbHome: "Beranda",
       breadcrumbCatalog: "Katalog Tur",
       exclusiveBadge: "PAKET TUR PRIVAT EKSKLUSIF",
-      feeLabel: "Biaya Sewa",
-      feeUnit: tour.priceType === "per_person" ? "per orang" : "per mobil (maks 5 tamu)",
+      feeLabel: tour.price && tour.price > 0 ? "Biaya Sewa" : "Tarif Tur",
+      feeUnit: tour.price && tour.price > 0 ? (tour.priceType === "per_person" ? "per orang" : "per mobil (maks 5 tamu)") : "fleksibel via WhatsApp",
       quotaLabel: "Kuota Tamu",
       quotaValue: `${tour.minimumGuests || 1} – ${tour.maximumGuests || 5} Tamu`,
       quotaDesc: "Rombongan privat",
@@ -94,10 +98,13 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
       standardLabel: "Standar Layanan",
       standardValue: "100% Privat",
       standardDesc: "Mobil dingin ber-AC",
+      aboutKicker: "Cerita & Nuansa",
       aboutTitle: "Tentang Perjalanan Ini",
+      itineraryKicker: "Rencana Perjalanan",
       itineraryTitle: "Sorotan Destinasi & Rencana Perjalanan",
       itinerarySubtitle:
         "Rute disusun santai dan fleksibel, murni menikmati keindahan budaya dan alam Bali tanpa paksaan mampir belanja oleh-oleh.",
+      whyKicker: "Keistimewaan Layanan",
       whyTitle: "Mengapa Tur Ini Istimewa Bersama Bli Gede?",
       whyFeatures: [
         {
@@ -121,11 +128,13 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
           icon: Compass,
         },
       ],
+      facilitiesKicker: "Transparansi Layanan",
       facilitiesTitle: "Fasilitas & Ketentuan Layanan",
       facilitiesSubtitle:
         "Semua komponen harga kami cantumkan secara transparan tanpa biaya tersembunyi demi kenyamanan Anda.",
       inclusionsTitle: "Sudah Termasuk (Inclusions)",
       exclusionsTitle: "Belum Termasuk (Exclusions)",
+      reviewsKicker: "Kata Wisatawan",
       reviewsTitle: "Ulasan Wisatawan untuk Paket Ini",
       reviewsSubtitle: "Pengalaman nyata wisatawan yang telah menjelajahi rute ini bersama Bli Gede.",
       seeAllReviews: "Lihat Semua Ulasan Tamu →",
@@ -147,8 +156,8 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
       breadcrumbHome: "Home",
       breadcrumbCatalog: "Tour Packages",
       exclusiveBadge: "EXCLUSIVE PRIVATE TOUR",
-      feeLabel: "Tour Price",
-      feeUnit: tour.priceType === "per_person" ? "per guest" : "per private car (up to 5 guests)",
+      feeLabel: tour.price && tour.price > 0 ? "Tour Price" : "Tour Rates",
+      feeUnit: tour.price && tour.price > 0 ? (tour.priceType === "per_person" ? "per guest" : "per private car (up to 5 guests)") : "flexible via WhatsApp",
       quotaLabel: "Guest Capacity",
       quotaValue: `${tour.minimumGuests || 1} – ${tour.maximumGuests || 5} Guests`,
       quotaDesc: "Private group only",
@@ -157,10 +166,13 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
       standardLabel: "Service Standard",
       standardValue: "100% Private",
       standardDesc: "Air-conditioned car",
+      aboutKicker: "Story & Character",
       aboutTitle: "About This Experience",
+      itineraryKicker: "Curated Itinerary",
       itineraryTitle: "Destination Highlights & Itinerary",
       itinerarySubtitle:
         "Thoughtfully planned with relaxed pacing, focused purely on Balinese culture and natural beauty without mandatory souvenir stops.",
+      whyKicker: "Signature Hospitality",
       whyTitle: "Why Tour with Bli Gede?",
       whyFeatures: [
         {
@@ -184,11 +196,13 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
           icon: Compass,
         },
       ],
+      facilitiesKicker: "Transparent Inclusions",
       facilitiesTitle: "Inclusions & Service Terms",
       facilitiesSubtitle:
         "Transparent pricing with zero hidden fees, so you know exactly what is covered in your tour.",
       inclusionsTitle: "Included (Inclusions)",
       exclusionsTitle: "Not Included (Exclusions)",
+      reviewsKicker: "Guest Experiences",
       reviewsTitle: "Guest Reviews for This Tour",
       reviewsSubtitle: "Real experiences from travelers who explored this exact route with Bli Gede.",
       seeAllReviews: "View All Guest Reviews →",
@@ -211,6 +225,9 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
 
   // Helper Format Harga
   const formatDisplayPrice = (price: number) => {
+    if (!price || price <= 0) {
+      return lang === "en" ? "Price on Request" : "Tarif via WA";
+    }
     if (lang === "en") {
       return t.usdApprox(price);
     }
@@ -240,7 +257,7 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#FEFDFB] text-[#121715] flex flex-col font-sans selection:bg-[#F2FAF6] selection:text-[#0C8C5E]">
+    <div className="min-h-screen bg-[#FEFDFB] text-[#121715] flex flex-col font-sans selection:bg-[#EBF5FB] selection:text-[#1878B8]">
       <main className="flex-1 pb-20 sm:pb-24">
         {/* ========================================================
             1. BREADCRUMB RESPONSIF (FIX CLIPPING DI MOBILE)
@@ -294,13 +311,13 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
               {/* Header Info: Badge, Judul, Tagline */}
               <div className="space-y-3.5">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#F2FAF6] text-[#0C8C5E] border border-[#0C8C5E]/20">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#E8F6F0] text-[#0C8C5E]">
                     {t.exclusiveBadge}
                   </span>
-                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#EAF5FC] text-[#1878B8] border border-[#1878B8]/20">
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#EBF5FB] text-[#1878B8]">
                     📍 {tour.area}
                   </span>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF8F5] border border-[#EBE9E6] text-xs font-bold text-[#08090A]">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF8F5] text-xs font-semibold text-[#08090A]">
                     <Star className="h-3.5 w-3.5 fill-[#E67E22] text-[#E67E22]" />
                     <span>{(tour.rating || 5.0).toFixed(1)}</span>
                     <span className="text-[#5E6965] font-normal">
@@ -451,9 +468,14 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
                   SEKSI: TENTANG PERJALANAN INI
                   ======================================================== */}
               <div className="space-y-3 pt-2">
-                <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#08090A]">
-                  {t.aboutTitle}
-                </h2>
+                <div>
+                  <span className="font-serif italic text-base sm:text-lg text-[#1878B8] font-normal tracking-wide block mb-1">
+                    “{t.aboutKicker}”
+                  </span>
+                  <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#08090A]">
+                    {t.aboutTitle}
+                  </h2>
+                </div>
                 <div className="text-sm sm:text-base text-[#5E6965] leading-relaxed space-y-3">
                   <p>{tour.description}</p>
                 </div>
@@ -464,6 +486,9 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
                   ======================================================== */}
               <div className="space-y-5 pt-4 border-t border-[#EBE9E6]">
                 <div>
+                  <span className="font-serif italic text-base sm:text-lg text-[#0C8C5E] font-normal tracking-wide block mb-1">
+                    “{t.itineraryKicker}”
+                  </span>
                   <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#08090A]">
                     {t.itineraryTitle}
                   </h2>
@@ -510,21 +535,41 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
 
               {/* ========================================================
                   SEKSI: MENGAPA TUR INI ISTIMEWA BERSAMA BLI GEDE
-                  (4 KARTU FITUR STANDAR LAYANAN)
+                  (4 KARTU FITUR STANDAR LAYANAN DENGAN RITME 3 WARNA)
                   ======================================================== */}
               <div className="space-y-4 pt-4 border-t border-[#EBE9E6]">
-                <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#08090A]">
-                  {t.whyTitle}
-                </h2>
+                <div>
+                  <span className="font-serif italic text-base sm:text-lg text-[#1878B8] font-normal tracking-wide block mb-1">
+                    “{t.whyKicker}”
+                  </span>
+                  <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#08090A]">
+                    {t.whyTitle}
+                  </h2>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {t.whyFeatures.map((feat, fIdx) => {
                     const IconComp = feat.icon;
+                    const rhythmStyles = [
+                      {
+                        iconBg: "bg-[#EBF5FB] text-[#1878B8]",
+                        borderHover: "hover:border-[#1878B8]",
+                      },
+                      {
+                        iconBg: "bg-[#E8F6F0] text-[#0C8C5E]",
+                        borderHover: "hover:border-[#0C8C5E]",
+                      },
+                      {
+                        iconBg: "bg-[#FDF3E6] text-[#E67E22]",
+                        borderHover: "hover:border-[#E67E22]",
+                      },
+                    ];
+                    const rhythm = rhythmStyles[fIdx % 3];
                     return (
                       <div
                         key={fIdx}
-                        className="bg-white border border-[#EBE9E6] rounded-2xl p-5 shadow-xs space-y-2.5 hover:border-[#0C8C5E]/30 transition-colors"
+                        className={`bg-white border border-[#EBE9E6] rounded-2xl p-5 shadow-xs space-y-2.5 transition-all duration-200 hover:-translate-y-0.5 ${rhythm.borderHover}`}
                       >
-                        <div className="w-10 h-10 rounded-xl bg-[#F2FAF6] text-[#0C8C5E] flex items-center justify-center">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${rhythm.iconBg}`}>
                           <IconComp className="h-5 w-5" />
                         </div>
                         <h3 className="font-bold text-sm sm:text-base text-[#08090A]">
@@ -544,6 +589,9 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
                   ======================================================== */}
               <div className="space-y-4 pt-4 border-t border-[#EBE9E6]">
                 <div>
+                  <span className="font-serif italic text-base sm:text-lg text-[#0C8C5E] font-normal tracking-wide block mb-1">
+                    “{t.facilitiesKicker}”
+                  </span>
                   <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#08090A]">
                     {t.facilitiesTitle}
                   </h2>
@@ -607,6 +655,9 @@ export default function TourDetailClient({ tour }: TourDetailClientProps) {
               <div className="space-y-4 pt-4 border-t border-[#EBE9E6]">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
+                    <span className="font-serif italic text-base sm:text-lg text-[#1878B8] font-normal tracking-wide block mb-1">
+                      “{t.reviewsKicker}”
+                    </span>
                     <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#08090A]">
                       {t.reviewsTitle}
                     </h2>

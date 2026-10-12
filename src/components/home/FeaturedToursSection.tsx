@@ -106,7 +106,7 @@ export default function FeaturedToursSection({ initialTours }: FeaturedToursSect
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-950/60 via-transparent to-black/20" />
 
                   {/* Area Badge */}
-                  <div className="absolute top-3.5 left-3.5 rounded-full bg-stone-900/80 backdrop-blur-md px-3 py-1 text-xs font-semibold text-white border border-white/20">
+                  <div className="absolute top-3.5 left-3.5 rounded-full bg-stone-900/80 backdrop-blur-md px-3 py-1 text-xs font-semibold text-white">
                     {tour.area}
                   </div>
 
@@ -202,14 +202,14 @@ export default function FeaturedToursSection({ initialTours }: FeaturedToursSect
                   <div className="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between gap-3 mt-auto">
                     <div>
                       <span className="block text-[11px] font-semibold uppercase tracking-wider text-stone-400">
-                        Harga Sewa Tur
+                        Tarif Tur Privat
                       </span>
-                      <div className="flex items-baseline gap-1">
-                        <span className="font-serif text-xl sm:text-2xl font-bold text-stone-900">
-                          {formatPrice(tour.price)}
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-[#121715]">
+                          Price on Request
                         </span>
-                        <span className="text-xs text-stone-500 font-medium">
-                          / mobil
+                        <span className="text-[11px] text-stone-500 font-medium">
+                          Rates via WA
                         </span>
                       </div>
                     </div>

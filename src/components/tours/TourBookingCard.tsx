@@ -53,19 +53,16 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
       {/* Price Header */}
       <div className="border-b border-stone-100 pb-5">
         <span className="block text-[11px] font-semibold uppercase tracking-wider text-stone-400">
-          Harga Sewa Tur Privat
+          Tarif Tur Privat
         </span>
-        <div className="flex items-baseline gap-1 mt-1">
-          <span className="font-serif text-3xl sm:text-4xl font-bold text-[#E67E22]">
-            {formatPrice(tour.price)}
+        <div className="mt-2">
+          <span className="inline-block px-3 py-1.5 rounded-lg bg-[#FAF8F5] text-[#121715] font-bold text-base sm:text-lg border border-[#EBE9E6]">
+            Price on Request / Rates via WA
           </span>
-          <span className="text-sm font-medium text-stone-500">
-            {tour.priceType === "per_person" ? "/ orang" : "/ mobil (rombongan)"}
-          </span>
+          <p className="text-xs text-[#0C8C5E] font-medium mt-1">
+            ✓ Konsultasikan rute & penawaran terbaik langsung via WhatsApp
+          </p>
         </div>
-        <p className="text-xs text-[#0C8C5E] font-medium mt-1">
-          ✓ Sudah termasuk mobil ber-AC, BBM, supir/guide, dan parkir
-        </p>
       </div>
 
       {/* Quota & Capacity Info */}
@@ -249,7 +246,7 @@ export default function TourBookingCard({ tour }: TourBookingCardProps) {
           className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-[#E67E22] hover:bg-[#D35400] px-6 py-4 text-base font-bold text-white shadow-lg shadow-[#E67E22]/25 active:scale-[0.98] transition-all"
         >
           <MessageCircle className="h-5 w-5" />
-          <span>Kirim Pemesanan ke WhatsApp</span>
+          <span>Konsultasi / Book via WhatsApp</span>
         </a>
 
         {/* Secondary: Direct question button */}

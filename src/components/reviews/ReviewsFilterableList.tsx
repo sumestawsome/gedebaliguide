@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Star, Quote, CheckCircle2, MessageSquarePlus, X, Send, HeartHandshake, Sparkles, Filter } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Review } from "@/types";
+import ReviewCard from "./ReviewCard";
 
 interface ReviewsFilterableListProps {
   initialReviews: Review[];
@@ -159,57 +160,17 @@ export default function ReviewsFilterableList({ initialReviews }: ReviewsFiltera
         >
           <AnimatePresence>
             {filteredReviews.map((review, idx) => (
-              <motion.article
+              <motion.div
                 key={review.id}
                 layout
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.35, delay: idx * 0.04 }}
-                className="relative flex flex-col justify-between rounded-3xl border border-stone-200/90 bg-white p-7 shadow-xs hover:shadow-xl hover:border-[#1878B8]/40 transition-all duration-300"
+                className="h-full flex flex-col"
               >
-                <div>
-                  {/* Top Card: Rating & Quote */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-1">
-                      {[...Array(review.rating)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-[#E67E22] text-[#E67E22]" />
-                      ))}
-                      <span className="ml-1 text-xs font-bold text-stone-800">
-                        {review.rating}.0
-                      </span>
-                    </div>
-
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-100 text-stone-400">
-                      <Quote className="h-3.5 w-3.5" />
-                    </div>
-                  </div>
-
-                  {/* Review Content */}
-                  <blockquote className="text-sm text-stone-700 leading-relaxed italic mb-6 font-sans">
-                    &ldquo;{review.content}&rdquo;
-                  </blockquote>
-                </div>
-
-                {/* Footer Card: Author Details */}
-                <div className="pt-4 border-t border-stone-100 flex flex-col sm:flex-row sm:items-end justify-between gap-3 mt-auto">
-                  <div className="min-w-0">
-                    <h3 className="font-serif text-base font-bold text-stone-900 flex items-center gap-1.5 truncate">
-                      <span className="truncate">{review.authorName}</span>
-                      <CheckCircle2 className="h-3.5 w-3.5 text-[#0C8C5E] shrink-0" />
-                    </h3>
-                    <p className="text-xs text-stone-500 mt-0.5 truncate">
-                      {review.authorOrigin} {review.dateOfTrip && `• ${review.dateOfTrip}`}
-                    </p>
-                  </div>
-
-                  {review.tourName && (
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#1878B8] bg-[#EAF5FC] border border-[#1878B8]/20 px-2.5 py-1 rounded-md shrink-0 truncate max-w-[180px]">
-                      {review.tourName}
-                    </span>
-                  )}
-                </div>
-              </motion.article>
+                <ReviewCard review={review} index={idx} className="h-full" />
+              </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>

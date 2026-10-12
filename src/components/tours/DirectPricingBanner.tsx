@@ -6,7 +6,6 @@ import {
   Lock,
   ShoppingBag,
   Sparkles,
-  CheckCircle2,
 } from "lucide-react";
 import { handleWhatsAppClick } from "@/lib/lead-tracker";
 
@@ -14,7 +13,7 @@ interface DirectPricingBannerProps {
   lang?: "id" | "en";
 }
 
-export default function DirectPricingBanner({ lang = "id" }: DirectPricingBannerProps) {
+export default function DirectPricingBanner({ lang = "en" }: DirectPricingBannerProps) {
   const content = {
     id: {
       badge: "Garansi Transparansi Harga",
@@ -84,14 +83,31 @@ export default function DirectPricingBanner({ lang = "id" }: DirectPricingBanner
 
   const t = content[lang];
 
+  const guaranteeIcons = [BadgePercent, Lock, ShoppingBag, Sparkles];
+  const rhythmConfig = [
+    {
+      iconBg: "bg-[#EBF5FB] text-[#1878B8]",
+      borderHover: "hover:border-[#1878B8]",
+    },
+    {
+      iconBg: "bg-[#E8F6F0] text-[#0C8C5E]",
+      borderHover: "hover:border-[#0C8C5E]",
+    },
+    {
+      iconBg: "bg-[#FDF3E6] text-[#E67E22]",
+      borderHover: "hover:border-[#E67E22]",
+    },
+  ];
+
   return (
     <div className="space-y-8 sm:space-y-10">
       {/* 4 Value Propositions Grid */}
       <div className="rounded-3xl border border-[#EBE9E6] bg-white p-6 sm:p-9 shadow-[0_4px_20px_rgba(12,140,94,0.05)]">
         <div className="max-w-2xl mb-8">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-[#E8F7F1] border border-[#0C8C5E]/20 px-3 py-1 text-xs font-semibold text-[#006B49] mb-3">
-            <CheckCircle2 className="h-3.5 w-3.5 text-[#0C8C5E]" />
-            <span>{t.badge}</span>
+          <div className="mb-2">
+            <span className="font-serif italic text-base sm:text-lg text-[#0C8C5E] font-normal tracking-wide block">
+              “{t.badge}”
+            </span>
           </div>
           <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#08090A] leading-tight mb-2">
             {t.title}
@@ -102,22 +118,26 @@ export default function DirectPricingBanner({ lang = "id" }: DirectPricingBanner
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {t.guarantees.map((item, idx) => (
-            <div
-              key={idx}
-              className="rounded-2xl border border-[#EBE9E6] bg-[#FEFDFB] p-5 space-y-2.5 hover:border-[#0C8C5E]/40 hover:-translate-y-1 transition-all duration-200"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white border border-[#EBE9E6] shadow-xs">
-                {item.icon}
+          {t.guarantees.map((item, idx) => {
+            const rhythm = rhythmConfig[idx % 3];
+            const IconComp = guaranteeIcons[idx];
+            return (
+              <div
+                key={idx}
+                className={`rounded-2xl border border-[#EBE9E6] bg-[#FEFDFB] p-5 space-y-2.5 transition-all duration-200 hover:-translate-y-1 ${rhythm.borderHover}`}
+              >
+                <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${rhythm.iconBg}`}>
+                  <IconComp className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-sm text-[#08090A] leading-snug">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-[#5E6965] leading-relaxed">
+                  {item.desc}
+                </p>
               </div>
-              <h3 className="font-bold text-sm text-[#08090A] leading-snug">
-                {item.title}
-              </h3>
-              <p className="text-xs text-[#5E6965] leading-relaxed">
-                {item.desc}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

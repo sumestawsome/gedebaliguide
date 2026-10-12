@@ -1,6 +1,6 @@
 # Product Briefing & Content Specification: Gede Bali Guide
 
-Dokumen ini berisi seluruh materi, data konten, dan panduan desain untuk disinkronkan ke **desainpakeai.com**.
+Dokumen ini berisi seluruh materi, data konten, dan panduan desain untuk proyek **Gede Bali Guide**.
 
 ---
 

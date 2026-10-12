@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Tour } from "@/types";
 import TourCard from "./TourCard";
 import { Search, SlidersHorizontal, RotateCcw, MessageCircle, Sparkles } from "lucide-react";
@@ -15,12 +16,33 @@ type SortOption = "popular" | "price_asc" | "price_desc" | "duration";
 
 export default function ToursCatalog({
   initialTours = [],
-  lang = "id",
+  lang = "en",
 }: ToursCatalogProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedArea, setSelectedArea] = useState<string>("all");
   const [sortBy, setSortBy] = useState<SortOption>("popular");
+  const searchParams = useSearchParams();
+
+  // Sync with URL query parameter (e.g. ?region=ubud, ?area=uluwatu)
+  useEffect(() => {
+    if (!searchParams) return;
+    const regionParam = searchParams.get("region") || searchParams.get("area");
+    if (regionParam) {
+      const lower = regionParam.toLowerCase().trim();
+      if (lower.includes("ubud")) setSelectedArea("ubud");
+      else if (lower.includes("uluwatu")) setSelectedArea("uluwatu");
+      else if (lower.includes("bedugul")) setSelectedArea("bedugul");
+      else if (lower.includes("kintamani")) setSelectedArea("kintamani");
+      else if (lower.includes("penida")) setSelectedArea("nusa penida");
+      else if (lower.includes("timur") || lower.includes("east")) setSelectedArea("bali timur");
+      else setSelectedArea(lower);
+    }
+    const qParam = searchParams.get("search") || searchParams.get("q");
+    if (qParam) {
+      setSearchQuery(qParam);
+    }
+  }, [searchParams]);
 
   const dictionary = {
     id: {

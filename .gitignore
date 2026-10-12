@@ -64,10 +64,14 @@ next-env.d.ts
 *.sln
 *.sw?
 
-# AI assistant / local tool directories
+# AI assistant / local tool directories & artifacts
 .claude/
 .codex/
 .gemini/
+.ngodingpakeai/
+.ngodingpakeaiignore
+gede-bali-guide (1)/
+*.local
 
 # Operating system files
 .DS_Store

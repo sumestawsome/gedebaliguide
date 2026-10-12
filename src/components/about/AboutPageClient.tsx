@@ -17,7 +17,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import Footer from "@/components/layout/Footer";
-import { AboutPageContent } from "@/types";
+import { AboutPageContent, StatItem, PillarItem, TrustItem } from "@/types";
 import { handleWhatsAppClick } from "@/lib/lead-tracker";
 
 interface AboutPageClientProps {
@@ -25,13 +25,17 @@ interface AboutPageClientProps {
 }
 
 export default function AboutPageClient({ initialContent }: AboutPageClientProps) {
-  const [lang, setLang] = useState<"id" | "en">("id");
+  const [lang, setLang] = useState<"id" | "en">("en");
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem("app_lang");
-      if (saved === "id" || saved === "en") setLang(saved);
-    } catch {}
+      if (saved === "id" || saved === "en") {
+        setLang(saved);
+      } else {
+        setLang("en");
+      }
+    } catch { }
     const handleLang = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail?.lang === "id" || detail?.lang === "en") {
@@ -73,7 +77,7 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
     breadcrumbCurrent: "About Gede",
     backHome: "Back to Home",
     hero: {
-      badge: "INDEPENDENT LOCAL BALINESE GUIDE",
+      badge: "Local Guide in Bali",
       title: "Meet Bli Gede, Your Local Friend & Keeper of Bali's Stories",
       introText:
         "Om Swastyastu. Welcome to Bali. I'm Gede Sudiartana, an officially licensed independent HPI Bali tour guide. I believe the best journeys are not about rushing through a dozen checklist spots a day, but about slowing down, discovering true serenity, and experiencing the authentic soul of our island at your family's own gentle rhythm.",
@@ -161,45 +165,49 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
   };
 
   const isEn = lang === "en";
+  const enResolved = initialContent.en || contentEn;
+  const idResolved = initialContent.id || initialContent;
 
   // Data resolution with live Firestore primary and bilingual fallback
   const heroData = {
-    badge: isEn ? contentEn.hero.badge : initialContent.hero.badge,
-    title: isEn ? contentEn.hero.title : initialContent.hero.title,
-    introText: isEn ? contentEn.hero.introText : initialContent.hero.introText,
-    profileImage: initialContent.hero.profileImage,
-    imageCaption: isEn ? contentEn.hero.imageCaption : initialContent.hero.imageCaption,
-    stats: isEn ? contentEn.hero.stats : initialContent.hero.stats,
-    ctaPrimary: isEn ? contentEn.hero.ctaPrimary : "Konsultasi Bersama Gede",
-    ctaSecondary: isEn ? contentEn.hero.ctaSecondary : "Lihat Pilihan Tur",
+    badge: isEn ? (enResolved.hero?.badge || contentEn.hero.badge) : (idResolved.hero?.badge || initialContent.hero.badge),
+    title: isEn ? (enResolved.hero?.title || contentEn.hero.title) : (idResolved.hero?.title || initialContent.hero.title),
+    introText: isEn ? (enResolved.hero?.introText || contentEn.hero.introText) : (idResolved.hero?.introText || initialContent.hero.introText),
+    profileImage: (isEn ? (enResolved as any).hero?.profileImage : (idResolved as any).hero?.profileImage) || initialContent.hero.profileImage,
+    imageCaption: isEn ? (enResolved.hero?.imageCaption || contentEn.hero.imageCaption) : (idResolved.hero?.imageCaption || initialContent.hero.imageCaption),
+    stats: ((isEn ? (enResolved as any).hero?.stats : (idResolved as any).hero?.stats) || initialContent.hero.stats) as StatItem[],
+    ctaPrimary: isEn ? (enResolved.hero as any)?.ctaPrimary || contentEn.hero.ctaPrimary : "Konsultasi Bersama Gede",
+    ctaSecondary: isEn ? (enResolved.hero as any)?.ctaSecondary || contentEn.hero.ctaSecondary : "Lihat Pilihan Tur",
   };
 
   const storyData = {
-    sectionTag: isEn ? contentEn.story.sectionTag : initialContent.story.sectionTag,
-    title: isEn ? contentEn.story.title : initialContent.story.title,
-    paragraphs: isEn ? contentEn.story.paragraphs : initialContent.story.paragraphs,
-    quote: isEn ? contentEn.story.quote : initialContent.story.quote,
-    quoteAuthor: isEn ? contentEn.story.quoteAuthor : initialContent.story.quoteAuthor,
-    storyImage: initialContent.story.storyImage,
+    sectionTag: isEn ? (enResolved.story?.sectionTag || contentEn.story.sectionTag) : (idResolved.story?.sectionTag || initialContent.story.sectionTag),
+    title: isEn ? (enResolved.story?.title || contentEn.story.title) : (idResolved.story?.title || initialContent.story.title),
+    paragraphs: isEn ? (enResolved.story?.paragraphs || contentEn.story.paragraphs) : (idResolved.story?.paragraphs || initialContent.story.paragraphs),
+    quote: isEn ? (enResolved.story?.quote || contentEn.story.quote) : (idResolved.story?.quote || initialContent.story.quote),
+    quoteAuthor: isEn ? (enResolved.story?.quoteAuthor || contentEn.story.quoteAuthor) : (idResolved.story?.quoteAuthor || initialContent.story.quoteAuthor),
+    storyImage: (isEn ? (enResolved as any).story?.storyImage : (idResolved as any).story?.storyImage) || initialContent.story.storyImage,
   };
+
 
   const guidingStyleData = {
-    sectionTag: isEn ? contentEn.guidingStyle.sectionTag : initialContent.guidingStyle.sectionTag,
-    title: isEn ? contentEn.guidingStyle.title : initialContent.guidingStyle.title,
-    subtitle: isEn ? contentEn.guidingStyle.subtitle : initialContent.guidingStyle.subtitle,
-    pillars: isEn ? contentEn.guidingStyle.pillars : initialContent.guidingStyle.pillars,
+    sectionTag: isEn ? (enResolved.guidingStyle?.sectionTag || contentEn.guidingStyle.sectionTag) : (idResolved.guidingStyle?.sectionTag || initialContent.guidingStyle.sectionTag),
+    title: isEn ? (enResolved.guidingStyle?.title || contentEn.guidingStyle.title) : (idResolved.guidingStyle?.title || initialContent.guidingStyle.title),
+    subtitle: isEn ? (enResolved.guidingStyle?.subtitle || contentEn.guidingStyle.subtitle) : (idResolved.guidingStyle?.subtitle || initialContent.guidingStyle.subtitle),
+    pillars: ((isEn ? (enResolved as any).guidingStyle?.pillars : (idResolved as any).guidingStyle?.pillars) || initialContent.guidingStyle.pillars) as PillarItem[],
   };
 
-  const trustStripData = isEn ? contentEn.trustStrip : initialContent.trustStrip;
+  const trustStripData = ((isEn ? (enResolved as any).trustStrip : (idResolved as any).trustStrip) || initialContent.trustStrip) as TrustItem[];
 
   const ctaData = {
-    title: isEn ? contentEn.cta.title : initialContent.cta.title,
-    subtitle: isEn ? contentEn.cta.subtitle : initialContent.cta.subtitle,
-    buttonText: isEn ? contentEn.cta.buttonText : initialContent.cta.buttonText,
+    title: isEn ? (enResolved.cta?.title || contentEn.cta.title) : (idResolved.cta?.title || initialContent.cta.title),
+    subtitle: isEn ? (enResolved.cta?.subtitle || contentEn.cta.subtitle) : (idResolved.cta?.subtitle || initialContent.cta.subtitle),
+    buttonText: isEn ? (enResolved.cta?.buttonText || contentEn.cta.buttonText) : (idResolved.cta?.buttonText || initialContent.cta.buttonText),
   };
 
+
   return (
-    <div className="flex min-h-screen flex-col bg-[#FEFDFB] text-[#08090A] font-sans selection:bg-amber-100 selection:text-amber-900">
+    <div className="flex min-h-screen flex-col bg-[#FEFDFB] text-[#08090A] font-sans selection:bg-[#EBF5FB] selection:text-[#1878B8]">
       <main className="flex-1">
         {/* ========================================================
             BREADCRUMB RINGKAS (Mobile & Desktop)
@@ -235,10 +243,11 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             {/* Kolom Kiri: Teks Profil Editorial & Statistik */}
             <div className="lg:col-span-7 space-y-6 sm:space-y-8">
-              {/* Badge Tipis */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#E8F6F0] text-[#0C8C5E] border border-[#0C8C5E]/20">
-                <span className="w-2 h-2 rounded-full bg-[#0C8C5E] animate-pulse" />
-                <span>{heroData.badge}</span>
+              {/* Aksen Teks Editorial Bersih Tanpa Shape */}
+              <div className="mb-2">
+                <span className="font-serif italic text-base sm:text-lg text-[#1878B8] font-normal tracking-wide">
+                  “{heroData.badge}”
+                </span>
               </div>
 
               {/* Headline Utama (Libre Baskerville) */}
@@ -268,19 +277,19 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
                 ))}
               </div>
 
-              {/* Tombol CTA */}
+              {/* Tombol CTA (Standarisasi Ukuran h-11, Primary Biru Samudra) */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => handleWhatsAppClick("Konsultasi Profil Gede")}
-                  className="flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#E67E22] hover:bg-[#D35400] text-white font-semibold text-base shadow-[0_4px_14px_rgba(230,126,34,0.28)] transition-all cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-[#1878B8] hover:bg-[#0F4C81] text-white font-medium text-sm shadow-[0_2px_8px_rgba(24,120,184,0.25)] transition-all cursor-pointer"
                 >
-                  <MessageCircle className="w-5 h-5" />
+                  <MessageCircle className="w-4.5 h-4.5" />
                   <span>{heroData.ctaPrimary}</span>
                 </button>
                 <Link
                   href="/tours"
-                  className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border border-[#EBE9E6] text-[#08090A] hover:text-[#1878B8] hover:bg-[#EBF5FB] font-semibold text-base transition-colors"
+                  className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl border border-[#D3D8D6] bg-white hover:bg-[#FAF8F5] text-[#08090A] font-medium text-sm transition-colors text-center"
                 >
                   <span>{heroData.ctaSecondary}</span>
                   <ChevronRight className="w-4 h-4" />
@@ -317,18 +326,18 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
         </section>
 
         {/* ========================================================
-            SEKSI 2: KISAH DI BALIK KEMUDI (THE STORY)
+            SEKSI 2: KISAH DI BALIK KEMUDI (Clean White bg-white)
             ======================================================== */}
-        <section className="bg-[#FAF8F5] border-y border-[#EBE9E6] py-16 sm:py-24">
+        <section className="bg-white border-y border-[#EBE9E6] py-16 sm:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
               {/* Kolom Teks: Narasi Mengalir & Pull Quote */}
               <div className="lg:col-span-7 space-y-6 sm:space-y-8 order-2 lg:order-1">
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#1878B8]">
-                    {storyData.sectionTag}
+                <div className="space-y-2 mb-4">
+                  <span className="font-serif italic text-base sm:text-lg text-[#1878B8] font-normal tracking-wide block">
+                    “{storyData.sectionTag}”
                   </span>
-                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#08090A] mt-2 leading-tight">
+                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal text-[#08090A] leading-tight">
                     {storyData.title}
                   </h2>
                 </div>
@@ -373,98 +382,135 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
         </section>
 
         {/* ========================================================
-            SEKSI 3: BAGAIMANA HARI ANDA BERJALAN BERSAMA GEDE (THE EXPERIENCE)
+            SEKSI 3: BAGAIMANA HARI ANDA BERJALAN BERSAMA GEDE (Warm Cream bg-[#FEFDFB])
+            Pola Ritme 3 Warna: 1 Biru Samudra, 2 Hijau Bali, 3 Oranye Sunset
             ======================================================== */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-          <div className="max-w-3xl mx-auto text-center space-y-3 mb-12 sm:mb-16">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#1878B8]">
-              {guidingStyleData.sectionTag}
-            </span>
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#08090A] leading-tight">
-              {guidingStyleData.title}
-            </h2>
-            <p className="text-sm sm:text-base text-[#5E6965] leading-relaxed">
-              {guidingStyleData.subtitle}
-            </p>
-          </div>
-
-          {/* 3 Esai Singkat dengan Tata Letak Editorial Lega */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {guidingStyleData.pillars.map((pillar, idx) => (
-              <div
-                key={pillar.id}
-                className="group relative p-6 sm:p-8 rounded-2xl bg-white border border-[#EBE9E6] shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
-              >
-                <div className="space-y-4">
-                  {/* Icon Header */}
-                  <div className="w-12 h-12 rounded-xl bg-[#E8F6F0] flex items-center justify-center transition-transform group-hover:scale-105">
-                    {renderIcon(pillar.icon)}
-                  </div>
-
-                  <span className="text-xs font-mono font-semibold text-[#5E6965]">
-                    0{idx + 1}
-                  </span>
-
-                  <h3 className="font-serif text-xl font-bold text-[#08090A] leading-snug">
-                    {pillar.title}
-                  </h3>
-
-                  <p className="text-sm sm:text-base text-[#5E6965] leading-relaxed">
-                    {pillar.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ========================================================
-            SEKSI 4: STANDAR KENYAMANAN & KEPASTIAN (SUBTLE TRUST STRIP)
-            ======================================================== */}
-        <section className="bg-[#FAF8F5] border-t border-[#EBE9E6] py-12 sm:py-16">
+        <section className="bg-[#FEFDFB] py-16 sm:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {trustStripData.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-start gap-4 p-5 sm:p-6 rounded-2xl bg-white border border-[#EBE9E6]/80 shadow-xs"
-                >
-                  <div className="p-2.5 rounded-xl bg-[#E8F6F0] shrink-0">
-                    {renderIcon(item.icon, "w-5 h-5 text-[#0C8C5E]")}
+            <div className="max-w-2xl mx-auto text-center space-y-2 mb-12 sm:mb-16">
+              <span className="font-serif italic text-base sm:text-lg text-[#1878B8] font-normal tracking-wide block mb-2">
+                “{guidingStyleData.sectionTag}”
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl font-normal text-[#08090A] leading-tight mb-3">
+                {guidingStyleData.title}
+              </h2>
+              <p className="text-sm sm:text-base text-[#5E6965] leading-relaxed font-sans">
+                {guidingStyleData.subtitle}
+              </p>
+            </div>
+
+            {/* 3 Esai Singkat dengan Tata Letak Editorial Lega (Pola Ritme 3 Warna) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              {guidingStyleData.pillars.map((pillar, idx) => {
+                const iconBoxBg =
+                  idx === 0
+                    ? "bg-[#EBF5FB] text-[#1878B8]"
+                    : idx === 1
+                      ? "bg-[#E8F6F0] text-[#0C8C5E]"
+                      : "bg-[#FDF3E6] text-[#E67E22]";
+                const iconColor =
+                  idx === 0
+                    ? "w-6 h-6 text-[#1878B8]"
+                    : idx === 1
+                      ? "w-6 h-6 text-[#0C8C5E]"
+                      : "w-6 h-6 text-[#E67E22]";
+                const hoverBorder =
+                  idx === 0
+                    ? "hover:border-[#1878B8]"
+                    : idx === 1
+                      ? "hover:border-[#0C8C5E]"
+                      : "hover:border-[#E67E22]";
+
+                return (
+                  <div
+                    key={pillar.id}
+                    className={`group relative p-6 sm:p-8 rounded-2xl bg-white border border-[#EBE9E6] shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between ${hoverBorder}`}
+                  >
+                    <div className="space-y-4">
+                      {/* Icon Header */}
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105 ${iconBoxBg}`}>
+                        {renderIcon(pillar.icon, iconColor)}
+                      </div>
+
+                      <h3 className="font-serif text-xl font-bold text-[#08090A] leading-snug">
+                        {pillar.title}
+                      </h3>
+
+                      <p className="text-sm sm:text-base text-[#5E6965] leading-relaxed">
+                        {pillar.description}
+                      </p>
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    <h4 className="font-bold text-sm sm:text-base text-[#08090A]">
-                      {item.title}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-[#5E6965] leading-relaxed">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
 
         {/* ========================================================
-            SEKSI 5: BOTTOM CTA BANNER
+            SEKSI 4: STANDAR KENYAMANAN & KEPASTIAN (Clean White bg-white)
+            Pola Ritme 3 Warna: 1 Biru Samudra, 2 Hijau Bali, 3 Oranye Sunset
+            ======================================================== */}
+        <section className="bg-white border-y border-[#EBE9E6] py-12 sm:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {trustStripData.map((item, idx) => {
+                const iconBoxBg =
+                  idx === 0
+                    ? "bg-[#EBF5FB] text-[#1878B8]"
+                    : idx === 1
+                      ? "bg-[#E8F6F0] text-[#0C8C5E]"
+                      : "bg-[#FDF3E6] text-[#E67E22]";
+                const iconColor =
+                  idx === 0
+                    ? "w-5 h-5 text-[#1878B8]"
+                    : idx === 1
+                      ? "w-5 h-5 text-[#0C8C5E]"
+                      : "w-5 h-5 text-[#E67E22]";
+
+                return (
+                  <div
+                    key={item.id}
+                    className="flex items-start gap-4 p-5 sm:p-6 rounded-2xl bg-[#FEFDFB] border border-[#EBE9E6]/80 shadow-xs"
+                  >
+                    <div className={`p-2.5 rounded-xl shrink-0 ${iconBoxBg}`}>
+                      {renderIcon(item.icon, iconColor)}
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-bold text-sm sm:text-base text-[#08090A]">
+                        {item.title}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-[#5E6965] leading-relaxed">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================
+            SEKSI 5: BOTTOM CTA BANNER (Gradien Biru Samudra Elegan)
+            bg-gradient-to-r from-[#0F4C81] to-[#1878B8] text-white
             ======================================================== */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0C8C5E] to-[#006B49] text-white p-8 sm:p-12 lg:p-16 text-center shadow-xl shadow-[#0C8C5E]/20">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0F4C81] to-[#1878B8] text-white p-8 sm:p-12 lg:p-16 text-center shadow-xl">
             {/* Soft decorative background circles */}
             <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-white/10 blur-2xl pointer-events-none" />
-            <div className="absolute -bottom-24 -right-24 w-64 h-64 rounded-full bg-amber-400/15 blur-2xl pointer-events-none" />
+            <div className="absolute -bottom-24 -right-24 w-64 h-64 rounded-full bg-[#E67E22]/20 blur-2xl pointer-events-none" />
 
             <div className="relative max-w-2xl mx-auto space-y-4">
-              <span className="inline-block px-3 py-1 rounded-full bg-white/15 text-xs font-semibold tracking-wider uppercase text-amber-200 border border-white/20">
+              <span className="inline-block px-3 py-1 rounded-full bg-white/15 text-xs font-semibold tracking-wider uppercase text-white/90 border border-white/20">
                 {isEn ? "Direct Local Consultation" : "Konsultasi Rute Langsung"}
               </span>
 
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">
+              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal leading-tight">
                 {ctaData.title}
               </h2>
 
-              <p className="text-sm sm:text-base text-emerald-50 leading-relaxed max-w-xl mx-auto">
+              <p className="text-sm sm:text-base text-white/90 leading-relaxed max-w-xl mx-auto">
                 {ctaData.subtitle}
               </p>
 
@@ -472,9 +518,9 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
                 <button
                   type="button"
                   onClick={() => handleWhatsAppClick("Konsultasi Profil Gede")}
-                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-[#E67E22] hover:bg-[#D35400] text-white font-semibold text-base shadow-[0_4px_16px_rgba(230,126,34,0.35)] transition-all transform hover:scale-[1.02] cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-[#E67E22] hover:bg-[#D35400] text-white font-medium text-sm shadow-[0_4px_16px_rgba(230,126,34,0.3)] transition-all cursor-pointer"
                 >
-                  <MessageCircle className="w-5 h-5" />
+                  <MessageCircle className="w-4.5 h-4.5" />
                   <span>{ctaData.buttonText}</span>
                 </button>
               </div>

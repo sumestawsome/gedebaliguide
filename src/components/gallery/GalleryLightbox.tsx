@@ -21,7 +21,7 @@ export default function GalleryLightbox({
   items,
   onClose,
   onNavigate,
-  lang = "id",
+  lang = "en",
 }: GalleryLightboxProps) {
   const currentIndex = item ? items.findIndex((i) => i.id === item.id) : -1;
   const totalCount = items.length;
@@ -161,7 +161,7 @@ export default function GalleryLightbox({
             <div className="space-y-4">
               {/* Badge Kategori & Lokasi */}
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1878B8]/20 px-3 py-1 text-xs font-semibold text-[#80C5F6] border border-[#1878B8]/30">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1878B8]/20 px-3 py-1 text-xs font-semibold text-[#80C5F6]">
                   <MapPin className="h-3.5 w-3.5 text-[#60B3F0]" />
                   <span>{item.location}</span>
                 </span>

@@ -56,16 +56,22 @@ export interface Destination {
   id: string;
   name: string;
   area: string;
+  badge?: string;
   description: string;
   imageUrl: string;
-  tourSlug?: string;
+  coverImage?: string;
+  colorVariant?: "blue" | "green" | "orange" | string;
   highlightSpot: string;
+  tourSlug?: string;
+  tourSlugs?: string[];
 }
 
 export interface Review {
   id: string;
   tourId?: string;
+  tourSlug?: string;
   tourName?: string;
+  areaId?: string;
   authorName: string;
   authorOrigin: string;
   rating: number;
@@ -214,6 +220,14 @@ export interface AboutPageContent {
     subtitle: string;
     buttonText: string;
   };
+  id?: AboutPageContent;
+  en?: AboutPageContent;
+  updatedAt?: string;
+}
+
+export interface BilingualAboutPageContent {
+  id: AboutPageContent;
+  en: AboutPageContent;
   updatedAt?: string;
 }
 

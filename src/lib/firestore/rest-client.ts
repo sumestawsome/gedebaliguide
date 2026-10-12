@@ -108,3 +108,67 @@ export async function getFirestoreDocument<T = any>(documentPath: string): Promi
     return null;
   }
 }
+
+/**
+ * Mengonversi nilai JS ke format representasi tipe data Firestore REST API v1.
+ */
+export function toFirestoreValue(val: any): any {
+  if (val === null || val === undefined) return { nullValue: null };
+  if (typeof val === "boolean") return { booleanValue: val };
+  if (typeof val === "number") {
+    if (Number.isInteger(val)) return { integerValue: val.toString() };
+    return { doubleValue: val };
+  }
+  if (typeof val === "string") return { stringValue: val };
+  if (Array.isArray(val)) {
+    return { arrayValue: { values: val.map(toFirestoreValue) } };
+  }
+  if (typeof val === "object") {
+    const fields: Record<string, any> = {};
+    for (const [k, v] of Object.entries(val)) {
+      if (v !== undefined) fields[k] = toFirestoreValue(v);
+    }
+    return { mapValue: { fields } };
+  }
+  return { stringValue: String(val) };
+}
+
+/**
+ * Mengonversi objek JavaScript biasa ke map fields Firestore REST API.
+ */
+export function toFirestoreFields(obj: Record<string, any>): Record<string, any> {
+  const fields: Record<string, any> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (v !== undefined) fields[k] = toFirestoreValue(v);
+  }
+  return fields;
+}
+
+/**
+ * Menyimpan/memperbarui satu dokumen spesifik di Firestore REST API v1.
+ */
+export async function setFirestoreDocument(
+  documentPath: string,
+  data: Record<string, any>
+): Promise<boolean> {
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${documentPath}`;
+    const res = await fetch(url, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fields: toFirestoreFields(data) }),
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error(`Gagal menulis dokumen ${documentPath}:`, res.status, errText);
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.error(`Error setFirestoreDocument untuk ${documentPath}:`, err);
+    return false;
+  }
+}
+

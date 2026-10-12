@@ -12,8 +12,8 @@ export default function TourInclusions({ includes, excludes }: TourInclusionsPro
   return (
     <div className="space-y-6">
       <div className="border-b border-stone-200/80 pb-4">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-0.5 text-xs font-bold uppercase tracking-wider text-emerald-800 mb-2">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-[#E8F6F0] px-3 py-0.5 text-xs font-semibold tracking-wider uppercase text-[#0C8C5E] mb-2">
+          <ShieldCheck className="h-3.5 w-3.5 text-[#0C8C5E]" />
           <span>Transparansi Biaya 100%</span>
         </div>
         <h3 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900">

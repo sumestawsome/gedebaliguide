@@ -2,6 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { ArrowUp } from "lucide-react";
 import { handleWhatsAppClick } from "@/lib/lead-tracker";
 
 export default function Footer() {
@@ -11,20 +13,14 @@ export default function Footer() {
         {/* Kolom 1: Profil Brand & Lisensi */}
         <div className="md:col-span-5">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#1878B8] to-[#0F4C81] flex items-center justify-center text-white shadow-xs">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
-                <path d="M12 6v6l4 2" />
-              </svg>
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 shrink-0">
+              <Image
+                src="/assets/gede-logo-white.svg"
+                alt="Gede Bali Guide Logo"
+                width={40}
+                height={40}
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="font-serif font-bold text-lg text-white tracking-tight">
               Gede Bali Guide
@@ -112,9 +108,20 @@ export default function Footer() {
       </div>
 
       {/* Footer Bottom */}
-      <div className="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#717D79]">
+      <div className="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#717D79]">
         <div>© 2026 Gede Bali Guide (Gede Sudiartana). Seluruh hak cipta dilindungi.</div>
-        <div className="font-mono text-[11px]">No. Lisensi: HPI-BALI-2015-8849</div>
+        <div className="flex items-center gap-4">
+          <div className="font-mono text-[11px]">No. Lisensi: HPI-BALI-2015-8849</div>
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors cursor-pointer"
+            aria-label="Kembali ke atas"
+          >
+            <ArrowUp className="w-3.5 h-3.5" />
+            <span>Back to Top</span>
+          </button>
+        </div>
       </div>
     </footer>
   );

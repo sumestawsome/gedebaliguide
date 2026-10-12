@@ -2,11 +2,15 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { ArrowUp } from "lucide-react";
 import { handleWhatsAppClick } from "@/lib/lead-tracker";
 import { getActiveFeaturedTours } from "@/lib/services/tour-service";
 import { getFeaturedFiveStarReviews } from "@/lib/services/review-service";
 import { getActiveFaqs } from "@/lib/services/faq-service";
 import { Tour, Review, FAQItem } from "@/types";
+import ReviewCard from "@/components/reviews/ReviewCard";
+import { mockPopularDestinations, mockAllTours } from "@/data/mock-data";
 
 // -------------------------------------------------------------
 // Kamus Konten Dwibahasa (ID & EN)
@@ -78,15 +82,30 @@ const CONTENT = {
       tag: "Pilihan Terpopuler",
       title: "Katalog Paket Tur Favorit",
       subtitle:
-        "Tarif transparan per mobil (kapasitas hingga 5 orang), sudah termasuk bahan bakar mobil ber-AC dan jasa pemandu ramah.",
-      priceUnit: "per mobil · kapasitas s.d. 5 orang",
+        "Pilihan rute fleksibel 100% privat, sudah termasuk kendaraan ber-AC, bahan bakar, dan pendampingan pemandu lokal ramah.",
+      priceUnit: "rute fleksibel · kapasitas s.d. 5 orang",
       btnBook: "Pesan via WhatsApp",
       btnAllTours: "Lihat Semua Paket Tur →",
       items: [
         {
+          badge: "Sunset Terbaik",
+          title: "Uluwatu Sunset Cliff, Melasti & Tari Kecak",
+          price: "",
+          duration: "Half / Full Day (7 - 9 Jam) · Sore Romantis",
+          highlights: [
+            "Pantai Pasir Putih & Tebing Karang Melasti",
+            "Pura Luhur Uluwatu di Atas Tebing Samudra Hindia",
+            "Magis Pertunjukan Tari Kecak & Api saat Senja",
+            "Makan Malam Romantis Seafood Jimbaran Bay",
+            "Penjemputan & Pengantaran Kembali ke Hotel",
+          ],
+          waMessage:
+            "Halo Bli Gede, saya tertarik dengan Paket Uluwatu Sunset Cliff & Tari Kecak",
+        },
+        {
           badge: "Favorit Budaya",
           title: "Ubud Cultural, Rice Terrace & Secret Waterfall",
-          price: "Rp 650.000",
+          price: "",
           duration: "Full Day (8 - 10 Jam) · Rute Fleksibel",
           highlights: [
             "Hutan Monyet Ubud (Sacred Monkey Forest)",
@@ -101,7 +120,7 @@ const CONTENT = {
         {
           badge: "Warisan UNESCO",
           title: "Bedugul Ulun Danu & Jatiluwih Rice Terrace",
-          price: "Rp 750.000",
+          price: "",
           duration: "Full Day (9 - 10 Jam) · Sejuk & Alami",
           highlights: [
             "Pura Ulun Danu Beratan (Pura Danau Ikonik)",
@@ -112,21 +131,6 @@ const CONTENT = {
           ],
           waMessage:
             "Halo Bli Gede, saya tertarik dengan Paket Bedugul Ulun Danu & Jatiluwih",
-        },
-        {
-          badge: "Sunset Terbaik",
-          title: "Uluwatu Sunset Cliff, Melasti & Tari Kecak",
-          price: "Rp 700.000",
-          duration: "Half / Full Day (7 - 9 Jam) · Sore Romantis",
-          highlights: [
-            "Pantai Pasir Putih & Tebing Karang Melasti",
-            "Pura Luhur Uluwatu di Atas Tebing Samudra Hindia",
-            "Magis Pertunjukan Tari Kecak & Api saat Senja",
-            "Makan Malam Romantis Seafood Jimbaran Bay",
-            "Penjemputan & Pengantaran Kembali ke Hotel",
-          ],
-          waMessage:
-            "Halo Bli Gede, saya tertarik dengan Paket Uluwatu Sunset Cliff & Tari Kecak",
         },
       ],
     },
@@ -140,21 +144,29 @@ const CONTENT = {
           badge: "Budaya & Alam",
           title: "Ubud & Gianyar",
           desc: "Pusat kesenian tradisional, pura suci berwibawa, sawah bertingkat hijau asri, serta lembah air terjun tropis alami.",
+          image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&auto=format&fit=crop&q=80",
+          regionQuery: "ubud",
         },
         {
           badge: "Pantai & Tebing",
           title: "Uluwatu & Jimbaran",
           desc: "Tebing kapur dramatis menjorok ke samudra lepas, pantai pasir putih tersembunyi, sunset legendaris, dan hidangan laut segar.",
+          image: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=800&auto=format&fit=crop&q=80",
+          regionQuery: "uluwatu",
         },
         {
           badge: "Sejuk Pegunungan",
           title: "Bedugul & Jatiluwih",
           desc: "Udara dingin menyegarkan, pura danau berkabut yang menentramkan jiwa, serta keagungan sawah terasering warisan UNESCO.",
+          image: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=800&auto=format&fit=crop&q=80",
+          regionQuery: "bedugul",
         },
         {
           badge: "Panorama Kaldera",
           title: "Kintamani & Batur",
           desc: "Pemandangan megah Gunung dan Danau Batur, kafe estetik di atas awan, serta desa kuno yang kaya tradisi asli Bali.",
+          image: "https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=800&auto=format&fit=crop&q=80",
+          regionQuery: "kintamani",
         },
       ],
     },
@@ -297,15 +309,30 @@ const CONTENT = {
       tag: "Most Popular Choices",
       title: "Featured Tour Packages",
       subtitle:
-        "Transparent pricing per car (up to 5 persons), including private AC vehicle, fuel, and friendly licensed guide services.",
-      priceUnit: "per private car · up to 5 persons",
+        "Flexible 100% private itineraries, including private AC vehicle, fuel, and friendly licensed local guide services.",
+      priceUnit: "flexible route · up to 5 guests",
       btnBook: "Book via WhatsApp",
       btnAllTours: "View All Tour Packages →",
       items: [
         {
+          badge: "Sunset Classic",
+          title: "Uluwatu Sunset Cliff, Melasti & Kecak Fire Dance",
+          price: "",
+          duration: "Half / Full Day (7 - 9 Hours) · Romantic Sunset",
+          highlights: [
+            "Melasti White Sand Beach & Limestone Cliffs",
+            "Uluwatu Cliff Temple overlooking Indian Ocean",
+            "Magical Kecak & Fire Dance at Sunset",
+            "Romantic Jimbaran Bay Seafood Candlelit Dinner",
+            "Complimentary Hotel Pick-up & Drop-off",
+          ],
+          waMessage:
+            "Hi Gede, I am interested in booking the Uluwatu Sunset Cliff & Kecak tour",
+        },
+        {
           badge: "Cultural Favorite",
           title: "Ubud Cultural, Rice Terrace & Secret Waterfall",
-          price: "IDR 650,000 (~$42 USD)",
+          price: "",
           duration: "Full Day (8 - 10 Hours) · Flexible Itinerary",
           highlights: [
             "Ubud Sacred Monkey Forest Sanctuary",
@@ -320,7 +347,7 @@ const CONTENT = {
         {
           badge: "UNESCO Heritage",
           title: "Bedugul Ulun Danu & Jatiluwih Rice Terrace",
-          price: "IDR 750,000 (~$48 USD)",
+          price: "",
           duration: "Full Day (9 - 10 Hours) · Cool Mountain Breeze",
           highlights: [
             "Ulun Danu Beratan Iconic Floating Temple",
@@ -331,21 +358,6 @@ const CONTENT = {
           ],
           waMessage:
             "Hi Gede, I am interested in booking the Bedugul Ulun Danu & Jatiluwih tour",
-        },
-        {
-          badge: "Sunset Classic",
-          title: "Uluwatu Sunset Cliff, Melasti & Kecak Fire Dance",
-          price: "IDR 700,000 (~$45 USD)",
-          duration: "Half / Full Day (7 - 9 Hours) · Romantic Sunset",
-          highlights: [
-            "Melasti White Sand Beach & Limestone Cliffs",
-            "Uluwatu Cliff Temple overlooking Indian Ocean",
-            "Magical Kecak & Fire Dance at Sunset",
-            "Romantic Jimbaran Bay Seafood Candlelit Dinner",
-            "Complimentary Hotel Pick-up & Drop-off",
-          ],
-          waMessage:
-            "Hi Gede, I am interested in booking the Uluwatu Sunset Cliff & Kecak tour",
         },
       ],
     },
@@ -359,21 +371,29 @@ const CONTENT = {
           badge: "Culture & Nature",
           title: "Ubud & Gianyar",
           desc: "Heart of Balinese arts, spiritual temples, lush emerald terraces, and refreshing tropical waterfall gorges.",
+          image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&auto=format&fit=crop&q=80",
+          regionQuery: "ubud",
         },
         {
           badge: "Beaches & Cliffs",
           title: "Uluwatu & Jimbaran",
           desc: "Dramatic limestone ocean cliffs, secluded turquoise bays, legendary sunsets, and oceanfront fresh seafood.",
+          image: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=800&auto=format&fit=crop&q=80",
+          regionQuery: "uluwatu",
         },
         {
           badge: "Cool Highlands",
           title: "Bedugul & Jatiluwih",
           desc: "Refreshing mountain climate, serene mist-kissed lake shrines, and majestic UNESCO terraced landscapes.",
+          image: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=800&auto=format&fit=crop&q=80",
+          regionQuery: "bedugul",
         },
         {
           badge: "Caldera Panorama",
           title: "Kintamani & Batur",
           desc: "Awe-inspiring vistas of Mount Batur and its crater lake, trendy hilltop cafes above the clouds, and ancient villages.",
+          image: "https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=800&auto=format&fit=crop&q=80",
+          regionQuery: "kintamani",
         },
       ],
     },
@@ -456,35 +476,28 @@ const DESTINATION_SLIDES = [
   {
     id: 1,
     title: "Pura Ulun Danu Beratan, Bedugul",
-    tag: "Ulun Danu Beratan, Bedugul",
+    tag: "📍 Ulun Danu Beratan, Bedugul",
     imageUrl:
       "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1000&auto=format&fit=crop&q=85",
   },
   {
     id: 2,
-    title: "Terasering Tegalalang, Ubud",
-    tag: "Tegalalang Rice Terrace, Ubud",
-    imageUrl:
-      "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=1000&auto=format&fit=crop&q=85",
-  },
-  {
-    id: 3,
-    title: "Tebing Sunset Pura Luhur Uluwatu, Badung",
-    tag: "Tebing Sunset Uluwatu, Badung",
+    title: "Pantai Melasti & Tebing Ungasan",
+    tag: "📍 Pantai Melasti, Ungasan",
     imageUrl:
       "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=1000&auto=format&fit=crop&q=85",
   },
   {
-    id: 4,
-    title: "Air Terjun Eksotis Kanto Lampo, Gianyar",
-    tag: "Air Terjun Kanto Lampo, Gianyar",
+    id: 3,
+    title: "Terasering Tegalalang, Ubud",
+    tag: "📍 Terasering Tegalalang, Ubud",
     imageUrl:
-      "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?w=1000&auto=format&fit=crop&q=85",
+      "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=1000&auto=format&fit=crop&q=85",
   },
 ];
 
 export default function HomePage() {
-  const [lang, setLang] = useState<"id" | "en">("id");
+  const [lang, setLang] = useState<"id" | "en">("en");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   const touchStartXRef = useRef<number>(0);
@@ -535,7 +548,11 @@ export default function HomePage() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem("app_lang");
-      if (saved === "id" || saved === "en") setLang(saved);
+      if (saved === "id" || saved === "en") {
+        setLang(saved);
+      } else {
+        setLang("en");
+      }
     } catch {}
     const handleLang = (e: Event) => {
       const detail = (e as CustomEvent).detail;
@@ -569,47 +586,43 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FEFDFB] text-[#121715] flex flex-col font-sans selection:bg-amber-100 selection:text-amber-900">
+    <div className="min-h-screen bg-[var(--canvas)] text-[var(--text-primary)] flex flex-col font-sans selection:bg-[var(--brand-blue-light)] selection:text-[var(--brand-blue)]">
       {/* ========================================================
-          2. HERO SECTION (Luxury Travel Editorial)
+          SEKSI 1: HERO SECTION (Warm Cream bg-[var(--canvas)])
           ======================================================== */}
       <section
         id="beranda"
-        className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16 lg:pt-16 lg:pb-20"
+        className="relative overflow-hidden bg-[var(--canvas)] pt-8 pb-12 sm:pt-12 sm:pb-16 lg:pt-16 lg:pb-20"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
             {/* Kolom Teks Kiri */}
             <div className="lg:col-span-7 flex flex-col justify-center text-left">
-              <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 mb-4 sm:mb-5">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-[#1878B8] border border-blue-200">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#1878B8]" />
-                  {t.hero.badge}
-                </span>
-                <span className="font-serif italic text-sm sm:text-base text-[#1878B8]">
-                  {t.hero.greeting}
+              <div className="mb-4 sm:mb-5">
+                <span className="font-serif italic text-base sm:text-lg text-[var(--brand-blue)] font-normal tracking-wide">
+                  {lang === "id" ? "“Om Swastyastu! Selamat Datang di Bali”" : "“Om Swastyastu! Welcome to Bali”"}
                 </span>
               </div>
 
-              {/* H1 Headline Editorial */}
-              <h1 className="font-serif text-[32px] sm:text-[42px] lg:text-[50px] leading-[1.14] sm:leading-[1.1] tracking-[-0.035em] text-[#08090A] font-normal mb-5">
+              {/* H1 Headline Editorial - Skala Proporsional & Elegan */}
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-[2.75rem] leading-[1.2] tracking-[-0.025em] text-[var(--text-primary)] font-normal mb-5">
                 {t.hero.headlineLead}
-                <span className="text-[#1878B8] font-semibold underline decoration-[#1878B8]/20 underline-offset-8">
+                <span className="text-[var(--brand-blue)] font-semibold underline decoration-[var(--brand-blue)]/25 underline-offset-8">
                   {t.hero.name}
                 </span>
               </h1>
 
               {/* Deskripsi Ringkas */}
-              <p className="text-[#5E6965] text-base sm:text-[17px] leading-relaxed mb-8 max-w-xl">
+              <p className="text-[var(--text-muted)] text-base sm:text-[17px] leading-relaxed mb-8 max-w-xl">
                 {t.hero.description}
               </p>
 
-              {/* 2 Tombol CTA Berdampingan */}
+              {/* 2 Tombol CTA Berdampingan (Standarisasi Ukuran h-11, Primary Biru Samudra) */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4">
                 <button
                   type="button"
                   onClick={() => handleWhatsAppClick("Hero Section CTA")}
-                  className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-[#1878B8] hover:bg-[#0F4C81] text-white font-medium text-sm shadow-[0_2px_8px_rgba(24,120,184,0.25)] transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 text-center cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-[var(--brand-blue)] hover:bg-[#0F4C81] hover:opacity-95 text-white font-medium text-sm shadow-[0_2px_8px_rgba(24,120,184,0.25)] transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 text-center cursor-pointer"
                 >
                   <svg
                     width="18"
@@ -628,7 +641,7 @@ export default function HomePage() {
 
                 <Link
                   href="/tours"
-                  className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-white hover:bg-[#FAF8F5] text-[#08090A] border border-[#D3D8D6] font-medium text-sm transition-colors text-center"
+                  className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-white hover:bg-[var(--surface-alt)] text-[var(--text-primary)] border border-[var(--border)] font-medium text-sm transition-colors text-center"
                 >
                   <span>{t.hero.btnCatalog}</span>
                   <svg
@@ -648,29 +661,46 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Kolom Visual Kanan: Frameless Destination Slideshow
-                - Tablet (768px - 1023px): aspect-video membentang lebar w-full tanpa batasan kaku max-w-[480px]
-                - Mobile (< 768px): aspect-[4/5] vertikal proporsional
-                - Tag: Minimal Map Pin SVG + Nama Destinasi
-            */}
-            <div className="lg:col-span-5 w-full flex flex-col items-center">
+            {/* Kolom Visual Kanan: Slideshow Kartu Bertumpuk 3 Lapis (Stacked Card Gallery Slideshow) */}
+            <div className="lg:col-span-5 w-full flex flex-col items-center justify-center">
               <div
                 id="hero-slideshow-frame"
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
-                className="relative w-full aspect-[4/5] md:aspect-video lg:aspect-[4/5] max-w-[420px] md:max-w-none lg:max-w-[440px] rounded-[32px_32px_16px_16px] md:rounded-3xl lg:rounded-[36px_36px_18px_18px] overflow-hidden shadow-[0_20px_48px_-12px_rgba(12,140,94,0.24)] bg-[#FAF8F5] select-none cursor-grab active:cursor-grabbing"
+                className="relative w-full max-w-[320px] sm:max-w-[360px] md:max-w-[380px] lg:max-w-[400px] aspect-[4/5] mx-auto select-none flex items-center justify-center"
               >
                 {DESTINATION_SLIDES.map((slide, idx) => {
-                  const isActive = idx === currentSlide;
+                  // offset 0: Kartu Depan (Active Main Card)
+                  // offset 1: Kartu Belakang Kanan (Next Card Stack)
+                  // offset 2: Kartu Belakang Kiri (Previous Card Stack)
+                  const offset = (idx - currentSlide + DESTINATION_SLIDES.length) % DESTINATION_SLIDES.length;
+
+                  let stackClasses = "";
+                  let isInteractive = false;
+
+                  if (offset === 0) {
+                    // Kartu Depan (Active Main Card): Tengah depan, bingkai putih tebal, luxury shadow
+                    stackClasses =
+                      "z-20 translate-x-0 rotate-0 scale-100 opacity-100 border-[6px] border-white shadow-[0_20px_50px_rgba(0,0,0,0.12)] pointer-events-auto";
+                  } else if (offset === 1) {
+                    // Kartu Belakang Kanan (Next Card Stack): Miring kanan (rotate-6), scale-85, opacity-65
+                    stackClasses =
+                      "z-10 translate-x-7 sm:translate-x-10 rotate-6 scale-85 opacity-65 border-4 border-white/90 shadow-[0_12px_30px_rgba(0,0,0,0.08)] cursor-pointer hover:opacity-85 pointer-events-auto";
+                    isInteractive = true;
+                  } else {
+                    // Kartu Belakang Kiri (Previous Card Stack): Miring kiri (-rotate-6), scale-85, opacity-65
+                    stackClasses =
+                      "z-10 -translate-x-7 sm:-translate-x-10 -rotate-6 scale-85 opacity-65 border-4 border-white/90 shadow-[0_12px_30px_rgba(0,0,0,0.08)] cursor-pointer hover:opacity-85 pointer-events-auto";
+                    isInteractive = true;
+                  }
+
                   return (
                     <div
                       key={slide.id}
-                      className={`absolute inset-0 transition-all duration-700 ease-out ${
-                        isActive
-                          ? "opacity-100 scale-100 visible pointer-events-auto"
-                          : "opacity-0 scale-105 invisible pointer-events-none"
-                      }`}
+                      onClick={isInteractive ? () => setCurrentSlide(idx) : undefined}
+                      className={`absolute inset-0 w-full h-full rounded-[2rem] overflow-hidden bg-stone-900 transition-all duration-700 ease-in-out transform-gpu origin-center ${stackClasses}`}
                     >
+                      {/* Foto Destinasi */}
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={slide.imageUrl}
@@ -679,32 +709,36 @@ export default function HomePage() {
                         loading={idx === 0 ? "eager" : "lazy"}
                       />
 
-                      {/* Floating Minimalist Glassmorphism Tag */}
-                      <div className="absolute bottom-5 left-5 right-auto bg-black/60 backdrop-blur-md text-white text-xs sm:text-sm font-medium px-4 py-2 rounded-full border border-white/20 shadow-lg flex items-center gap-2 pointer-events-none">
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="text-[#E67E22] shrink-0"
-                        >
-                          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                          <circle cx="12" cy="10" r="3" />
-                        </svg>
-                        <span className="truncate">{slide.tag}</span>
-                      </div>
+                      {/* Shading Halus di Bagian Bawah Foto */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+
+                      {/* Floating Glassmorphism Tag Lokasi di Pojok Kiri Bawah (Khusus Kartu Depan Aktif) */}
+                      {offset === 0 && (
+                        <div className="absolute bottom-5 left-5 right-auto bg-black/60 backdrop-blur-md text-white text-xs font-medium px-3.5 py-1.5 rounded-full border border-white/20 shadow-lg flex items-center gap-1.5 pointer-events-none transition-all duration-500 z-30">
+                          {/* Location Pin Icon Aksen */}
+                          <svg
+                            width="13"
+                            height="13"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            stroke="none"
+                            className="text-[var(--brand-accent)] shrink-0"
+                          >
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z" />
+                          </svg>
+                          <span className="truncate tracking-wide text-white font-medium">
+                            {slide.tag.replace(/^📍\s*/, "")}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
               </div>
 
-              {/* Dash Indicators */}
+              {/* 3 Indikator Navigasi Titik/Garis Berbentuk Pil (Dash Indicators / Dots) */}
               <div
-                className="flex items-center justify-center gap-2 mt-4 pt-1"
+                className="relative z-30 flex items-center justify-center gap-2 mt-7 pt-1"
                 role="tablist"
                 aria-label="Slideshow Indikator"
               >
@@ -718,10 +752,10 @@ export default function HomePage() {
                       role="tab"
                       aria-selected={isActive}
                       aria-label={`Slide ${idx + 1}: ${slide.title}`}
-                      className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                      className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                         isActive
-                          ? "w-10 bg-[#1878B8]"
-                          : "w-6 bg-[#CFCDCA] hover:bg-[#969E9B]"
+                          ? "w-8 bg-[var(--brand-blue)]"
+                          : "w-2 bg-gray-300 hover:bg-gray-400"
                       }`}
                     />
                   );
@@ -733,17 +767,17 @@ export default function HomePage() {
       </section>
 
       {/* ========================================================
-          SEKSI 2: BAR KEPERCAYAAN (Trust Bar)
-          - 1 kolom di mobile, 2x2 di tablet, 4 kolom di desktop
+          SEKSI 2: BAR KEPERCAYAAN / TRUST BAR (Clean White bg-white)
+          Pola Ritme 3 Warna: 1 Biru Samudra, 2 Hijau Bali, 3 Oranye Sunset, 4 Biru Samudra
           ======================================================== */}
       <section
-        className="bg-white border-y border-[#EBE9E6] py-6 px-4 sm:px-6 lg:px-8"
+        className="bg-white border-y border-[var(--border)] py-6 px-4 sm:px-6 lg:px-8"
         aria-label="Keunggulan Layanan"
       >
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-center">
-          {/* Item 1 - Aksen Biru */}
+          {/* Item 1 - Biru Samudra */}
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-lg bg-blue-50 text-[#1878B8] flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[var(--brand-blue-light)] text-[var(--brand-blue)] flex items-center justify-center shrink-0">
               <svg
                 width="20"
                 height="20"
@@ -761,18 +795,18 @@ export default function HomePage() {
               </svg>
             </div>
             <div>
-              <div className="font-bold text-sm text-[#08090A] leading-tight">
+              <div className="font-bold text-sm text-[var(--text-primary)] leading-tight">
                 {t.trustBar[0].title}
               </div>
-              <div className="text-xs text-[#5E6965] mt-0.5">
+              <div className="text-xs text-[var(--text-muted)] mt-0.5">
                 {t.trustBar[0].desc}
               </div>
             </div>
           </div>
 
-          {/* Item 2 - Aksen Hijau */}
+          {/* Item 2 - Hijau Bali */}
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-lg bg-emerald-50 text-[#0C8C5E] flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[var(--brand-green-light)] text-[var(--brand-green)] flex items-center justify-center shrink-0">
               <svg
                 width="20"
                 height="20"
@@ -784,24 +818,24 @@ export default function HomePage() {
                 strokeLinejoin="round"
               >
                 <rect x="1" y="3" width="15" height="13" />
-                <polygon points="16 8 20 8 23 11 23 16 16 16 8" />
+                <polygon points="16 8 20 8 23 11 23 16 16 8" />
                 <circle cx="5.5" cy="18.5" r="2.5" />
                 <circle cx="18.5" cy="18.5" r="2.5" />
               </svg>
             </div>
             <div>
-              <div className="font-bold text-sm text-[#08090A] leading-tight">
+              <div className="font-bold text-sm text-[var(--text-primary)] leading-tight">
                 {t.trustBar[1].title}
               </div>
-              <div className="text-xs text-[#5E6965] mt-0.5">
+              <div className="text-xs text-[var(--text-muted)] mt-0.5">
                 {t.trustBar[1].desc}
               </div>
             </div>
           </div>
 
-          {/* Item 3 - Aksen Oranye */}
+          {/* Item 3 - Oranye Sunset */}
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-lg bg-amber-50 text-[#E67E22] flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[var(--brand-accent-light)] text-[var(--brand-accent)] flex items-center justify-center shrink-0">
               <svg
                 width="20"
                 height="20"
@@ -817,18 +851,18 @@ export default function HomePage() {
               </svg>
             </div>
             <div>
-              <div className="font-bold text-sm text-[#08090A] leading-tight">
+              <div className="font-bold text-sm text-[var(--text-primary)] leading-tight">
                 {t.trustBar[2].title}
               </div>
-              <div className="text-xs text-[#5E6965] mt-0.5">
+              <div className="text-xs text-[var(--text-muted)] mt-0.5">
                 {t.trustBar[2].desc}
               </div>
             </div>
           </div>
 
-          {/* Item 4 - Aksen Oranye Emas */}
+          {/* Item 4 - Kembali ke Biru Samudra (Pola Ritme Berulang) */}
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-lg bg-amber-50 text-[#E67E22] flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[var(--brand-blue-light)] text-[var(--brand-blue)] flex items-center justify-center shrink-0">
               <svg
                 width="20"
                 height="20"
@@ -840,10 +874,10 @@ export default function HomePage() {
               </svg>
             </div>
             <div>
-              <div className="font-bold text-sm text-[#08090A] leading-tight">
+              <div className="font-bold text-sm text-[var(--text-primary)] leading-tight">
                 {t.trustBar[3].title}
               </div>
-              <div className="text-xs text-[#5E6965] mt-0.5">
+              <div className="text-xs text-[var(--text-muted)] mt-0.5">
                 {t.trustBar[3].desc}
               </div>
             </div>
@@ -852,393 +886,203 @@ export default function HomePage() {
       </section>
 
       {/* ========================================================
-          SEKSI 3: TIGA PILAR UTAMA LAYANAN
-          ======================================================== */}
-      <section
-        id="tentang"
-        className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full"
-      >
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#1878B8] block mb-2">
-            {t.pillars.tag}
-          </span>
-          <h2 className="font-serif text-3xl sm:text-4xl text-[#08090A] font-normal mb-3">
-            {t.pillars.title}
-          </h2>
-          <p className="text-[#5E6965] text-sm sm:text-base leading-relaxed">
-            {t.pillars.subtitle}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7">
-          {/* Pilar 1 - Aksen Biru */}
-          <article className="bg-white border border-[#EBE9E6] rounded-2xl p-7 sm:p-8 shadow-[0_4px_20px_rgba(24,120,184,0.06)] hover:-translate-y-1 transition-all duration-200 hover:border-[#1878B8]">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 text-[#1878B8] flex items-center justify-center mb-5">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-            </div>
-            <h3 className="font-bold text-lg text-[#08090A] mb-2.5">
-              {t.pillars.items[0].title}
-            </h3>
-            <p className="text-sm text-[#5E6965] leading-relaxed">
-              {t.pillars.items[0].desc}
-            </p>
-          </article>
-
-          {/* Pilar 2 - Aksen Hijau */}
-          <article className="bg-white border border-[#EBE9E6] rounded-2xl p-7 sm:p-8 shadow-[0_4px_20px_rgba(12,140,94,0.06)] hover:-translate-y-1 transition-all duration-200 hover:border-[#0C8C5E]">
-            <div className="w-12 h-12 rounded-xl bg-emerald-50 text-[#0C8C5E] flex items-center justify-center mb-5">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
-            </div>
-            <h3 className="font-bold text-lg text-[#08090A] mb-2.5">
-              {t.pillars.items[1].title}
-            </h3>
-            <p className="text-sm text-[#5E6965] leading-relaxed">
-              {t.pillars.items[1].desc}
-            </p>
-          </article>
-
-          {/* Pilar 3 - Aksen Oranye */}
-          <article className="bg-white border border-[#EBE9E6] rounded-2xl p-7 sm:p-8 shadow-[0_4px_20px_rgba(230,126,34,0.06)] hover:-translate-y-1 transition-all duration-200 hover:border-[#E67E22]">
-            <div className="w-12 h-12 rounded-xl bg-amber-50 text-[#E67E22] flex items-center justify-center mb-5">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="1" y="3" width="15" height="13" />
-                <polygon points="16 8 20 8 23 11 23 16 16 16 8" />
-                <circle cx="5.5" cy="18.5" r="2.5" />
-                <circle cx="18.5" cy="18.5" r="2.5" />
-              </svg>
-            </div>
-            <h3 className="font-bold text-lg text-[#08090A] mb-2.5">
-              {t.pillars.items[2].title}
-            </h3>
-            <p className="text-sm text-[#5E6965] leading-relaxed">
-              {t.pillars.items[2].desc}
-            </p>
-          </article>
-        </div>
-      </section>
-
-      {/* ========================================================
-          SEKSI 4: KATALOG PAKET TUR FAVORIT
-          - Grid: 1 col on mobile, 2 cols on tablet, 3 cols on desktop
-          - 1 badge flexbox elegan di kiri atas
-          - Harga bertingkat 2 baris
-          - Tombol sekunder "Lihat Semua Paket Tur →" di tengah ke /tours
+          SEKSI 3: KATALOG PAKET TUR FAVORIT (Warm Cream bg-[#FEFDFB])
+          Pola Ritme 3 Warna untuk Badge & Hover Aksen: 1 Biru Samudra, 2 Hijau Bali, 3 Oranye Sunset
+          Standarisasi Tombol Booking: h-11 px-5 py-2.5 rounded-xl
           ======================================================== */}
       <section
         id="katalog"
-        className="py-16 sm:py-20 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full"
+        className="bg-[var(--canvas)] py-16 sm:py-20 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full"
       >
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#1878B8] block mb-2">
-            {t.tours.tag}
+          <span className="font-serif italic text-base sm:text-lg text-[var(--brand-blue)] block mb-2 font-normal tracking-wide">
+            “{t.tours.tag}”
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl text-[#08090A] font-normal mb-3">
+          <h2 className="font-serif text-3xl sm:text-4xl text-[var(--text-primary)] font-normal mb-3">
             {t.tours.title}
           </h2>
-          <p className="text-[#5E6965] text-sm sm:text-base leading-relaxed">
+          <p className="text-[var(--text-muted)] text-sm sm:text-base leading-relaxed">
             {t.tours.subtitle}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
           {(() => {
+            const orderedFirestoreTours =
+              firestoreTours && firestoreTours.length > 0
+                ? [...firestoreTours].sort((a, b) => {
+                    const getOrder = (item: any) => {
+                      const text = (item.name || item.slug || item.id || "").toLowerCase();
+                      if (text.includes("uluwatu")) return 0;
+                      if (text.includes("ubud")) return 1;
+                      if (text.includes("bedugul")) return 2;
+                      return 3;
+                    };
+                    return getOrder(a) - getOrder(b);
+                  })
+                : null;
+
             const toursList =
-              lang === "id" && firestoreTours && firestoreTours.length > 0
-                ? firestoreTours.map((ft, idx) => ({
-                    badge:
-                      ft.category === "culture"
-                        ? "Favorit Budaya"
-                        : ft.category === "heritage"
-                        ? "Warisan UNESCO"
-                        : "Sunset Terbaik",
-                    title: ft.name,
-                    price: `Rp ${Number(ft.price).toLocaleString("id-ID")}`,
-                    duration: ft.duration,
-                    highlights:
-                      ft.highlights && ft.highlights.length > 0
-                        ? ft.highlights.slice(0, 5)
-                        : [
-                            "Mobil Ber-AC Dingin & Bersih",
-                            "Pemandu Lokal Resmi HPI",
-                            "Jadwal Fleksibel Santai",
-                            "Bebas Request Spot Foto",
-                            "Tanpa Komisi Toko Oleh-Oleh",
-                          ],
-                  }))
-                : t.tours.items;
+              orderedFirestoreTours && orderedFirestoreTours.length > 0
+                ? orderedFirestoreTours.map((ft, idx) => {
+                    const hasValidPrice = Boolean(ft.price && ft.price > 0);
+                    const priceFormatted = hasValidPrice
+                      ? lang === "en"
+                        ? `IDR ${ft.price.toLocaleString("en-US")} (~$${Math.round(ft.price / 15500)} USD)`
+                        : `Rp ${Number(ft.price).toLocaleString("id-ID")}`
+                      : null;
+                    return {
+                      badge:
+                        idx === 0
+                          ? (lang === "id" ? "Sunset Terbaik" : "Sunset Classic")
+                          : idx === 1
+                          ? (lang === "id" ? "Favorit Budaya" : "Cultural Highlights")
+                          : (lang === "id" ? "Warisan UNESCO" : "UNESCO Heritage"),
+                      title: ft.name,
+                      hasPrice: hasValidPrice,
+                      price: priceFormatted,
+                      duration: ft.duration,
+                      highlights:
+                        ft.highlights && ft.highlights.length > 0
+                          ? ft.highlights.slice(0, 5)
+                          : [
+                              lang === "id" ? "Mobil Ber-AC Dingin & Bersih" : "Clean A/C Private Car",
+                              lang === "id" ? "Pemandu Lokal Resmi HPI" : "Licensed Balinese HPI Guide",
+                              lang === "id" ? "Jadwal Fleksibel Santai" : "Flexible Relaxed Pacing",
+                              lang === "id" ? "Bebas Request Spot Foto" : "Free Photo Requests",
+                              lang === "id" ? "Tanpa Komisi Toko Oleh-Oleh" : "No Commission Tourist Shops",
+                            ],
+                    };
+                  })
+                : t.tours.items.map((item) => ({
+                    ...item,
+                    hasPrice: true,
+                  }));
 
-              return toursList.map((tour, index) => {
-                const isThirdCard = index === 2;
-                // Pola Ritme 3 Warna: Kartu 1 Biru, Kartu 2 Hijau, Kartu 3 Oranye
-                const badgeColorClass =
-                  index === 0
-                    ? "bg-blue-50 text-[#1878B8] border-blue-200"
-                    : index === 1
-                    ? "bg-emerald-50 text-[#0C8C5E] border-emerald-200"
-                    : "bg-amber-50 text-[#E67E22] border-amber-200";
+            return toursList.map((tour, index) => {
+              const isThirdCard = index === 2;
+              // Pola Ritme 3 Warna (1-2-3):
+              // Kartu 1 (Kiri - Uluwatu Sunset Cliff): Biru Samudra (#1878B8 / bg-[#EBF5FB]), CTA #1878B8 (hover #0F4C81)
+              // Kartu 2 (Tengah - Ubud Cultural Heritage): Hijau Bali (#0C8C5E / bg-[#E8F6F0]), CTA #0C8C5E (hover #09734C)
+              // Kartu 3 (Kanan - Bedugul Ulun Danu): Oranye Sunset (#E67E22 / bg-[#FDF3E6]), CTA #E67E22 (hover #D35400)
+              const badgeColorClass =
+                index === 0
+                  ? "bg-[var(--brand-blue-light)] text-[var(--brand-blue)]"
+                  : index === 1
+                  ? "bg-[var(--brand-green-light)] text-[var(--brand-green)]"
+                  : "bg-[var(--brand-accent-light)] text-[var(--brand-accent)]";
 
-                const ctaBtnColorClass =
-                  index === 0
-                    ? "bg-[#1878B8] hover:bg-[#0F4C81] text-white shadow-[0_2px_8px_rgba(24,120,184,0.25)]"
-                    : index === 1
-                    ? "bg-[#0C8C5E] hover:bg-[#09734C] text-white shadow-[0_2px_8px_rgba(12,140,94,0.25)]"
-                    : "bg-[#E67E22] hover:bg-[#D35400] text-white shadow-[0_2px_8px_rgba(230,126,34,0.25)]";
+              const hoverBorderClass =
+                index === 0
+                  ? "hover:border-[var(--brand-blue)]"
+                  : index === 1
+                  ? "hover:border-[var(--brand-green)]"
+                  : "hover:border-[var(--brand-accent)]";
 
-                return (
-                  <article
-                    key={index}
-                    className={`bg-white border border-[#EBE9E6] rounded-2xl flex flex-col justify-between overflow-hidden shadow-[0_4px_20px_rgba(12,140,94,0.06)] hover:-translate-y-1.5 hover:shadow-[0_12px_36px_rgba(0,0,0,0.08)] transition-all duration-200 ${
-                      isThirdCard ? "md:col-span-2 lg:col-span-1" : ""
-                    }`}
-                  >
-                    <div>
-                      {/* Header Kartu */}
-                      <div className="p-6 pb-5 border-b border-[#EBE9E6]">
-                        <div className="flex items-center mb-3">
-                          <span
-                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${badgeColorClass}`}
-                          >
-                            {tour.badge}
-                          </span>
-                        </div>
-                        <h3 className="font-bold text-lg text-[#08090A] mb-4 leading-snug">
-                          {tour.title}
-                        </h3>
-                        {/* Penataan Harga (2 Baris Bertingkat) */}
-                        <div className="flex flex-col">
-                          <span className="text-2xl sm:text-[26px] font-extrabold text-[#08090A] tracking-tight">
-                            {tour.price}
-                          </span>
-                          <span className="text-[12px] sm:text-[13px] text-[#5E6965] mt-0.5">
-                            {t.tours.priceUnit}
-                          </span>
-                        </div>
+              const accentColorClass =
+                index === 0
+                  ? "text-[var(--brand-blue)]"
+                  : index === 1
+                  ? "text-[var(--brand-green)]"
+                  : "text-[var(--brand-accent)]";
+
+              const ctaButtonClass =
+                index === 0
+                  ? "bg-[var(--brand-blue)] hover:bg-[#0F4C81] text-white shadow-[0_2px_8px_rgba(24,120,184,0.25)]"
+                  : index === 1
+                  ? "bg-[var(--brand-green)] hover:bg-[#09734C] text-white shadow-[0_2px_8px_rgba(12,140,94,0.25)]"
+                  : "bg-[var(--brand-accent)] hover:bg-[#D35400] text-white shadow-[0_2px_8px_rgba(230,126,34,0.25)]";
+
+              return (
+                <article
+                  key={index}
+                  className={`bg-white border border-[var(--border)] rounded-2xl flex flex-col justify-between overflow-hidden shadow-[0_4px_20px_rgba(24,120,184,0.06)] hover:-translate-y-1.5 hover:shadow-[0_12px_36px_rgba(0,0,0,0.08)] transition-all duration-200 ${hoverBorderClass} ${
+                    isThirdCard ? "md:col-span-2 lg:col-span-1" : ""
+                  }`}
+                >
+                  <div>
+                    {/* Header Kartu */}
+                    <div className="p-6 pb-5 border-b border-[var(--border)]">
+                      <div className="flex items-center mb-3">
+                        <span
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${badgeColorClass}`}
+                        >
+                          {tour.badge}
+                        </span>
                       </div>
-
-                      {/* Isi Rute & Highlight */}
-                      <div className="p-6">
-                        <div className="flex items-center gap-1.5 text-xs font-semibold text-[#1878B8] mb-4">
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                          >
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12 6 12 12 16 14" />
-                          </svg>
-                          <span>{tour.duration}</span>
-                        </div>
-
-                        <ul className="space-y-2.5 text-xs sm:text-[13px] text-[#121715]">
-                          {tour.highlights.map((item, hIdx) => (
-                            <li key={hIdx} className="flex items-start gap-2">
-                              <svg
-                                width="14"
-                                height="14"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.5"
-                                className="text-[#0C8C5E] shrink-0 mt-0.5"
-                              >
-                                <polyline points="20 6 9 17 4 12" />
-                              </svg>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
+                      <h3 className="font-bold text-lg text-[var(--text-primary)] mb-4 leading-snug">
+                        {tour.title}
+                      </h3>
+                      {/* Penataan Tarif Bersih (Price on Request) - Warna Netral var(--text-primary) */}
+                      <div className="flex flex-col">
+                        <span className="text-base sm:text-lg font-bold text-[var(--text-primary)] tracking-tight">
+                          {lang === "id" ? "Tarif Fleksibel / Hubungi WA" : "Price on Request / Rates via WA"}
+                        </span>
+                        <span className="text-[12px] sm:text-[13px] text-[var(--text-muted)] mt-0.5">
+                          {lang === "id" ? "Konsultasi rute langsung gratis" : "Free custom itinerary consultation"}
+                        </span>
                       </div>
                     </div>
 
-                    {/* Tombol Pesan via WhatsApp (Ukuran Seragam h-11 text-sm font-medium) */}
-                    <div className="p-5 pt-4 border-t border-[#EBE9E6] bg-[#FAF8F5]">
-                      <button
-                        type="button"
-                        onClick={() => handleWhatsAppClick(`Kartu Tur: ${tour.title}`, tour.title)}
-                        className={`w-full flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer ${ctaBtnColorClass}`}
-                      >
+                    {/* Isi Rute & Highlight */}
+                    <div className="p-6">
+                      <div className={`flex items-center gap-1.5 text-xs font-semibold ${accentColorClass} mb-4`}>
                         <svg
-                          width="16"
-                          height="16"
+                          width="14"
+                          height="14"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
                         >
-                          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                          <circle cx="12" cy="12" r="10" />
+                          <polyline points="12 6 12 12 16 14" />
                         </svg>
-                        <span>{t.tours.btnBook}</span>
-                      </button>
-                    </div>
-                  </article>
-                );
-              });
-            })()}
-          </div>
-
-        {/* Tombol Sekunder di Bawah Grid Paket Tur -> href="/tours" (h-11, px-6, text-sm font-medium, border-blue-600 text-[#1878B8]) */}
-        <div className="mt-10 sm:mt-12 text-center">
-          <Link
-            href="/tours"
-            className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-white hover:bg-blue-50 text-[#1878B8] border border-blue-600 font-medium text-sm shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
-          >
-            <span>{t.tours.btnAllTours}</span>
-          </Link>
-        </div>
-      </section>
-
-      {/* ========================================================
-          SEKSI 5: WILAYAH POPULER EKSPLORASI
-          ======================================================== */}
-      <section className="bg-white border-y border-[#EBE9E6] py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#1878B8] block mb-2">
-              {t.regions.tag}
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl text-[#08090A] font-normal mb-3">
-              {t.regions.title}
-            </h2>
-            <p className="text-[#5E6965] text-sm sm:text-base leading-relaxed">
-              {t.regions.subtitle}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-            {t.regions.items.map((region, idx) => {
-              // Pola Ritme: Kartu 1 Biru, Kartu 2 Hijau, Kartu 3 Oranye, Kartu 4 Biru
-              const badgeBg =
-                idx === 0 || idx === 3
-                  ? "bg-blue-50 text-[#1878B8] border border-blue-200"
-                  : idx === 1
-                  ? "bg-emerald-50 text-[#0C8C5E] border border-emerald-200"
-                  : "bg-amber-50 text-[#E67E22] border border-amber-200";
-              return (
-                <div
-                  key={idx}
-                  className="bg-[#FEFDFB] border border-[#EBE9E6] rounded-xl p-6 hover:border-[#1878B8] hover:-translate-y-1 transition-all duration-200"
-                >
-                  <span
-                    className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold mb-3 ${badgeBg}`}
-                  >
-                    {region.badge}
-                  </span>
-                  <h3 className="font-bold text-lg text-[#08090A] mb-1.5">
-                    {region.title}
-                  </h3>
-                  <p className="text-xs text-[#5E6965] leading-relaxed">
-                    {region.desc}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================
-          SEKSI 6: ULASAN WISATAWAN (Testimoni Tamu)
-          - 3 Kartu Ulasan Bintang Lima Amber (Live Firestore)
-          - Tombol Sekunder di Tengah: "Lihat Semua Ulasan Tamu →" ke /reviews
-          ======================================================== */}
-      <section
-        id="ulasan"
-        className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full"
-      >
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#1878B8] block mb-2">
-            {t.reviews.tag}
-          </span>
-          <h2 className="font-serif text-3xl sm:text-4xl text-[#08090A] font-normal mb-3">
-            {t.reviews.title}
-          </h2>
-          <p className="text-[#5E6965] text-sm sm:text-base leading-relaxed">
-            {t.reviews.subtitle}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7">
-          {(() => {
-            const reviewsList =
-              lang === "id" && firestoreReviews && firestoreReviews.length > 0
-                ? firestoreReviews.map((fr) => ({
-                    rating: fr.rating || 5,
-                    text: `“${fr.content}”`,
-                    author: fr.authorName,
-                    origin: fr.authorOrigin,
-                    tourType: fr.tourName || "Tur Privat",
-                  }))
-                : t.reviews.items;
-
-            return reviewsList.map((rev, idx) => {
-              const badgeBg =
-                idx === 0
-                  ? "bg-[#E8F7F1] text-[#006B49]"
-                  : idx === 1
-                  ? "bg-[#FFF5EB] text-[#D35400]"
-                  : "bg-[#EAF5FC] text-[#0A5C94]";
-              return (
-                <article
-                  key={idx}
-                  className="bg-white border border-[#EBE9E6] rounded-2xl p-7 flex flex-col justify-between shadow-[0_4px_20px_rgba(12,140,94,0.06)]"
-                >
-                  <div>
-                    <div className="text-[#E67E22] text-base mb-3.5 tracking-wider">
-                      ★★★★★
-                    </div>
-                    <p className="text-sm sm:text-[15px] text-[#121715] leading-relaxed italic mb-5">
-                      {rev.text}
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-between pt-4 border-t border-[#EBE9E6]">
-                    <div>
-                      <div className="font-bold text-sm text-[#08090A]">
-                        {rev.author}
+                        <span>{tour.duration}</span>
                       </div>
-                      <div className="text-xs text-[#5E6965]">{rev.origin}</div>
+
+                      <ul className="space-y-2.5 text-xs sm:text-[13px] text-[#121715]">
+                        {tour.highlights.map((item, hIdx) => (
+                          <li key={hIdx} className="flex items-start gap-2">
+                            <svg
+                              width="14"
+                              height="14"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2.5"
+                              className={`${accentColorClass} shrink-0 mt-0.5`}
+                            >
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <span
-                      className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeBg}`}
+                  </div>
+
+                  {/* Tombol Pesan via WhatsApp - CTA sesuai Ritme 3 Warna */}
+                  <div className="p-5 pt-4 border-t border-[#EBE9E6] bg-[#FAF8F5]">
+                    <button
+                      type="button"
+                      onClick={() => handleWhatsAppClick(`Kartu Tur: ${tour.title}`, tour.title)}
+                      className={`w-full flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer ${ctaButtonClass}`}
                     >
-                      {rev.tourType}
-                    </span>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                      </svg>
+                      <span>{t.tours.btnBook}</span>
+                    </button>
                   </div>
                 </article>
               );
@@ -1246,31 +1090,369 @@ export default function HomePage() {
           })()}
         </div>
 
-        {/* Tombol Sekunder di Bawah Ulasan -> href="/reviews" (Ukuran Seragam h-11) */}
+        {/* Tombol Sekunder di Bawah Grid Paket Tur -> href="/tours" (Standar Ukuran h-11, Biru Samudra) */}
         <div className="mt-10 sm:mt-12 text-center">
           <Link
-            href="/reviews"
-            className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-white hover:bg-blue-50 text-[#1878B8] border border-blue-600 font-medium text-sm shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+            href="/tours"
+            className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-white hover:bg-[#EBF5FB] text-[#1878B8] border border-[#1878B8] font-medium text-sm shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
           >
-            <span>{t.reviews.btnAllReviews}</span>
+            <span>{t.tours.btnAllTours}</span>
           </Link>
         </div>
       </section>
 
       {/* ========================================================
-          SEKSI 7: PERTANYAAN YANG SERING DIAJUKAN (FAQ)
-          - Akordeon interaktif buka-tutup (Live Firestore)
-          - 4 pertanyaan esensial
-          - Tombol sekunder "Lihat Semua Tanya Jawab (15 Pertanyaan Lengkap) →" ke /faq
+          SEKSI 4: WHY CHOOSE US / TIGA PILAR UTAMA LAYANAN (Clean White bg-white)
+          Pola Ritme 3 Warna: 1 Biru Samudra, 2 Hijau Bali, 3 Oranye Sunset
+          ======================================================== */}
+      <section
+        id="tentang"
+        className="bg-white border-y border-[#EBE9E6] py-16 sm:py-20 px-4 sm:px-6 lg:px-8 w-full"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="font-serif italic text-base sm:text-lg text-[#0C8C5E] block mb-2 font-normal tracking-wide">
+              “{t.pillars.tag}”
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-[#08090A] font-normal mb-3">
+              {t.pillars.title}
+            </h2>
+            <p className="text-[#5E6965] text-sm sm:text-base leading-relaxed">
+              {t.pillars.subtitle}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7">
+            {/* Pilar 1 - Biru Samudra */}
+            <article className="bg-[#FEFDFB] border border-[#EBE9E6] rounded-2xl p-7 sm:p-8 shadow-xs hover:-translate-y-1 transition-all duration-200 hover:border-[#1878B8]">
+              <div className="w-12 h-12 rounded-xl bg-[#EBF5FB] text-[#1878B8] flex items-center justify-center mb-5">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-lg text-[#08090A] mb-2.5">
+                {t.pillars.items[0].title}
+              </h3>
+              <p className="text-sm text-[#5E6965] leading-relaxed">
+                {t.pillars.items[0].desc}
+              </p>
+            </article>
+
+            {/* Pilar 2 - Hijau Bali */}
+            <article className="bg-[#FEFDFB] border border-[#EBE9E6] rounded-2xl p-7 sm:p-8 shadow-xs hover:-translate-y-1 transition-all duration-200 hover:border-[#0C8C5E]">
+              <div className="w-12 h-12 rounded-xl bg-[#E8F6F0] text-[#0C8C5E] flex items-center justify-center mb-5">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-lg text-[#08090A] mb-2.5">
+                {t.pillars.items[1].title}
+              </h3>
+              <p className="text-sm text-[#5E6965] leading-relaxed">
+                {t.pillars.items[1].desc}
+              </p>
+            </article>
+
+            {/* Pilar 3 - Oranye Sunset */}
+            <article className="bg-[#FEFDFB] border border-[#EBE9E6] rounded-2xl p-7 sm:p-8 shadow-xs hover:-translate-y-1 transition-all duration-200 hover:border-[#E67E22]">
+              <div className="w-12 h-12 rounded-xl bg-[#FDF3E6] text-[#E67E22] flex items-center justify-center mb-5">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="1" y="3" width="15" height="13" />
+                  <polygon points="16 8 20 8 23 11 23 16 16 8" />
+                  <circle cx="5.5" cy="18.5" r="2.5" />
+                  <circle cx="18.5" cy="18.5" r="2.5" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-lg text-[#08090A] mb-2.5">
+                {t.pillars.items[2].title}
+              </h3>
+              <p className="text-sm text-[#5E6965] leading-relaxed">
+                {t.pillars.items[2].desc}
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SEKSI 5: WILAYAH POPULER EKSPLORASI (Warm Cream bg-[var(--canvas)])
+          Pola Ritme 3 Warna: 1 Biru Samudra, 2 Hijau Bali, 3 Oranye Sunset, 4 Biru Samudra
+          ======================================================== */}
+      <section className="bg-[var(--canvas)] py-16 sm:py-20 px-4 sm:px-6 lg:px-8 w-full">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="font-serif italic text-base sm:text-lg text-[var(--brand-blue)] block mb-2 font-normal tracking-wide">
+              “{t.regions.tag}”
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-[var(--text-primary)] font-normal mb-3">
+              {t.regions.title}
+            </h2>
+            <p className="text-[var(--text-muted)] text-sm sm:text-base leading-relaxed">
+              {t.regions.subtitle}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+            {(() => {
+              // Koneksi Data Dinamis dari mockPopularDestinations & relasi mockAllTours
+              const dynamicRegions = mockPopularDestinations.map((dest, idx) => {
+                const linkedTour = mockAllTours.find(
+                  (t) =>
+                    t.slug === dest.tourSlug ||
+                    (dest.tourSlugs && dest.tourSlugs.includes(t.slug))
+                );
+
+                const regionQuery =
+                  idx === 0
+                    ? "ubud"
+                    : idx === 1
+                    ? "uluwatu"
+                    : idx === 2
+                    ? "bedugul"
+                    : "kintamani";
+
+                const coverImage =
+                  linkedTour?.coverImage ||
+                  dest.coverImage ||
+                  dest.imageUrl ||
+                  "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&auto=format&fit=crop&q=80";
+
+                const description =
+                  lang === "en"
+                    ? idx === 0
+                      ? "Cultural heartland, sacred temples, lush emerald rice terraces, and hidden tropical waterfalls."
+                      : idx === 1
+                      ? "Dramatic limestone sea cliffs, secluded white sand beaches, legendary sunsets, and fresh seafood."
+                      : idx === 2
+                      ? "Refreshing mountain highlands, misty lake temples, and grand UNESCO World Heritage rice terraces."
+                      : "Majestic caldera vistas of Mount and Lake Batur, floating cafes, and ancient indigenous villages."
+                    : dest.description || linkedTour?.description || "";
+
+                return {
+                  id: dest.id,
+                  locationName: dest.name,
+                  badge: dest.badge || "Destinasi Pilihan",
+                  description,
+                  coverImage,
+                  regionSlug: regionQuery,
+                };
+              });
+
+              return dynamicRegions.map((region, idx) => {
+                // Pola Ritme 3 Warna Sekuensial (1-2-3, berulang ke 1):
+                // 1. Ubud (Biru Samudra): var(--brand-blue) / bg-[var(--brand-blue-light)], hover:border-[var(--brand-blue)], hover judul var(--brand-blue)
+                // 2. Uluwatu (Hijau Bali): var(--brand-green) / bg-[var(--brand-green-light)], hover:border-[var(--brand-green)], hover judul var(--brand-green)
+                // 3. Bedugul (Oranye Sunset): var(--brand-accent) / bg-[var(--brand-accent-light)], hover:border-[var(--brand-accent)], hover judul var(--brand-accent)
+                // 4. Kintamani: Berulang ke Biru Samudra
+                const rhythmIndex = idx % 3;
+
+                const badgeClass =
+                  rhythmIndex === 0
+                    ? "bg-[var(--brand-blue-light)] text-[var(--brand-blue)]"
+                    : rhythmIndex === 1
+                    ? "bg-[var(--brand-green-light)] text-[var(--brand-green)]"
+                    : "bg-[var(--brand-accent-light)] text-[var(--brand-accent)]";
+
+                const hoverBorderClass =
+                  rhythmIndex === 0
+                    ? "hover:border-[var(--brand-blue)]"
+                    : rhythmIndex === 1
+                    ? "hover:border-[var(--brand-green)]"
+                    : "hover:border-[var(--brand-accent)]";
+
+                // Perbaikan Hover Judul: Pola Ritme 3 Warna Sekuensial
+                const titleHoverClass =
+                  rhythmIndex === 0
+                    ? "group-hover:text-[var(--brand-blue)]"
+                    : rhythmIndex === 1
+                    ? "group-hover:text-[var(--brand-green)]"
+                    : "group-hover:text-[var(--brand-accent)]";
+
+                const linkTextClass =
+                  rhythmIndex === 0
+                    ? "text-[var(--brand-blue)] group-hover:text-[var(--brand-blue)]"
+                    : rhythmIndex === 1
+                    ? "text-[var(--brand-green)] group-hover:text-[var(--brand-green)]"
+                    : "text-[var(--brand-accent)] group-hover:text-[var(--brand-accent)]";
+
+                const arrowBgClass =
+                  rhythmIndex === 0
+                    ? "group-hover:bg-[var(--brand-blue)] group-hover:text-white"
+                    : rhythmIndex === 1
+                    ? "group-hover:bg-[var(--brand-green)] group-hover:text-white"
+                    : "group-hover:bg-[var(--brand-accent)] group-hover:text-white";
+
+                return (
+                  <Link
+                    key={region.id || idx}
+                    href={`/tours?region=${region.regionSlug}`}
+                    className={`group bg-white border border-[var(--border)] rounded-2xl overflow-hidden flex flex-col justify-between hover:-translate-y-1.5 transition-all duration-300 shadow-xs hover:shadow-xl ${hoverBorderClass}`}
+                  >
+                    {/* Foto Sampul Destinasi Dinamis (Aspect 16:9 / 4:3 dengan Soft Rounded) */}
+                    <div className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--surface-alt)]">
+                      <Image
+                        src={region.coverImage}
+                        alt={region.locationName}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+
+                      {/* Tag Badge di atas foto sesuai Ritme 3 Warna */}
+                      <div className="absolute top-3 left-3 z-10">
+                        <span
+                          className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold shadow-xs ${badgeClass}`}
+                        >
+                          {region.badge}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Konten Kartu */}
+                    <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between">
+                      <div>
+                        {/* Judul Wilayah: font-serif, normal unhovered text-[var(--text-primary)], hover ritme 3 warna */}
+                        <h3
+                          className={`font-serif font-bold text-lg text-[var(--text-primary)] mb-2 leading-snug transition-colors ${titleHoverClass}`}
+                        >
+                          {region.locationName}
+                        </h3>
+                        <p className="text-xs sm:text-[13px] text-[var(--text-muted)] leading-relaxed line-clamp-3">
+                          {region.description}
+                        </p>
+                      </div>
+
+                      <div className="pt-4 mt-4 border-t border-[var(--border)] flex items-center justify-between text-xs font-semibold">
+                        <span className={`transition-colors ${linkTextClass}`}>
+                          {lang === "id" ? "Eksplorasi Tur" : "Explore Tours"}
+                        </span>
+                        <div
+                          className={`w-7 h-7 rounded-full bg-[var(--surface-alt)] text-[var(--text-muted)] flex items-center justify-center transition-all ${arrowBgClass}`}
+                        >
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                          >
+                            <line x1="7" y1="17" x2="17" y2="7" />
+                            <polyline points="7 7 17 7 17 17" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              });
+            })()}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SEKSI 6: ULASAN WISATAWAN / TESTIMONI (Clean White bg-white)
+          Pola Ritme 3 Warna: 1 Biru Samudra, 2 Hijau Bali, 3 Oranye Sunset
+          Standarisasi Tombol Sekunder: h-11 px-6 rounded-xl
+          ======================================================== */}
+      <section
+        id="ulasan"
+        className="bg-white border-y border-[#EBE9E6] py-16 sm:py-20 px-4 sm:px-6 lg:px-8 w-full"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="font-serif italic text-base sm:text-lg text-[#0C8C5E] block mb-2 font-normal tracking-wide">
+              “{t.reviews.tag}”
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-[#08090A] font-normal mb-3">
+              {t.reviews.title}
+            </h2>
+            <p className="text-[#5E6965] text-sm sm:text-base leading-relaxed">
+              {t.reviews.subtitle}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7">
+            {(() => {
+              const reviewsList =
+                lang === "id" && firestoreReviews && firestoreReviews.length > 0
+                  ? firestoreReviews.map((fr) => ({
+                      rating: fr.rating || 5,
+                      text: `“${fr.content}”`,
+                      author: fr.authorName,
+                      origin: fr.authorOrigin,
+                      tourType: fr.tourName || "Tur Privat",
+                    }))
+                  : t.reviews.items;
+
+              return reviewsList.map((rev, idx) => (
+                <ReviewCard
+                  key={idx}
+                  review={rev}
+                  index={idx}
+                  className="h-full"
+                />
+              ));
+            })()}
+          </div>
+
+          {/* Tombol Sekunder di Bawah Ulasan -> href="/reviews" (Standar Ukuran h-11) */}
+          <div className="mt-10 sm:mt-12 text-center">
+            <Link
+              href="/reviews"
+              className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-white hover:bg-[#EBF5FB] text-[#1878B8] border border-[#1878B8] font-medium text-sm shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+            >
+              <span>{t.reviews.btnAllReviews}</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SEKSI 7: PERTANYAAN YANG SERING DIAJUKAN / FAQ (Warm Cream bg-[#FEFDFB])
+          Standarisasi Tombol Sekunder: h-11 px-6 rounded-xl
           ======================================================== */}
       <section
         id="faq"
-        className="bg-[#FAF8F5] border-y border-[#EBE9E6] py-16 sm:py-20 px-4 sm:px-6 lg:px-8"
+        className="bg-[#FEFDFB] py-16 sm:py-20 px-4 sm:px-6 lg:px-8 w-full"
       >
         <div className="max-w-4xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#1878B8] block mb-2">
-              {t.faq.tag}
+            <span className="font-serif italic text-base sm:text-lg text-[#1878B8] block mb-2 font-normal tracking-wide">
+              “{t.faq.tag}”
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl text-[#08090A] font-normal mb-3">
               {t.faq.title}
@@ -1295,13 +1477,17 @@ export default function HomePage() {
                 return (
                   <div
                     key={index}
-                    className="bg-white border border-[#EBE9E6] rounded-2xl overflow-hidden shadow-xs transition-all duration-200"
+                    className={`border rounded-2xl overflow-hidden shadow-xs transition-all duration-200 ${
+                      isOpen
+                        ? "bg-[#EAF5FC] border-[#1878B8]/30 shadow-xs"
+                        : "bg-white hover:bg-[#EAF5FC]/50 border-[#EBE9E6]"
+                    }`}
                   >
                     <button
                       type="button"
                       onClick={() => toggleFaq(index)}
                       aria-expanded={isOpen}
-                      className="w-full flex items-center justify-between gap-4 p-5 sm:p-6 text-left cursor-pointer hover:bg-[#F2FAF6]/40 transition-colors"
+                      className="w-full flex items-center justify-between gap-4 p-5 sm:p-6 text-left cursor-pointer transition-colors"
                     >
                       <span className="font-bold text-base sm:text-lg text-[#08090A] pr-2">
                         {item.q}
@@ -1310,7 +1496,7 @@ export default function HomePage() {
                         className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
                           isOpen
                             ? "bg-[#1878B8] text-white rotate-180"
-                            : "bg-[#EAF5FC] text-[#1878B8]"
+                            : "bg-[#EBF5FB] text-[#1878B8]"
                         }`}
                       >
                         <svg
@@ -1329,7 +1515,7 @@ export default function HomePage() {
                     </button>
 
                     {isOpen && (
-                      <div className="px-5 sm:px-6 pb-6 pt-1 text-sm sm:text-[15px] text-[#5E6965] leading-relaxed border-t border-[#F2FAF6]">
+                      <div className="px-5 sm:px-6 pb-6 pt-1 text-sm sm:text-[15px] text-[#5E6965] leading-relaxed border-t border-[#1878B8]/15">
                         <p>{item.a}</p>
                       </div>
                     )}
@@ -1339,11 +1525,11 @@ export default function HomePage() {
             })()}
           </div>
 
-          {/* Tombol Sekunder di Bawah FAQ -> href="/faq" (Ukuran Seragam h-11) */}
+          {/* Tombol Sekunder di Bawah FAQ -> href="/faq" (Standar Ukuran h-11) */}
           <div className="mt-10 sm:mt-12 text-center">
             <Link
               href="/faq"
-              className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-white hover:bg-blue-50 text-[#1878B8] border border-blue-600 font-medium text-sm shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+              className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-white hover:bg-[#EBF5FB] text-[#1878B8] border border-[#1878B8] font-medium text-sm shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
             >
               <span>{t.faq.btnAllFaq}</span>
             </Link>
@@ -1352,8 +1538,9 @@ export default function HomePage() {
       </section>
 
       {/* ========================================================
-          SEKSI 8: BOTTOM CTA BANNER (Rute Khusus)
-          - Konsultasi WhatsApp Interaktif (Lead Logging)
+          SEKSI 8: BOTTOM CTA BANNER (Gradien Biru Samudra Elegan)
+          bg-gradient-to-r from-[#0F4C81] to-[#1878B8] text-white
+          Standarisasi Tombol WhatsApp Aksi Khusus: h-11 px-5 py-2.5 bg-[#E67E22]
           ======================================================== */}
       <section
         id="kontak"
@@ -1406,29 +1593,21 @@ export default function HomePage() {
 
       {/* ========================================================
           SEKSI 9: FOOTER LENGKAP
-          - Legalitas HPI-BALI-2015-8849
-          - Tautan navigasi internal aktif (/about, /tours, /gallery, /reviews, /faq)
-          - Jam operasional & kontak
-          - Padding ekstra bawah
           ======================================================== */}
       <footer className="bg-[#08090A] text-white pt-14 pb-12 px-4 sm:px-6 lg:px-8 mt-auto">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-white/10">
           {/* Kolom 1: Profil Brand & Lisensi */}
           <div className="md:col-span-5">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#1878B8] to-[#0F4C81] flex items-center justify-center text-white shadow-xs">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                >
-                  <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
-                  <path d="M12 6v6l4 2" />
-                </svg>
-              </div>
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 shrink-0">
+              <Image
+                src="/assets/gede-logo-white.svg"
+                alt="Gede Bali Guide Logo"
+                width={40}
+                height={40}
+                className="w-full h-full object-contain"
+              />
+            </div>
               <span className="font-bold text-lg tracking-tight">Gede Bali Guide</span>
             </div>
             <p className="text-[#969E9B] text-xs sm:text-sm leading-relaxed max-w-sm mb-4">
@@ -1511,9 +1690,20 @@ export default function HomePage() {
         </div>
 
         {/* Footer Bottom */}
-        <div className="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#717D79]">
+        <div className="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#717D79]">
           <div>{t.footer.copyright}</div>
-          <div className="font-mono text-[11px]">{t.footer.license}</div>
+          <div className="flex items-center gap-4">
+            <div className="font-mono text-[11px]">{t.footer.license}</div>
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors cursor-pointer"
+              aria-label="Back to Top"
+            >
+              <ArrowUp className="w-3.5 h-3.5" />
+              <span>Back to Top</span>
+            </button>
+          </div>
         </div>
       </footer>
     </div>

@@ -196,10 +196,10 @@ export default function FaqAccordion() {
             return (
               <div
                 key={item.id}
-                className={`rounded-2xl sm:rounded-3xl border bg-white overflow-hidden transition-all duration-200 ${
+                className={`rounded-2xl sm:rounded-3xl border overflow-hidden transition-all duration-200 ${
                   isOpen
-                    ? "border-[#1878B8]/40 shadow-md ring-1 ring-[#1878B8]/15"
-                    : "border-stone-200/80 shadow-xs hover:border-stone-300"
+                    ? "bg-[#EAF5FC] border-[#1878B8]/40 shadow-md ring-1 ring-[#1878B8]/15"
+                    : "bg-white hover:bg-[#EAF5FC]/50 border-stone-200/80 shadow-xs hover:border-[#1878B8]/30"
                 }`}
               >
                 {/* Accordion Trigger Header */}
@@ -230,8 +230,8 @@ export default function FaqAccordion() {
                   <div
                     className={`shrink-0 mt-1 sm:mt-2 h-7 w-7 sm:h-8 sm:w-8 rounded-full flex items-center justify-center transition-transform duration-200 ${
                       isOpen
-                        ? "bg-[#EAF5FC] text-[#1878B8] rotate-180"
-                        : "bg-stone-100 text-stone-500 hover:bg-stone-200"
+                        ? "bg-[#1878B8] text-white rotate-180"
+                        : "bg-[#EAF5FC] text-[#1878B8] hover:bg-[#1878B8] hover:text-white"
                     }`}
                   >
                     <ChevronDown className="h-4 w-4" />
@@ -248,20 +248,20 @@ export default function FaqAccordion() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.25, ease: "easeInOut" }}
                     >
-                      <div className="px-4 sm:px-6 pb-5 sm:pb-6 pt-1 border-t border-stone-100 space-y-4">
+                      <div className="px-4 sm:px-6 pb-5 sm:pb-6 pt-1 border-t border-[#1878B8]/15 space-y-4">
                         <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
                           {item.answer}
                         </p>
 
                         {/* Interactive Contextual Hint based on Category */}
                         {item.category === "booking" && (
-                          <div className="rounded-xl bg-emerald-50/70 border border-emerald-200/60 p-3 sm:p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 text-xs">
-                            <span className="text-emerald-800">
+                          <div className="rounded-xl bg-[#EAF5FC] border border-[#1878B8]/20 p-3 sm:p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 text-xs">
+                            <span className="text-[#1878B8] font-medium">
                               Ingin booking untuk tanggal liburan mendatang?
                             </span>
                             <Link
                               href="/contact"
-                              className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:text-emerald-900 hover:underline shrink-0"
+                              className="inline-flex items-center gap-1 text-xs font-bold text-[#1878B8] hover:text-[#0F4C81] hover:underline shrink-0"
                             >
                               <span>Buka Form Booking</span>
                               <ExternalLink className="h-3 w-3" />

@@ -87,7 +87,7 @@ export default function ContactMessageForm() {
     : "#";
 
   return (
-    <div className="rounded-3xl border border-stone-200 bg-white p-5 sm:p-8 md:p-9 shadow-sm">
+    <div className="rounded-3xl border border-[#EBE9E6] bg-white p-5 sm:p-8 md:p-9 shadow-xs">
       <AnimatePresence mode="wait">
         {isSuccess && submittedData ? (
           /* Mock Success State */
@@ -98,44 +98,44 @@ export default function ContactMessageForm() {
             exit={{ opacity: 0, scale: 0.95 }}
             className="py-6 text-center space-y-6"
           >
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-xs">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#E8F6F0] text-[#0C8C5E] shadow-xs">
               <CheckCircle2 className="h-10 w-10" />
             </div>
 
             <div className="space-y-2 max-w-md mx-auto">
-              <span className="text-xs uppercase tracking-wider font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+              <span className="text-xs uppercase tracking-wider font-bold text-[#0C8C5E] bg-[#E8F6F0] px-3 py-1 rounded-full">
                 Pesan Berhasil Terkirim
               </span>
-              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900">
+              <h3 className="font-serif text-2xl sm:text-3xl font-normal text-[#08090A]">
                 Matur Suksema, {submittedData.name}!
               </h3>
-              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#5E6965] leading-relaxed">
                 Detail permintaan liburan privat Anda telah kami terima. Bli Gede akan segera meninjau dan merespon ke nomor WhatsApp <strong>{submittedData.phone}</strong> dalam kurun waktu kurang dari 2 jam.
               </p>
             </div>
 
             {/* Summary Box */}
-            <div className="rounded-2xl bg-stone-50 border border-stone-200/80 p-4 text-left text-xs space-y-2 max-w-md mx-auto">
-              <div className="flex justify-between py-1 border-b border-stone-200/60">
-                <span className="text-stone-500">Pilihan Rute:</span>
-                <span className="font-semibold text-stone-900 truncate max-w-[220px]">
+            <div className="rounded-2xl bg-[#FEFDFB] border border-[#EBE9E6] p-4 text-left text-xs space-y-2 max-w-md mx-auto">
+              <div className="flex justify-between py-1 border-b border-[#EBE9E6]">
+                <span className="text-[#5E6965]">Pilihan Rute:</span>
+                <span className="font-semibold text-[#08090A] truncate max-w-[220px]">
                   {getTourLabel(submittedData.tour)}
                 </span>
               </div>
               {submittedData.date && (
-                <div className="flex justify-between py-1 border-b border-stone-200/60">
-                  <span className="text-stone-500">Rencana Tanggal:</span>
-                  <span className="font-semibold text-stone-900">{submittedData.date}</span>
+                <div className="flex justify-between py-1 border-b border-[#EBE9E6]">
+                  <span className="text-[#5E6965]">Rencana Tanggal:</span>
+                  <span className="font-semibold text-[#08090A]">{submittedData.date}</span>
                 </div>
               )}
-              <div className="flex justify-between py-1 border-b border-stone-200/60">
-                <span className="text-stone-500">Jumlah Tamu:</span>
-                <span className="font-semibold text-stone-900">{submittedData.guests} Orang</span>
+              <div className="flex justify-between py-1 border-b border-[#EBE9E6]">
+                <span className="text-[#5E6965]">Jumlah Tamu:</span>
+                <span className="font-semibold text-[#08090A]">{submittedData.guests} Orang</span>
               </div>
               {submittedData.message && (
                 <div className="pt-1">
-                  <span className="text-stone-500 block mb-1">Catatan Tambahan:</span>
-                  <p className="text-stone-700 italic bg-white p-2.5 rounded-lg border border-stone-200/60">
+                  <span className="text-[#5E6965] block mb-1">Catatan Tambahan:</span>
+                  <p className="text-[#08090A] italic bg-white p-2.5 rounded-lg border border-[#EBE9E6]">
                     &ldquo;{submittedData.message}&rdquo;
                   </p>
                 </div>
@@ -148,7 +148,7 @@ export default function ContactMessageForm() {
                 href={waFollowUpUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#E67E22] hover:bg-[#D35400] px-6 py-3.5 text-xs sm:text-sm font-bold text-white shadow-lg shadow-[#E67E22]/30 transition-all cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-[#E67E22] hover:bg-[#D35400] text-xs sm:text-sm font-semibold text-white shadow-[0_4px_16px_rgba(230,126,34,0.3)] transition-all cursor-pointer"
               >
                 <MessageCircle className="h-4 w-4" />
                 <span>Teruskan ke WhatsApp Sekarang</span>
@@ -157,7 +157,7 @@ export default function ContactMessageForm() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-stone-300 bg-white px-5 py-3.5 text-xs font-semibold text-stone-700 hover:bg-stone-50 transition-colors"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl border border-[#EBE9E6] bg-white text-xs font-semibold text-[#08090A] hover:bg-[#FAF8F5] transition-colors cursor-pointer"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
                 <span>Kirim Pesan Lain</span>
@@ -173,15 +173,14 @@ export default function ContactMessageForm() {
             exit={{ opacity: 0 }}
             className="space-y-6"
           >
-            <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 border border-blue-200 px-3 py-0.5 text-xs font-semibold text-blue-800">
-                <Sparkles className="h-3.5 w-3.5 text-blue-600" />
-                <span>Formulir Pesan Alternatif</span>
-              </div>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900">
+            <div>
+              <span className="font-serif italic text-base sm:text-lg text-[#1878B8] font-normal tracking-wide block mb-1">
+                “Formulir Pesan Alternatif”
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#08090A]">
                 Kirim Rencana Liburan Anda
               </h2>
-              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
+              <p className="text-xs sm:text-sm text-[#5E6965] leading-relaxed font-sans mt-1">
                 Isi rincian perjalanan Anda di bawah ini. Bli Gede akan membalas dengan saran jadwal dan konfirmasi ketersediaan armada.
               </p>
             </div>
@@ -190,7 +189,7 @@ export default function ContactMessageForm() {
               {/* Row 1: Name & Phone */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-stone-700">
+                  <label className="text-xs font-semibold text-[#08090A]">
                     Nama Lengkap *
                   </label>
                   <input
@@ -199,12 +198,12 @@ export default function ContactMessageForm() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Contoh: Sarah & Michael"
-                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
+                    className="w-full rounded-xl border border-[#EBE9E6] px-4 py-3 text-base sm:text-sm text-[#08090A] focus:border-[#1878B8] focus:outline-hidden transition-colors"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-stone-700">
+                  <label className="text-xs font-semibold text-[#08090A]">
                     Nomor WhatsApp / Telepon *
                   </label>
                   <input
@@ -213,7 +212,7 @@ export default function ContactMessageForm() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="Contoh: 0812-3456-7890"
-                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
+                    className="w-full rounded-xl border border-[#EBE9E6] px-4 py-3 text-base sm:text-sm text-[#08090A] focus:border-[#1878B8] focus:outline-hidden transition-colors"
                   />
                 </div>
               </div>
@@ -221,7 +220,7 @@ export default function ContactMessageForm() {
               {/* Row 2: Email & Date */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-stone-700">
+                  <label className="text-xs font-semibold text-[#08090A]">
                     Alamat Email (Opsional)
                   </label>
                   <input
@@ -229,20 +228,20 @@ export default function ContactMessageForm() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Contoh: sarah@gmail.com"
-                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
+                    className="w-full rounded-xl border border-[#EBE9E6] px-4 py-3 text-base sm:text-sm text-[#08090A] focus:border-[#1878B8] focus:outline-hidden transition-colors"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-stone-700 flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5 text-stone-500" />
+                  <label className="text-xs font-semibold text-[#08090A] flex items-center gap-1.5">
+                    <Calendar className="h-3.5 w-3.5 text-[#5E6965]" />
                     <span>Rencana Tanggal Tur</span>
                   </label>
                   <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 focus:border-blue-700 focus:outline-hidden transition-colors"
+                    className="w-full rounded-xl border border-[#EBE9E6] px-4 py-3 text-base sm:text-sm text-[#08090A] focus:border-[#1878B8] focus:outline-hidden transition-colors"
                   />
                 </div>
               </div>
@@ -250,14 +249,14 @@ export default function ContactMessageForm() {
               {/* Row 3: Guests Count & Tour Preference */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-stone-700 flex items-center gap-1.5">
-                    <Users className="h-3.5 w-3.5 text-stone-500" />
+                  <label className="text-xs font-semibold text-[#08090A] flex items-center gap-1.5">
+                    <Users className="h-3.5 w-3.5 text-[#5E6965]" />
                     <span>Jumlah Anggota Rombongan</span>
                   </label>
                   <select
                     value={guests}
                     onChange={(e) => setGuests(e.target.value)}
-                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 bg-white focus:border-blue-700 focus:outline-hidden transition-colors"
+                    className="w-full rounded-xl border border-[#EBE9E6] px-4 py-3 text-base sm:text-sm text-[#08090A] bg-white focus:border-[#1878B8] focus:outline-hidden transition-colors"
                   >
                     <option value="1">1 Orang (Solo Traveler)</option>
                     <option value="2">2 Orang (Pasangan / Teman)</option>
@@ -268,14 +267,14 @@ export default function ContactMessageForm() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-stone-700 flex items-center gap-1.5">
-                    <Compass className="h-3.5 w-3.5 text-stone-500" />
+                  <label className="text-xs font-semibold text-[#08090A] flex items-center gap-1.5">
+                    <Compass className="h-3.5 w-3.5 text-[#5E6965]" />
                     <span>Pilihan Rute / Paket Tur</span>
                   </label>
                   <select
                     value={tourPreference}
                     onChange={(e) => setTourPreference(e.target.value)}
-                    className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 bg-white focus:border-blue-700 focus:outline-hidden transition-colors"
+                    className="w-full rounded-xl border border-[#EBE9E6] px-4 py-3 text-base sm:text-sm text-[#08090A] bg-white focus:border-[#1878B8] focus:outline-hidden transition-colors"
                   >
                     <option value="ubud">Ubud Cultural, Rice Terrace & Waterfall</option>
                     <option value="uluwatu">Uluwatu Sunset & Kecak Fire Dance</option>
@@ -290,7 +289,7 @@ export default function ContactMessageForm() {
 
               {/* Row 4: Message */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-stone-700">
+                <label className="text-xs font-semibold text-[#08090A]">
                   Pesan & Catatan Khusus *
                 </label>
                 <textarea
@@ -299,14 +298,14 @@ export default function ContactMessageForm() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Ceritakan preferensi Anda: lokasi hotel penjemputan, ada anak kecil/lansia, atau tempat khusus yang ingin dikunjungi..."
-                  className="w-full rounded-xl border border-stone-300 px-4 py-3 text-base sm:text-sm text-stone-900 focus:border-[#1878B8] focus:outline-hidden transition-colors"
+                  className="w-full rounded-xl border border-[#EBE9E6] px-4 py-3 text-base sm:text-sm text-[#08090A] focus:border-[#1878B8] focus:outline-hidden transition-colors"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#E67E22] hover:bg-[#D35400] py-3.5 text-sm sm:text-base font-semibold text-white shadow-md shadow-[#E67E22]/20 disabled:opacity-75 transition-all active:scale-[0.99] cursor-pointer"
+                className="w-full inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-[#0C8C5E] hover:bg-[#0A734D] text-sm sm:text-base font-semibold text-white shadow-[0_4px_16px_rgba(12,140,94,0.25)] disabled:opacity-75 transition-all cursor-pointer"
               >
                 {isLoading ? (
                   <>
@@ -321,7 +320,7 @@ export default function ContactMessageForm() {
                 )}
               </button>
 
-              <p className="text-[11px] text-stone-400 text-center">
+              <p className="text-[11px] text-[#5E6965] text-center">
                 Data Anda aman dan hanya digunakan Bli Gede untuk merespon rencana tur privat Anda.
               </p>
             </form>

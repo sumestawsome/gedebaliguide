@@ -4,7 +4,7 @@ import Link from "next/link";
 import Footer from "@/components/layout/Footer";
 import ReviewsFilterableList from "@/components/reviews/ReviewsFilterableList";
 import { mockReviews, mockGuideProfile } from "@/data/mock-data";
-import { Star, CheckCircle2, ChevronRight, MessageCircle, Sparkles, Award, ShieldCheck, HeartHandshake } from "lucide-react";
+import { Star, CheckCircle2, ChevronRight, ArrowLeft, MessageCircle, Sparkles, Award, ShieldCheck, HeartHandshake } from "lucide-react";
 import { getGeneralConsultationUrl } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
@@ -87,61 +87,74 @@ export default function ReviewsPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#fafaf9] text-stone-900 font-sans">
+    <div className="flex min-h-screen flex-col bg-[#FEFDFB] text-[#08090A] font-sans selection:bg-[#EBF5FB] selection:text-[#1878B8]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewsJsonLd) }}
       />
 
       <main className="flex-1 pb-20">
-        {/* Breadcrumb Navigation */}
-        <div className="border-b border-stone-200/80 bg-white">
+        {/* Breadcrumb Navigation Responsif */}
+        <div className="border-b border-[#EBE9E6] bg-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3.5">
-            <nav className="flex items-center gap-2 text-xs font-medium text-stone-500">
+            {/* Mobile (< 768px) */}
+            <div className="md:hidden">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#5E6965] hover:text-[#1878B8] transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Kembali ke Beranda</span>
+              </Link>
+            </div>
+
+            {/* Desktop (>= 768px) */}
+            <nav aria-label="Breadcrumb" className="hidden md:flex items-center gap-2 text-xs font-medium text-[#5E6965]">
               <Link href="/" className="hover:text-[#1878B8] transition-colors">
                 Beranda
               </Link>
-              <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
-              <span className="text-stone-900 font-semibold">Ulasan Tamu</span>
+              <ChevronRight className="h-3.5 w-3.5 text-[#CFCDCA]" />
+              <span className="text-[#08090A] font-semibold">Ulasan Tamu</span>
             </nav>
           </div>
         </div>
 
         {/* Hero Header */}
-        <section className="bg-gradient-to-b from-stone-100/60 via-[#fafaf9] to-[#fafaf9] border-b border-stone-200/70 py-12 md:py-16">
+        <section className="bg-gradient-to-b from-[#FAF8F5] via-[#FEFDFB] to-[#FEFDFB] border-b border-[#EBE9E6] py-10 md:py-14">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-7 space-y-4">
-                <div className="inline-flex items-center gap-2 rounded-full bg-[#E8F7F1] border border-[#0C8C5E]/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#006B49]">
-                  <Sparkles className="h-3.5 w-3.5 text-[#0C8C5E]" />
-                  <span>Testimoni Autentik & Terverifikasi</span>
+                <div className="mb-2">
+                  <span className="font-serif italic text-base sm:text-lg text-[#0C8C5E] font-normal tracking-wide block">
+                    “Testimoni Autentik & Terverifikasi”
+                  </span>
                 </div>
-                <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-stone-900 leading-tight">
+                <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-[-0.03em] text-[#08090A] leading-tight">
                   Cerita Liburan Nyata Bersama Bli Gede
                 </h1>
-                <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-2xl font-sans">
+                <p className="text-sm sm:text-base text-[#5E6965] leading-relaxed max-w-2xl font-sans">
                   Kenyamanan, kehangatan keluarga, dan wawasan budaya tanpa komisi calo adalah janji kami. Simak apa kata para tamu yang telah mempercayakan perjalanan mereka di Pulau Dewata.
                 </p>
               </div>
 
               {/* Rating Summary Card */}
               <div className="lg:col-span-5">
-                <div className="rounded-3xl border border-stone-200/90 bg-white p-6 sm:p-7 shadow-lg flex flex-col sm:flex-row items-center gap-6">
-                  <div className="text-center sm:border-r border-stone-100 sm:pr-6 shrink-0">
-                    <span className="font-serif text-5xl font-bold text-stone-900">{averageRating}</span>
+                <div className="rounded-3xl border border-[#EBE9E6] bg-white p-6 sm:p-7 shadow-xs flex flex-col sm:flex-row items-center gap-6">
+                  <div className="text-center sm:border-r border-[#EBE9E6] sm:pr-6 shrink-0">
+                    <span className="font-serif text-5xl font-bold text-[#08090A]">{averageRating}</span>
                     <div className="flex items-center gap-1 justify-center mt-2">
                       {[1, 2, 3, 4, 5].map((s) => (
                         <Star key={s} className="h-4 w-4 fill-[#E67E22] text-[#E67E22]" />
                       ))}
                     </div>
-                    <span className="block text-[11px] text-stone-400 mt-1 font-semibold uppercase tracking-wider">
+                    <span className="block text-[11px] text-[#5E6965] mt-1 font-semibold uppercase tracking-wider">
                       Skor Sempurna
                     </span>
                   </div>
 
                   <div className="text-xs space-y-2 flex-1">
-                    <p className="font-bold text-stone-900 text-sm">100% Tamu Puas & Merekomendasikan</p>
-                    <p className="text-stone-500 leading-relaxed">
+                    <p className="font-bold text-[#08090A] text-sm">100% Tamu Puas & Merekomendasikan</p>
+                    <p className="text-[#5E6965] leading-relaxed">
                       Diambil dari {approvedReviews.length} ulasan terverifikasi wisatawan keluarga, pasangan, dan solo traveler.
                     </p>
                     <div className="pt-1 flex items-center gap-2 text-[#0C8C5E] font-semibold">
@@ -160,15 +173,15 @@ export default function ReviewsPage() {
 
         {/* Bottom Direct CTA */}
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-10">
-          <div className="rounded-3xl bg-stone-900 text-white p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
+          <div className="rounded-3xl bg-gradient-to-r from-[#0F4C81] to-[#1878B8] text-white p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl">
             <div className="space-y-2 max-w-xl text-center md:text-left">
               <span className="text-xs uppercase tracking-wider text-[#E67E22] font-semibold">
                 Rute Eksklusif Keluarga Anda
               </span>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold">
+              <h2 className="font-serif text-2xl sm:text-3xl font-normal leading-tight">
                 Ingin Merasakan Pengalaman Liburan Menyenangkan yang Sama?
               </h2>
-              <p className="text-stone-300 text-xs sm:text-sm leading-relaxed">
+              <p className="text-white/90 text-xs sm:text-sm leading-relaxed">
                 Rencanakan waktu liburan privat Anda di Bali bersama Bli Gede. Rute fleksibel, mobil ber-AC nyaman, dan tanpa paksaan belanja.
               </p>
             </div>
@@ -177,7 +190,7 @@ export default function ReviewsPage() {
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-[#E67E22] hover:bg-[#D35400] px-7 py-4 text-sm sm:text-base font-bold text-white shadow-xl shadow-[#E67E22]/30 active:scale-95 transition-all shrink-0 cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-[#E67E22] hover:bg-[#D35400] text-sm sm:text-base font-semibold text-white shadow-[0_4px_16px_rgba(230,126,34,0.3)] transition-all shrink-0 cursor-pointer"
             >
               <MessageCircle className="h-5 w-5" />
               <span>Konsultasi Tur via WhatsApp</span>

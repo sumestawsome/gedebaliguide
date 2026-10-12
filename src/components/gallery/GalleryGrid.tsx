@@ -12,7 +12,7 @@ interface GalleryGridProps {
   lang?: "id" | "en";
 }
 
-export default function GalleryGrid({ initialItems, lang = "id" }: GalleryGridProps) {
+export default function GalleryGrid({ initialItems, lang = "en" }: GalleryGridProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
 

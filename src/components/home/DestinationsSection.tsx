@@ -50,6 +50,20 @@ export default function DestinationsSection({ initialDestinations }: Destination
               source: "custom_itinerary",
             });
 
+            const rhythmIndex = index % 3;
+            const hoverBorder =
+              rhythmIndex === 0
+                ? "hover:border-[#1878B8]"
+                : rhythmIndex === 1
+                ? "hover:border-[#0C8C5E]"
+                : "hover:border-[#E67E22]";
+            const arrowHover =
+              rhythmIndex === 0
+                ? "group-hover:bg-[#1878B8]"
+                : rhythmIndex === 1
+                ? "group-hover:bg-[#0C8C5E]"
+                : "group-hover:bg-[#E67E22]";
+
             return (
               <motion.div
                 key={dest.id}
@@ -59,11 +73,11 @@ export default function DestinationsSection({ initialDestinations }: Destination
                 transition={{ duration: 0.45, delay: index * 0.08 }}
                 className="flex flex-col h-full"
               >
-                <div className="group relative flex flex-col h-full overflow-hidden rounded-3xl bg-white shadow-sm border border-stone-200/80 hover:shadow-xl hover:border-amber-300/80 transition-all duration-300">
+                <div className={`group relative flex flex-col h-full overflow-hidden rounded-3xl bg-white shadow-sm border border-stone-200/80 hover:shadow-xl transition-all duration-300 ${hoverBorder}`}>
                   {/* Image Frame */}
                   <Link href={targetUrl} className="relative aspect-[4/3] w-full overflow-hidden bg-stone-200 block">
                     <Image
-                      src={dest.imageUrl}
+                      src={dest.imageUrl || dest.coverImage || ""}
                       alt={`Pemandangan ${dest.name}`}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -72,15 +86,15 @@ export default function DestinationsSection({ initialDestinations }: Destination
                     <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/20 to-transparent opacity-90 group-hover:opacity-95 transition-opacity" />
 
                     {/* Area tag on top */}
-                    <div className="absolute top-3 left-3 rounded-full bg-stone-900/80 backdrop-blur-xs px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-300 border border-white/10">
-                      {dest.area}
+                    <div className="absolute top-3 left-3 rounded-full bg-stone-900/80 backdrop-blur-xs px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white border border-white/10">
+                      {dest.badge || dest.area}
                     </div>
 
                     {/* Bottom Title on Image */}
                     <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
                       <h3 className="font-serif text-lg sm:text-xl font-bold leading-tight flex items-center justify-between">
                         <span>{dest.name}</span>
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 backdrop-blur-xs group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                        <div className={`flex h-7 w-7 items-center justify-center rounded-full bg-white/20 backdrop-blur-xs group-hover:text-white transition-colors ${arrowHover}`}>
                           <ArrowUpRight className="h-4 w-4 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                         </div>
                       </h3>

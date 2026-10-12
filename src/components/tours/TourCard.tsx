@@ -16,7 +16,7 @@ interface TourCardProps {
 export default function TourCard({
   tour,
   priority = false,
-  lang = "id",
+  lang = "en",
 }: TourCardProps) {
   const formatPrice = (price: number) => {
     if (lang === "en") {
@@ -43,7 +43,11 @@ export default function TourCard({
       spotsTitle: "Spot Utama:",
       priceUnit: "per mobil · kapasitas s.d. 5 tamu",
       noDpNotice: "Tanpa DP • Pembayaran saat Tur Selesai",
+      priceOnRequest: "Tarif Fleksibel / Hubungi WA",
+      customRouteNotice: "Rute disesuaikan dengan permintaan Anda",
+      freeConsultNotice: "Konsultasi Rute Gratis",
       btnWa: "Pesan via WhatsApp",
+      btnConsult: "Konsultasi via WA",
       btnDetail: "Lihat Rute",
       reviewsCount: "ulasan",
     },
@@ -52,7 +56,11 @@ export default function TourCard({
       spotsTitle: "Key Highlights:",
       priceUnit: "per private car · up to 5 guests",
       noDpNotice: "No Deposit • Pay at End of Tour",
+      priceOnRequest: "Price on Request / Rates via WA",
+      customRouteNotice: "Custom route tailored to your request",
+      freeConsultNotice: "Free Itinerary Advice",
       btnWa: "Book via WhatsApp",
+      btnConsult: "Consult via WhatsApp",
       btnDetail: "View Route",
       reviewsCount: "reviews",
     },
@@ -80,7 +88,7 @@ export default function TourCard({
 
           {/* Kiri Atas Foto: HANYA Badge Kategori dengan backdrop-blur */}
           <div className="absolute top-3.5 left-3.5 z-10">
-            <span className="rounded-full bg-black/50 backdrop-blur-md px-3 py-1 text-xs font-semibold text-white border border-white/20 shadow-xs">
+            <span className="rounded-full bg-black/60 backdrop-blur-md px-3 py-1 text-xs font-medium text-white shadow-xs">
               {getCategoryLabel(tour.category)}
             </span>
           </div>
@@ -152,18 +160,16 @@ export default function TourCard({
 
       {/* Bagian Bawah: Harga Bertingkat & Tombol Aksi */}
       <div className="p-5 sm:p-6 pt-4 border-t border-[#EBE9E6] bg-[#FAF8F5]">
-        {/* Format Harga Bertingkat */}
-        <div className="mb-4">
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-2xl sm:text-[26px] font-extrabold text-[#E67E22] tracking-tight">
-              {formatPrice(tour.price)}
-            </span>
-          </div>
-          <span className="block text-xs text-[#5E6965] mt-0.5 font-medium">
-            {t.priceUnit}
+        {/* Format Tarif Halus Tanpa Angka */}
+        <div className="mb-4 space-y-1">
+          <span className="inline-block text-base sm:text-lg font-bold text-[#121715] tracking-tight">
+            {t.priceOnRequest}
           </span>
-          <span className="block text-[11px] text-[#0C8C5E] font-semibold mt-1">
-            ✓ {t.noDpNotice}
+          <span className="block text-xs text-[#5E6965] font-medium">
+            {t.customRouteNotice}
+          </span>
+          <span className="block text-[11px] text-[#0C8C5E] font-semibold mt-0.5">
+            ✓ {t.freeConsultNotice}
           </span>
         </div>
 
@@ -173,7 +179,7 @@ export default function TourCard({
           <button
             type="button"
             onClick={() => handleWhatsAppClick("/tours", tour.name)}
-            className="w-full flex items-center justify-center gap-1.5 py-2.5 sm:py-3 px-3 rounded-xl bg-[#E67E22] hover:bg-[#D35400] text-white font-semibold text-xs sm:text-sm shadow-xs transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+            className="w-full h-11 flex items-center justify-center gap-1.5 px-3 rounded-xl bg-[#0C8C5E] hover:bg-[#09734C] text-white font-medium text-xs sm:text-sm shadow-xs transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
           >
             <svg
               width="15"
@@ -187,13 +193,15 @@ export default function TourCard({
             >
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
             </svg>
-            <span className="truncate">{t.btnWa}</span>
+            <span className="truncate">
+              {t.btnWa}
+            </span>
           </button>
 
           {/* Tombol Detail Rute */}
           <Link
             href={`/tours/${tour.slug}`}
-            className="w-full flex items-center justify-center gap-1.5 py-2.5 sm:py-3 px-3 rounded-xl bg-white hover:bg-[#FAF8F5] text-[#08090A] border border-[#CFCDCA] font-semibold text-xs sm:text-sm transition-colors text-center"
+            className="w-full h-11 flex items-center justify-center gap-1.5 px-3 rounded-xl bg-white hover:bg-[#FAF8F5] text-[#08090A] border border-[#CFCDCA] font-medium text-xs sm:text-sm transition-colors text-center"
           >
             <span>{t.btnDetail}</span>
             <ArrowRight className="h-3.5 w-3.5 text-[#5E6965]" />

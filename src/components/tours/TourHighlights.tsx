@@ -129,7 +129,7 @@ export default function TourHighlights({
                       {pillar.title}
                     </h5>
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/80 border border-current/20">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/80">
                     {pillar.tag}
                   </span>
                 </div>

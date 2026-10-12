@@ -2,14 +2,20 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { ArrowUp } from "lucide-react";
 
 export default function NotFound() {
-  const [language, setLanguage] = useState<"id" | "en">("id");
+  const [language, setLanguage] = useState<"id" | "en">("en");
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem("app_lang");
-      if (saved === "id" || saved === "en") setLanguage(saved);
+      if (saved === "id" || saved === "en") {
+        setLanguage(saved);
+      } else {
+        setLanguage("en");
+      }
     } catch {}
     const handleLang = (e: Event) => {
       const detail = (e as CustomEvent).detail;
@@ -27,7 +33,7 @@ export default function NotFound() {
   const isId = language === "id";
 
   return (
-    <div className="min-h-screen bg-[#FEFDFB] text-[#121715] flex flex-col font-sans selection:bg-amber-100 selection:text-amber-900">
+    <div className="min-h-screen bg-[#FEFDFB] text-[#121715] flex flex-col font-sans selection:bg-[#EBF5FB] selection:text-[#1878B8]">
       {/* ========================================================
           BAGIAN TENGAH (404 Fallback Editorial)
           ======================================================== */}
@@ -92,18 +98,14 @@ export default function NotFound() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-white/10">
           <div className="md:col-span-5">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0C8C5E] to-[#006B49] flex items-center justify-center text-white">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                >
-                  <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
-                  <path d="M12 6v6l4 2" />
-                </svg>
+              <div className="relative w-9 h-9 sm:w-10 sm:h-10 shrink-0">
+                <Image
+                  src="/assets/gede-logo-white.svg"
+                  alt="Gede Bali Guide Logo"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="font-bold text-lg tracking-tight">Gede Bali Guide</span>
             </div>
@@ -182,9 +184,20 @@ export default function NotFound() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#717D79]">
+        <div className="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#717D79]">
           <div>© 2026 Gede Bali Guide (Gede Sudiartana). All rights reserved.</div>
-          <div className="font-mono text-[11px]">Lisensi: HPI-BALI-2015-8849</div>
+          <div className="flex items-center gap-4">
+            <div className="font-mono text-[11px]">Lisensi: HPI-BALI-2015-8849</div>
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors cursor-pointer"
+              aria-label="Back to Top"
+            >
+              <ArrowUp className="w-3.5 h-3.5" />
+              <span>Back to Top</span>
+            </button>
+          </div>
         </div>
       </footer>
     </div>

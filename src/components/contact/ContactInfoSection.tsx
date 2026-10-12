@@ -12,9 +12,9 @@ export default function ContactInfoSection() {
   return (
     <div className="space-y-6">
       {/* Profile Card */}
-      <div className="rounded-3xl border border-stone-200 bg-white p-5 sm:p-7 shadow-sm space-y-6">
+      <div className="rounded-3xl border border-[#EBE9E6] bg-white p-5 sm:p-7 shadow-xs space-y-6">
         <div className="flex items-center gap-3.5 sm:gap-4">
-          <div className="relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-full border-2 border-[#1878B8] shadow-md">
+          <div className="relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-full border-2 border-[#1878B8] shadow-xs">
             <Image
               src={mockGuideProfile.avatarUrl}
               alt={mockGuideProfile.name}
@@ -24,12 +24,12 @@ export default function ContactInfoSection() {
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <h3 className="font-serif text-base sm:text-xl font-bold text-stone-900 truncate">
+              <h3 className="font-serif text-base sm:text-xl font-bold text-[#08090A] truncate">
                 {mockGuideProfile.name}
               </h3>
               <ShieldCheck className="h-4 w-4 text-[#1878B8] shrink-0" />
             </div>
-            <p className="text-xs text-stone-500 truncate">
+            <p className="text-xs text-[#5E6965] truncate">
               Pemandu Wisata Resmi HPI Bali
             </p>
             <p className="text-[11px] font-semibold text-[#0C8C5E] mt-0.5">
@@ -38,91 +38,91 @@ export default function ContactInfoSection() {
           </div>
         </div>
 
-        <div className="rounded-2xl bg-amber-50/80 p-3.5 border border-amber-200/80 text-xs text-amber-950 space-y-1">
-          <div className="flex items-center gap-1.5 font-bold">
-            <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+        <div className="rounded-2xl bg-[#EBF5FB] p-3.5 border border-[#1878B8]/20 text-xs text-[#08090A] space-y-1">
+          <div className="flex items-center gap-1.5 font-bold text-[#1878B8]">
+            <Sparkles className="h-3.5 w-3.5 text-[#1878B8]" />
             <span>100% Bebas Konsultasi</span>
           </div>
-          <p className="text-[11px] text-amber-900 leading-relaxed">
+          <p className="text-[11px] text-[#5E6965] leading-relaxed">
             Tidak ada komitmen atau biaya apapun untuk konsultasi rute. Ceritakan rencana liburan Anda dengan santai.
           </p>
         </div>
 
-        {/* Direct Contact Points */}
-        <div className="space-y-3.5 pt-2 border-t border-stone-100 text-xs sm:text-sm">
-          {/* Phone & WhatsApp */}
-          <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-stone-50 border border-stone-100">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 shrink-0">
+        {/* Direct Contact Points - Sequential 3-Color Rhythm Pattern */}
+        <div className="space-y-3.5 pt-2 border-t border-[#EBE9E6] text-xs sm:text-sm">
+          {/* Card 1: WhatsApp & Phone -> Ocean Blue (#1878B8) */}
+          <div className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-[#FEFDFB] border border-[#EBE9E6] hover:border-[#1878B8] transition-colors">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EBF5FB] text-[#1878B8] shrink-0">
               <Phone className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <span className="block text-[11px] text-stone-500 font-semibold uppercase tracking-wider">
+              <span className="block text-[11px] text-[#5E6965] font-semibold uppercase tracking-wider">
                 WhatsApp & Telepon
               </span>
               <a
                 href={`tel:${mockGuideProfile.phone}`}
-                className="font-bold text-stone-900 hover:text-blue-700 transition-colors block text-sm sm:text-base"
+                className="font-bold text-[#08090A] hover:text-[#1878B8] transition-colors block text-sm sm:text-base"
               >
                 {mockGuideProfile.phone}
               </a>
-              <span className="block text-[11px] text-emerald-700 font-medium mt-0.5">
+              <span className="block text-[11px] text-[#0C8C5E] font-medium mt-0.5">
                 Respon Cepat (Online 07:00 - 22:00 WITA)
               </span>
             </div>
           </div>
 
-          {/* Email */}
-          <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-stone-50 border border-stone-100">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700 shrink-0">
+          {/* Card 2: Email -> Bali Green (#0C8C5E) */}
+          <div className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-[#FEFDFB] border border-[#EBE9E6] hover:border-[#0C8C5E] transition-colors">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E8F6F0] text-[#0C8C5E] shrink-0">
               <Mail className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <span className="block text-[11px] text-stone-500 font-semibold uppercase tracking-wider">
+              <span className="block text-[11px] text-[#5E6965] font-semibold uppercase tracking-wider">
                 Email Korespondensi
               </span>
               <a
                 href={`mailto:${mockGuideProfile.email}`}
-                className="font-bold text-stone-900 hover:text-blue-700 transition-colors break-all block"
+                className="font-bold text-[#08090A] hover:text-[#0C8C5E] transition-colors break-all block"
               >
                 {mockGuideProfile.email}
               </a>
-              <span className="block text-[11px] text-stone-500 font-medium mt-0.5">
+              <span className="block text-[11px] text-[#5E6965] font-medium mt-0.5">
                 Untuk pertanyaan tertulis atau kebutuhan invoice tur
               </span>
             </div>
           </div>
 
-          {/* Operating Hours */}
-          <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-stone-50 border border-stone-100">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700 shrink-0">
+          {/* Card 3: Operating Hours -> Sunset Amber (#E67E22) */}
+          <div className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-[#FEFDFB] border border-[#EBE9E6] hover:border-[#E67E22] transition-colors">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FDF3E6] text-[#E67E22] shrink-0">
               <Clock className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <span className="block text-[11px] text-stone-500 font-semibold uppercase tracking-wider">
+              <span className="block text-[11px] text-[#5E6965] font-semibold uppercase tracking-wider">
                 Jam Layanan & Penjemputan
               </span>
-              <span className="font-bold text-stone-900">
+              <span className="font-bold text-[#08090A]">
                 07:00 - 22:00 WITA (Setiap Hari)
               </span>
-              <span className="block text-[11px] text-stone-500 font-medium mt-0.5">
+              <span className="block text-[11px] text-[#5E6965] font-medium mt-0.5">
                 Tur subuh sunrise (Kintamani / Lempuyang) dapat diatur sebelumnya
               </span>
             </div>
           </div>
 
-          {/* Area Coverage */}
-          <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-stone-50 border border-stone-100">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-700 shrink-0">
+          {/* Card 4: Area Coverage -> Loop back to Ocean Blue (#1878B8) */}
+          <div className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-[#FEFDFB] border border-[#EBE9E6] hover:border-[#1878B8] transition-colors">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EBF5FB] text-[#1878B8] shrink-0">
               <MapPin className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <span className="block text-[11px] text-stone-500 font-semibold uppercase tracking-wider">
+              <span className="block text-[11px] text-[#5E6965] font-semibold uppercase tracking-wider">
                 Area Layanan Penjemputan
               </span>
-              <span className="font-bold text-stone-900">
+              <span className="font-bold text-[#08090A]">
                 Seluruh Wilayah Bali
               </span>
-              <span className="block text-[11px] text-stone-500 font-medium mt-0.5">
+              <span className="block text-[11px] text-[#5E6965] font-medium mt-0.5">
                 Ubud, Seminyak, Canggu, Kuta, Sanur, Jimbaran, Nusa Dua, & Bandara DPS
               </span>
             </div>
@@ -134,7 +134,7 @@ export default function ContactInfoSection() {
           href={waUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-[#E67E22] hover:bg-[#D35400] px-6 py-4 text-sm sm:text-base font-bold text-white shadow-lg shadow-[#E67E22]/30 transition-all active:scale-[0.98] cursor-pointer"
+          className="inline-flex w-full items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-[#E67E22] hover:bg-[#D35400] text-sm sm:text-base font-semibold text-white shadow-[0_4px_16px_rgba(230,126,34,0.3)] transition-all cursor-pointer"
         >
           <MessageCircle className="h-5 w-5" />
           <span>Chat WhatsApp Sekarang</span>
