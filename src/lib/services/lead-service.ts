@@ -3,7 +3,7 @@ import { Lead } from "@/types";
 const PROJECT_ID =
   process.env.FIREBASE_PROJECT_ID ||
   process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ||
-  "bali-tour-portfolio";
+  "guidebali";
 
 function toFirestoreValue(val: any): any {
   if (val === null || val === undefined) return { nullValue: null };
