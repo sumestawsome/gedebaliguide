@@ -136,21 +136,30 @@ export async function verifySessionToken(
   }
 }
 
+// Daftar fallback default email admin utama proyek Gede Bali Guide
+const DEFAULT_WHITELISTED_EMAILS = [
+  "sumestacreative@gmail.com",
+  "gedebaliguide@gmail.com",
+  "gedesudiartana@gmail.com",
+];
+
 /**
  * Helper untuk memeriksa apakah email berada dalam whitelist admin
  */
 export function isEmailWhitelisted(email: string | null | undefined): boolean {
-  if (!email) return false;
-  const rawList = process.env.ADMIN_ALLOWED_EMAILS || "sumestacreative@gmail.com";
-  const allowed = rawList
+  if (!email || typeof email !== "string") return false;
+  const normalized = email.trim().toLowerCase();
+
+  const envRaw =
+    process.env.ADMIN_ALLOWED_EMAILS ||
+    process.env.NEXT_PUBLIC_ADMIN_EMAILS ||
+    "";
+
+  const envEmails = envRaw
     .split(",")
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
 
-  // Jika whitelist kosong, fallback default ke sumestacreative@gmail.com
-  if (allowed.length === 0) {
-    return email.toLowerCase() === "sumestacreative@gmail.com";
-  }
-
-  return allowed.includes(email.toLowerCase());
+  const allowedList = new Set([...DEFAULT_WHITELISTED_EMAILS, ...envEmails]);
+  return allowedList.has(normalized);
 }

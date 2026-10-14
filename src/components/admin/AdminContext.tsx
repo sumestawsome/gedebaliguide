@@ -51,8 +51,12 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       try {
         const res = await fetch("/api/auth/session", { cache: "no-store" });
         if (res.ok) {
-          const data = await res.json();
-          if (data.authenticated && data.user) {
+          const text = await res.text();
+          let data: any = null;
+          try {
+            data = text ? JSON.parse(text) : null;
+          } catch {}
+          if (data?.authenticated && data?.user) {
             setAdminUser(data.user);
           }
         }

@@ -3,32 +3,38 @@ import { verifySessionToken, SESSION_COOKIE_NAME } from "@/lib/auth/session";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // 1. Seluruh rute otentikasi API dilewatkan tanpa pencegatan
+  if (pathname.startsWith("/api/auth/")) {
+    return NextResponse.next();
+  }
+
   const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
   const sessionUser = await verifySessionToken(sessionCookie);
   const isAuthenticated = Boolean(sessionUser);
 
-  // 1. Tangani rute halaman Login: /admin/login
+  // 2. Tangani rute halaman Login: /admin/login
   if (pathname === "/admin/login") {
     if (isAuthenticated) {
-      // Jika sudah login, redirect langsung ke halaman kerja admin
-      return NextResponse.redirect(new URL("/admin/about", request.url));
+      // Jika sudah login, redirect langsung ke halaman utama admin (Editor Beranda)
+      return NextResponse.redirect(new URL("/admin/home", request.url));
     }
     // Jika belum login, izinkan akses ke halaman login
     return NextResponse.next();
   }
 
-  // 2. Tangani rute root Admin: /admin
+  // 3. Tangani rute root Admin: /admin
   if (pathname === "/admin") {
     if (!isAuthenticated) {
       const loginUrl = new URL("/admin/login", request.url);
-      loginUrl.searchParams.set("redirect", pathname);
+      loginUrl.searchParams.set("redirect", "/admin/home");
       return NextResponse.redirect(loginUrl);
     }
-    // Jika sudah login, redirect default ke /admin/about
-    return NextResponse.redirect(new URL("/admin/about", request.url));
+    // Jika sudah login, redirect default ke /admin/home
+    return NextResponse.redirect(new URL("/admin/home", request.url));
   }
 
-  // 3. Tangani rute halaman Admin lainnya: /admin/* (misal: /admin/about, /admin/tours, dll.)
+  // 4. Tangani rute halaman Admin lainnya: /admin/* (misal: /admin/home, /admin/about, dll.)
   if (pathname.startsWith("/admin/")) {
     if (!isAuthenticated) {
       const loginUrl = new URL("/admin/login", request.url);
@@ -38,7 +44,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 4. Tangani rute REST API Admin: /api/admin/*
+  // 5. Tangani rute REST API Admin: /api/admin/*
   if (pathname.startsWith("/api/admin/")) {
     if (!isAuthenticated) {
       return NextResponse.json(
@@ -56,5 +62,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*", "/api/auth/:path*"],
 };

@@ -17,7 +17,7 @@ import { toast } from "sonner";
 function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectPath = searchParams.get("redirect") || "/admin/about";
+  const redirectPath = searchParams.get("redirect") || "/admin/home";
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,13 +44,32 @@ function AdminLoginForm() {
         }),
       });
 
-      const data = await res.json();
+      // Baca respons sebagai teks terlebih dahulu untuk menghindari JSON parse crash
+      const responseText = await res.text();
+      let data: any = null;
+      try {
+        data = responseText ? JSON.parse(responseText) : null;
+      } catch (jsonErr) {
+        console.error("Gagal mem-parse response JSON dari /api/auth/session:", responseText, jsonErr);
+      }
 
-      if (!res.ok || !data.success) {
+      if (!res.ok || !data?.success) {
         // Jika ditolak (403 non-whitelist atau 401 token invalid), putuskan koneksi Firebase client
         await signOut(auth);
-        throw new Error(data.error || "Akun Google Anda tidak terdaftar dalam whitelist administrator.");
+        const errorMessage =
+          data?.error ||
+          (res.status === 403
+            ? `Akses Ditolak: Akun (${user.email}) tidak terdaftar dalam whitelist administrator.`
+            : res.status === 500
+            ? "Server autentikasi mengalami kendala sementara. Silakan coba kembali."
+            : `Gagal memproses sesi login (Status ${res.status}).`);
+        throw new Error(errorMessage);
       }
+
+      toast.success("Berhasil Masuk", {
+        description: `Selamat datang, ${data.user?.name || user.displayName || "Admin"}!`,
+        duration: 3000,
+      });
 
       // Berhasil masuk -> arahkan ke halaman kerja admin
       router.push(redirectPath);
@@ -65,7 +84,7 @@ function AdminLoginForm() {
       } else if (err?.message) {
         msg = err.message;
       }
-      toast.error("Akses Ditolak", { description: msg, duration: 5000 });
+      toast.error("Gagal Masuk", { description: msg, duration: 6000 });
     } finally {
       setIsLoading(false);
     }

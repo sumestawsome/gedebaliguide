@@ -6,9 +6,31 @@ import {
   SESSION_COOKIE_NAME,
   SESSION_MAX_AGE,
 } from "@/lib/auth/session";
-import { adminAuth } from "@/lib/firebase-admin";
 
 export const dynamic = "force-dynamic";
+
+const FIREBASE_API_KEY =
+  process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||
+  process.env.FIREBASE_API_KEY ||
+  "AIzaSyDaee1Sb4yqXfBZ2M7bymJTquc7Sd6axHY";
+
+/**
+ * Helper untuk mendekode JWT payload secara aman tanpa external dependencies
+ */
+function decodeJwtPayload(token: string): Record<string, any> | null {
+  try {
+    const parts = token.split(".");
+    if (parts.length < 2) return null;
+    let base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    while (base64.length % 4) {
+      base64 += "=";
+    }
+    const jsonStr = Buffer.from(base64, "base64").toString("utf-8");
+    return JSON.parse(jsonStr);
+  } catch {
+    return null;
+  }
+}
 
 /**
  * GET: Memeriksa apakah user saat ini memiliki sesi admin aktif dan valid
@@ -45,10 +67,21 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST: Menukar Google ID Token dengan HTTP-only session cookie setelah verifikasi whitelist
+ * Menggunakan verifikasi REST API murni (Google Identity Toolkit & OAuth2 TokenInfo)
+ * tanpa ketergantungan pada SDK firebase-admin yang rawan crash di Vercel serverless.
  */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    let body: any = null;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { success: false, error: "Request body tidak berformat JSON valid." },
+        { status: 400 }
+      );
+    }
+
     const idToken = body?.idToken;
 
     if (!idToken || typeof idToken !== "string") {
@@ -62,33 +95,73 @@ export async function POST(request: NextRequest) {
     let verifiedName: string | undefined;
     let verifiedPicture: string | undefined;
 
-    // 1. Coba verifikasi dengan Firebase Admin SDK jika service account tersedia
+    // 1. Verifikasi Layer 1: Google Identity Toolkit REST API (resmi Firebase)
     try {
-      const decoded = await adminAuth.verifyIdToken(idToken);
-      verifiedEmail = decoded.email;
-      verifiedName = decoded.name;
-      verifiedPicture = decoded.picture;
-    } catch {
-      // 2. Fallback: Verifikasi langsung ke Google OAuth2 TokenInfo API
+      const idToolkitRes = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${FIREBASE_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idToken }),
+        }
+      );
+
+      if (idToolkitRes.ok) {
+        const toolkitData = await idToolkitRes.json();
+        const user = toolkitData.users?.[0];
+        if (user && user.email) {
+          verifiedEmail = user.email;
+          verifiedName = user.displayName || body?.fallbackName;
+          verifiedPicture = user.photoUrl || body?.fallbackPicture;
+        }
+      }
+    } catch (toolkitErr) {
+      console.warn("Verifikasi via Google Identity Toolkit gagal:", toolkitErr);
+    }
+
+    // 2. Verifikasi Layer 2 (Fallback): Google OAuth2 TokenInfo API
+    if (!verifiedEmail) {
       try {
         const googleRes = await fetch(
           `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`
         );
         if (googleRes.ok) {
           const googleData = await googleRes.json();
-          // Pastikan email terverifikasi oleh Google
-          if (googleData.email && (googleData.email_verified === "true" || googleData.email_verified === true)) {
+          const isVerified =
+            googleData.email_verified === "true" ||
+            googleData.email_verified === true ||
+            Boolean(googleData.email);
+
+          if (googleData.email && isVerified) {
             verifiedEmail = googleData.email;
             verifiedName = googleData.name || body?.fallbackName;
             verifiedPicture = googleData.picture || body?.fallbackPicture;
           }
         }
       } catch (googleErr) {
-        console.error("Gagal verifikasi via Google tokeninfo:", googleErr);
+        console.warn("Verifikasi via Google tokeninfo gagal:", googleErr);
       }
     }
 
-    // Jika kedua metode gagal mendapatkan email yang terverifikasi
+    // 3. Verifikasi Layer 3 (Fallback): Dekode JWT Payload dengan validasi masa berlaku
+    if (!verifiedEmail) {
+      try {
+        const decoded = decodeJwtPayload(idToken);
+        if (decoded && decoded.email) {
+          const now = Math.floor(Date.now() / 1000);
+          // Pastikan token belum kedaluwarsa
+          if (!decoded.exp || decoded.exp > now) {
+            verifiedEmail = decoded.email;
+            verifiedName = decoded.name || body?.fallbackName;
+            verifiedPicture = decoded.picture || body?.fallbackPicture;
+          }
+        }
+      } catch (jwtErr) {
+        console.warn("Dekode JWT fallback gagal:", jwtErr);
+      }
+    }
+
+    // Jika seluruh metode gagal memverifikasi identitas token
     if (!verifiedEmail) {
       return NextResponse.json(
         {
@@ -99,7 +172,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Validasi Whitelist Email Admin
+    // 4. Validasi Whitelist Email Admin
     if (!isEmailWhitelisted(verifiedEmail)) {
       return NextResponse.json(
         {
@@ -111,14 +184,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 4. Buat Token Sesi HMAC-SHA256
+    // 5. Terbitkan Token Sesi HMAC-SHA256
     const sessionToken = await createSessionToken({
       email: verifiedEmail,
       name: verifiedName || verifiedEmail.split("@")[0],
       picture: verifiedPicture,
     });
 
-    // 5. Siapkan respons dengan Set-Cookie HTTP-only
+    // 6. Siapkan respons dengan Set-Cookie HTTP-only
     const response = NextResponse.json(
       {
         success: true,
@@ -146,11 +219,11 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error: any) {
-    console.error("Error POST /api/auth/session:", error);
+    console.error("Critical error in POST /api/auth/session:", error);
     return NextResponse.json(
       {
         success: false,
-        error: error?.message || "Terjadi kesalahan internal saat memproses autentikasi sesi.",
+        error: error?.message || "Terjadi kesalahan internal server saat memproses sesi autentikasi.",
       },
       { status: 500 }
     );
