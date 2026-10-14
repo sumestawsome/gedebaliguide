@@ -1,13 +1,21 @@
 import { NextResponse } from "next/server";
-import { getUnifiedHomeContent } from "@/lib/services/home-service";
+import {
+  getUnifiedHomeContent,
+  getBilingualHomePageContent,
+} from "@/lib/services/home-service";
 
 export async function GET() {
   try {
-    const data = await getUnifiedHomeContent();
+    const [unified, bilingual] = await Promise.all([
+      getUnifiedHomeContent(),
+      getBilingualHomePageContent(),
+    ]);
+
     return NextResponse.json(
       {
         success: true,
-        data,
+        data: unified,
+        bilingual,
       },
       {
         status: 200,

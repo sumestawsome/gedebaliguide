@@ -290,6 +290,92 @@ export interface BilingualAboutPageContent {
   updatedAt?: string;
 }
 
+export interface HomeTrustItem {
+  id?: string;
+  title: string;
+  desc: string;
+}
+
+export interface HomePillarItem {
+  id?: string;
+  title: string;
+  desc: string;
+}
+
+export interface HomeRegionItem {
+  id?: string;
+  badge: string;
+  title: string;
+  desc: string;
+  image: string;
+  regionQuery: string;
+}
+
+export interface HomePageContent {
+  hero: {
+    badge: string;
+    greeting: string;
+    headlineLead: string;
+    name: string;
+    description: string;
+    btnWa: string;
+    btnCatalog: string;
+    ctaPrimaryVariant?: import("@/lib/button-variants").ButtonVariant;
+    ctaSecondaryVariant?: import("@/lib/button-variants").ButtonVariant;
+    media?: MediaSectionData;
+  };
+  trustBar: HomeTrustItem[];
+  pillars: {
+    tag: string;
+    title: string;
+    subtitle: string;
+    items: HomePillarItem[];
+  };
+  tours: {
+    tag: string;
+    title: string;
+    subtitle: string;
+    btnAllTours: string;
+  };
+  regions: {
+    tag: string;
+    title: string;
+    subtitle: string;
+    items: HomeRegionItem[];
+  };
+  reviews: {
+    tag: string;
+    title: string;
+    subtitle: string;
+    btnAllReviews: string;
+  };
+  faq: {
+    tag: string;
+    title: string;
+    subtitle: string;
+    btnAllFaq: string;
+  };
+  cta: {
+    title: string;
+    desc: string;
+    btn: string;
+    buttonVariant?: import("@/lib/button-variants").ButtonVariant;
+  };
+  id?: HomePageContent;
+  en?: HomePageContent;
+  updatedAt?: string;
+}
+
+export interface BilingualHomePageContent {
+  id: HomePageContent;
+  en: HomePageContent;
+  ctaPrimaryVariant?: import("@/lib/button-variants").ButtonVariant;
+  ctaSecondaryVariant?: import("@/lib/button-variants").ButtonVariant;
+  ctaBannerVariant?: import("@/lib/button-variants").ButtonVariant;
+  heroMedia?: MediaSectionData;
+  updatedAt?: string;
+}
+
 export * from "@/lib/schemas/home-schema";
 export * from "@/lib/schemas/tour-schema";
 

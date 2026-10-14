@@ -49,24 +49,27 @@ export default function AdminNavbar() {
     return null;
   }
 
+  const isHomeEditor = pathname === "/admin/home" || pathname === "/admin";
+  const isAboutEditor = pathname.startsWith("/admin/about");
+  const publicViewHref = isAboutEditor ? "/about" : "/";
+
   const navLinks = [
     {
-      href: "/admin/about",
-      label: "Halaman Tentang",
-      icon: FileText,
-      active: pathname.startsWith("/admin/about"),
-    },
-    {
-      href: "/tours",
-      label: "Katalog Tur",
-      icon: Compass,
-      target: "_blank",
-      active: pathname.startsWith("/admin/tours"),
-    },
-    {
-      href: "/",
-      label: "Beranda Publik",
+      href: "/admin/home",
+      label: "Editor Beranda",
       icon: Home,
+      active: isHomeEditor,
+    },
+    {
+      href: "/admin/about",
+      label: "Editor Tentang",
+      icon: FileText,
+      active: isAboutEditor,
+    },
+    {
+      href: publicViewHref,
+      label: "Lihat Tampilan Publik",
+      icon: ExternalLink,
       target: "_blank",
       active: false,
     },
@@ -79,7 +82,7 @@ export default function AdminNavbar() {
           {/* Sisi Kiri: Brand & Menu Navigasi */}
           <div className="flex items-center gap-6">
             <Link
-              href="/admin/about"
+              href="/admin/home"
               className="flex items-center gap-2 group transition-transform active:scale-95"
             >
               <div className="w-8 h-8 rounded-xl bg-[#1878B8] flex items-center justify-center text-white shadow-xs">

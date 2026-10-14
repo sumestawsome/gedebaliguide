@@ -8,9 +8,12 @@ import { handleWhatsAppClick } from "@/lib/lead-tracker";
 import { getActiveFeaturedTours } from "@/lib/services/tour-service";
 import { getFeaturedFiveStarReviews } from "@/lib/services/review-service";
 import { getActiveFaqs } from "@/lib/services/faq-service";
-import { Tour, Review, FAQItem } from "@/types";
+import { Tour, Review, FAQItem, BilingualHomePageContent } from "@/types";
 import ReviewCard from "@/components/reviews/ReviewCard";
 import { mockPopularDestinations, mockAllTours } from "@/data/mock-data";
+import { getButtonVariantClasses } from "@/lib/button-variants";
+import MediaRenderer from "@/components/common/MediaRenderer";
+import { defaultHeroMedia } from "@/lib/services/home-service";
 
 // -------------------------------------------------------------
 // Kamus Konten Dwibahasa (ID & EN)
@@ -507,23 +510,28 @@ export default function HomePage() {
   const [firestoreTours, setFirestoreTours] = useState<Tour[] | null>(null);
   const [firestoreReviews, setFirestoreReviews] = useState<Review[] | null>(null);
   const [firestoreFaqs, setFirestoreFaqs] = useState<FAQItem[] | null>(null);
+  const [dynamicBilingual, setDynamicBilingual] = useState<BilingualHomePageContent | null>(null);
 
-  const t = CONTENT[lang];
-
-  // Mengambil 3 Tur Unggulan, 3 Ulasan Tamu, dan 4 FAQ dari Firestore
+  // Mengambil 3 Tur Unggulan, 3 Ulasan Tamu, 4 FAQ, dan Konten Beranda Dinamis dari Firestore
   useEffect(() => {
     let isMounted = true;
     async function loadFirestoreData() {
       try {
-        const [tours, reviews, faqs] = await Promise.all([
+        const [tours, reviews, faqs, homeRes] = await Promise.all([
           getActiveFeaturedTours(3),
           getFeaturedFiveStarReviews(3),
           getActiveFaqs(),
+          fetch("/api/home", { cache: "no-store" })
+            .then((r) => r.json())
+            .catch(() => null),
         ]);
         if (isMounted) {
           if (tours && tours.length > 0) setFirestoreTours(tours);
           if (reviews && reviews.length > 0) setFirestoreReviews(reviews);
           if (faqs && faqs.length > 0) setFirestoreFaqs(faqs.slice(0, 4));
+          if (homeRes?.success && homeRes?.bilingual) {
+            setDynamicBilingual(homeRes.bilingual);
+          }
         }
       } catch (err) {
         console.warn("Gagal memuat live data Firestore di HomePage:", err);
@@ -534,6 +542,116 @@ export default function HomePage() {
       isMounted = false;
     };
   }, []);
+
+  const activeHomeContent = dynamicBilingual ? dynamicBilingual[lang] : null;
+
+  const t = {
+    ...CONTENT[lang],
+    hero: {
+      ...CONTENT[lang].hero,
+      ...(activeHomeContent?.hero
+        ? {
+            greeting: activeHomeContent.hero.greeting || CONTENT[lang].hero.greeting,
+            headlineLead: activeHomeContent.hero.headlineLead || CONTENT[lang].hero.headlineLead,
+            name: activeHomeContent.hero.name || CONTENT[lang].hero.name,
+            description: activeHomeContent.hero.description || CONTENT[lang].hero.description,
+            btnWa: activeHomeContent.hero.btnWa || CONTENT[lang].hero.btnWa,
+            btnCatalog: activeHomeContent.hero.btnCatalog || CONTENT[lang].hero.btnCatalog,
+          }
+        : {}),
+    },
+    trustBar:
+      activeHomeContent?.trustBar && activeHomeContent.trustBar.length > 0
+        ? activeHomeContent.trustBar
+        : CONTENT[lang].trustBar,
+    pillars: {
+      ...CONTENT[lang].pillars,
+      ...(activeHomeContent?.pillars
+        ? {
+            tag: activeHomeContent.pillars.tag || CONTENT[lang].pillars.tag,
+            title: activeHomeContent.pillars.title || CONTENT[lang].pillars.title,
+            subtitle: activeHomeContent.pillars.subtitle || CONTENT[lang].pillars.subtitle,
+            items:
+              activeHomeContent.pillars.items && activeHomeContent.pillars.items.length > 0
+                ? activeHomeContent.pillars.items
+                : CONTENT[lang].pillars.items,
+          }
+        : {}),
+    },
+    tours: {
+      ...CONTENT[lang].tours,
+      ...(activeHomeContent?.tours
+        ? {
+            tag: activeHomeContent.tours.tag || CONTENT[lang].tours.tag,
+            title: activeHomeContent.tours.title || CONTENT[lang].tours.title,
+            subtitle: activeHomeContent.tours.subtitle || CONTENT[lang].tours.subtitle,
+            btnAllTours: activeHomeContent.tours.btnAllTours || CONTENT[lang].tours.btnAllTours,
+          }
+        : {}),
+    },
+    regions: {
+      ...CONTENT[lang].regions,
+      ...(activeHomeContent?.regions
+        ? {
+            tag: activeHomeContent.regions.tag || CONTENT[lang].regions.tag,
+            title: activeHomeContent.regions.title || CONTENT[lang].regions.title,
+            subtitle: activeHomeContent.regions.subtitle || CONTENT[lang].regions.subtitle,
+          }
+        : {}),
+    },
+    reviews: {
+      ...CONTENT[lang].reviews,
+      ...(activeHomeContent?.reviews
+        ? {
+            tag: activeHomeContent.reviews.tag || CONTENT[lang].reviews.tag,
+            title: activeHomeContent.reviews.title || CONTENT[lang].reviews.title,
+            subtitle: activeHomeContent.reviews.subtitle || CONTENT[lang].reviews.subtitle,
+            btnAllReviews: activeHomeContent.reviews.btnAllReviews || CONTENT[lang].reviews.btnAllReviews,
+          }
+        : {}),
+    },
+    faq: {
+      ...CONTENT[lang].faq,
+      ...(activeHomeContent?.faq
+        ? {
+            tag: activeHomeContent.faq.tag || CONTENT[lang].faq.tag,
+            title: activeHomeContent.faq.title || CONTENT[lang].faq.title,
+            subtitle: activeHomeContent.faq.subtitle || CONTENT[lang].faq.subtitle,
+            btnAllFaq: activeHomeContent.faq.btnAllFaq || CONTENT[lang].faq.btnAllFaq,
+          }
+        : {}),
+    },
+    cta: {
+      ...CONTENT[lang].cta,
+      ...(activeHomeContent?.cta
+        ? {
+            title: activeHomeContent.cta.title || CONTENT[lang].cta.title,
+            desc: activeHomeContent.cta.desc || CONTENT[lang].cta.desc,
+            btn: activeHomeContent.cta.btn || CONTENT[lang].cta.btn,
+          }
+        : {}),
+    },
+  };
+
+  const heroPrimaryVariant =
+    dynamicBilingual?.ctaPrimaryVariant ||
+    activeHomeContent?.hero?.ctaPrimaryVariant ||
+    "ocean-blue-solid";
+
+  const heroSecondaryVariant =
+    dynamicBilingual?.ctaSecondaryVariant ||
+    activeHomeContent?.hero?.ctaSecondaryVariant ||
+    "neutral-outline";
+
+  const ctaBannerVariant =
+    dynamicBilingual?.ctaBannerVariant ||
+    activeHomeContent?.cta?.buttonVariant ||
+    "sunset-amber-solid";
+
+  const heroMedia =
+    dynamicBilingual?.heroMedia ||
+    activeHomeContent?.hero?.media ||
+    defaultHeroMedia;
 
   // Auto-slide effect every 4.5 seconds
   useEffect(() => {
@@ -617,12 +735,12 @@ export default function HomePage() {
                 {t.hero.description}
               </p>
 
-              {/* 2 Tombol CTA Berdampingan (Standarisasi Ukuran h-11, Primary Biru Samudra) */}
+              {/* 2 Tombol CTA Berdampingan dengan Varian Dinamis */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4">
                 <button
                   type="button"
                   onClick={() => handleWhatsAppClick("Hero Section CTA")}
-                  className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-[var(--brand-blue)] hover:bg-[#0F4C81] hover:opacity-95 text-white font-medium text-sm shadow-[0_2px_8px_rgba(24,120,184,0.25)] transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 text-center cursor-pointer"
+                  className={`inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 text-center cursor-pointer ${getButtonVariantClasses(heroPrimaryVariant)}`}
                 >
                   <svg
                     width="18"
@@ -641,7 +759,7 @@ export default function HomePage() {
 
                 <Link
                   href="/tours"
-                  className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-white hover:bg-[var(--surface-alt)] text-[var(--text-primary)] border border-[var(--border)] font-medium text-sm transition-colors text-center"
+                  className={`inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 text-center ${getButtonVariantClasses(heroSecondaryVariant)}`}
                 >
                   <span>{t.hero.btnCatalog}</span>
                   <svg
@@ -661,106 +779,13 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Kolom Visual Kanan: Slideshow Kartu Bertumpuk 3 Lapis (Stacked Card Gallery Slideshow) */}
+            {/* Kolom Visual Kanan: MediaRenderer Dinamis */}
             <div className="lg:col-span-5 w-full flex flex-col items-center justify-center">
-              <div
-                id="hero-slideshow-frame"
-                onTouchStart={handleTouchStart}
-                onTouchEnd={handleTouchEnd}
-                className="relative w-full max-w-[320px] sm:max-w-[360px] md:max-w-[380px] lg:max-w-[400px] aspect-[4/5] mx-auto select-none flex items-center justify-center"
-              >
-                {DESTINATION_SLIDES.map((slide, idx) => {
-                  // offset 0: Kartu Depan (Active Main Card)
-                  // offset 1: Kartu Belakang Kanan (Next Card Stack)
-                  // offset 2: Kartu Belakang Kiri (Previous Card Stack)
-                  const offset = (idx - currentSlide + DESTINATION_SLIDES.length) % DESTINATION_SLIDES.length;
-
-                  let stackClasses = "";
-                  let isInteractive = false;
-
-                  if (offset === 0) {
-                    // Kartu Depan (Active Main Card): Tengah depan, bingkai putih tebal, luxury shadow
-                    stackClasses =
-                      "z-20 translate-x-0 rotate-0 scale-100 opacity-100 border-[6px] border-white shadow-[0_20px_50px_rgba(0,0,0,0.12)] pointer-events-auto";
-                  } else if (offset === 1) {
-                    // Kartu Belakang Kanan (Next Card Stack): Miring kanan (rotate-6), scale-85, opacity-65
-                    stackClasses =
-                      "z-10 translate-x-7 sm:translate-x-10 rotate-6 scale-85 opacity-65 border-4 border-white/90 shadow-[0_12px_30px_rgba(0,0,0,0.08)] cursor-pointer hover:opacity-85 pointer-events-auto";
-                    isInteractive = true;
-                  } else {
-                    // Kartu Belakang Kiri (Previous Card Stack): Miring kiri (-rotate-6), scale-85, opacity-65
-                    stackClasses =
-                      "z-10 -translate-x-7 sm:-translate-x-10 -rotate-6 scale-85 opacity-65 border-4 border-white/90 shadow-[0_12px_30px_rgba(0,0,0,0.08)] cursor-pointer hover:opacity-85 pointer-events-auto";
-                    isInteractive = true;
-                  }
-
-                  return (
-                    <div
-                      key={slide.id}
-                      onClick={isInteractive ? () => setCurrentSlide(idx) : undefined}
-                      className={`absolute inset-0 w-full h-full rounded-[2rem] overflow-hidden bg-stone-900 transition-all duration-700 ease-in-out transform-gpu origin-center ${stackClasses}`}
-                    >
-                      {/* Foto Destinasi */}
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={slide.imageUrl}
-                        alt={slide.title}
-                        className="w-full h-full object-cover object-center pointer-events-none"
-                        loading={idx === 0 ? "eager" : "lazy"}
-                      />
-
-                      {/* Shading Halus di Bagian Bawah Foto */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-
-                      {/* Floating Glassmorphism Tag Lokasi di Pojok Kiri Bawah (Khusus Kartu Depan Aktif) */}
-                      {offset === 0 && (
-                        <div className="absolute bottom-5 left-5 right-auto bg-black/60 backdrop-blur-md text-white text-xs font-medium px-3.5 py-1.5 rounded-full border border-white/20 shadow-lg flex items-center gap-1.5 pointer-events-none transition-all duration-500 z-30">
-                          {/* Location Pin Icon Aksen */}
-                          <svg
-                            width="13"
-                            height="13"
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                            stroke="none"
-                            className="text-[var(--brand-accent)] shrink-0"
-                          >
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z" />
-                          </svg>
-                          <span className="truncate tracking-wide text-white font-medium">
-                            {slide.tag.replace(/^📍\s*/, "")}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* 3 Indikator Navigasi Titik/Garis Berbentuk Pil (Dash Indicators / Dots) */}
-              <div
-                className="relative z-30 flex items-center justify-center gap-2 mt-7 pt-1"
-                role="tablist"
-                aria-label="Slideshow Indikator"
-              >
-                {DESTINATION_SLIDES.map((slide, idx) => {
-                  const isActive = idx === currentSlide;
-                  return (
-                    <button
-                      key={slide.id}
-                      type="button"
-                      onClick={() => setCurrentSlide(idx)}
-                      role="tab"
-                      aria-selected={isActive}
-                      aria-label={`Slide ${idx + 1}: ${slide.title}`}
-                      className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                        isActive
-                          ? "w-8 bg-[var(--brand-blue)]"
-                          : "w-2 bg-gray-300 hover:bg-gray-400"
-                      }`}
-                    />
-                  );
-                })}
-              </div>
+              <MediaRenderer
+                media={heroMedia}
+                aspectRatio="aspect-[4/5]"
+                priority={true}
+              />
             </div>
           </div>
         </div>
@@ -1566,7 +1591,7 @@ export default function HomePage() {
                   "Halo Bli Gede, saya ingin konsultasi gratis rute custom itinerary untuk liburan privat di Bali."
                 )
               }
-              className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-[#E67E22] hover:bg-[#D35400] text-white font-medium text-sm shadow-[0_4px_16px_rgba(230,126,34,0.3)] transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+              className={`inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer ${getButtonVariantClasses(ctaBannerVariant)}`}
             >
               <svg
                 width="18"
