@@ -1,13 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  Save,
-  CheckCircle2,
-  AlertCircle,
-  ExternalLink,
   Clock,
   Compass,
   Camera,
@@ -20,113 +15,45 @@ import {
   ArrowLeft,
   MessageCircle,
   Loader2,
-  Pencil,
-  Upload,
-  Globe,
-  Database,
-  X,
-  Plus,
-  Trash2,
 } from "lucide-react";
-import Footer from "@/components/layout/Footer";
 import {
   AboutPageContent,
   BilingualAboutPageContent,
+  ButtonVariant,
   StatItem,
   PillarItem,
   TrustItem,
+  MediaSectionData,
 } from "@/types";
 import {
   defaultAboutPageContent,
   defaultAboutPageContentEn,
   defaultBilingualAboutPageContent,
 } from "@/lib/services/about-service";
-
-/**
- * Komponen pembungkus teks untuk In-Place Inline Editing yang presisi
- * Menggunakan contentEditable dengan sinkronisasi halus tanpa jump cursor.
- */
-function InlineEditable({
-  value,
-  onChange,
-  className = "",
-  placeholder = "Ketik teks...",
-  multiline = false,
-  as: Component = "span",
-}: {
-  value: string;
-  onChange: (val: string) => void;
-  className?: string;
-  placeholder?: string;
-  multiline?: boolean;
-  as?: React.ElementType;
-}) {
-  const contentRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (contentRef.current && contentRef.current.innerText !== value) {
-      contentRef.current.innerText = value || "";
-    }
-  }, [value]);
-
-  return (
-    <Component
-      ref={contentRef}
-      contentEditable
-      suppressContentEditableWarning
-      onBlur={(e: React.FocusEvent<HTMLElement>) => {
-        const text = e.currentTarget.innerText.trim();
-        if (text !== value) {
-          onChange(text);
-        }
-      }}
-      onKeyDown={(e: React.KeyboardEvent<HTMLElement>) => {
-        if (!multiline && e.key === "Enter") {
-          e.preventDefault();
-          e.currentTarget.blur();
-        }
-      }}
-      className={`group/edit relative cursor-text transition-all duration-200 outline-hidden rounded-md px-1 -mx-1 border border-transparent hover:border-dashed hover:border-[#1878B8] hover:bg-[#1878B8]/5 focus:border-solid focus:border-[#1878B8] focus:bg-white/90 focus:ring-2 focus:ring-[#1878B8]/20 ${className}`}
-      title="Klik untuk mengedit langsung di tempat"
-      data-placeholder={placeholder}
-    />
-  );
-}
+import {
+  useAdminContext,
+  EditableText,
+  EditableButton,
+  EditableMediaSection,
+  AdminSaveBar,
+} from "@/components/admin";
+import { toast } from "sonner";
 
 export default function AdminAboutInlineEditorPage() {
+  const {
+    lang,
+    hasUnsavedChanges,
+    setHasUnsavedChanges,
+    isSaving,
+    setIsSaving,
+    lastSavedTime,
+    setLastSavedTime,
+  } = useAdminContext();
+
   const [bilingual, setBilingual] = useState<BilingualAboutPageContent>(
     defaultBilingualAboutPageContent
   );
-  const [lang, setLang] = useState<"id" | "en">("id");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
-  const [lastSavedTime, setLastSavedTime] = useState<string | null>(null);
-  const [saveStatus, setSaveStatus] = useState<{
-    type: "idle" | "success" | "error";
-    message?: string;
-  }>({ type: "idle" });
-
-  // State Modal Upload Foto Cloudinary
-  const [imageModal, setImageModal] = useState<{
-    isOpen: boolean;
-    target: "profile" | "story";
-    title: string;
-    url: string;
-    alt: string;
-    caption?: string;
-  }>({
-    isOpen: false,
-    target: "profile",
-    title: "",
-    url: "",
-    alt: "",
-    caption: "",
-  });
-  const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Ambil data dwibahasa dari Cloud Firestore
   useEffect(() => {
@@ -139,6 +66,11 @@ export default function AdminAboutInlineEditorPage() {
           const loaded: BilingualAboutPageContent = {
             id: json.data.id || defaultAboutPageContent,
             en: json.data.en || defaultAboutPageContentEn,
+            ctaPrimaryVariant: json.data.ctaPrimaryVariant,
+            ctaSecondaryVariant: json.data.ctaSecondaryVariant,
+            buttonVariant: json.data.buttonVariant,
+            heroMedia: json.data.heroMedia || json.data.id?.hero?.media,
+            storyMedia: json.data.storyMedia || json.data.id?.story?.media,
             updatedAt: json.data.updatedAt,
           };
           setBilingual(loaded);
@@ -153,12 +85,12 @@ export default function AdminAboutInlineEditorPage() {
       }
     }
     loadData();
-  }, []);
+  }, [setLastSavedTime]);
 
-  // Konten aktif berdasarkan toggle bahasa
+  // Konten aktif berdasarkan toggle bahasa global di AdminNavbar
   const activeContent: AboutPageContent = bilingual[lang] || defaultAboutPageContent;
 
-  // Fungsi pembaruan data spesifik bahasa aktif
+  // Fungsi pembaruan data teks spesifik bahasa aktif (Lokal)
   const updateActiveContent = (updater: (prev: AboutPageContent) => AboutPageContent) => {
     setBilingual((prev) => ({
       ...prev,
@@ -167,18 +99,182 @@ export default function AdminAboutInlineEditorPage() {
     setHasUnsavedChanges(true);
   };
 
-  // Simpan data bahasa aktif ke Cloud Firestore (skema murni dwibahasa tanpa root fields)
+  // Fungsi pembaruan varian gaya tombol secara GLOBAL (sinkron 100% untuk ID & EN)
+  const updateButtonVariantGlobal = (
+    buttonKey: "heroPrimary" | "heroSecondary" | "ctaBanner",
+    newVariant: ButtonVariant
+  ) => {
+    setBilingual((prev) => {
+      const nextId = {
+        ...prev.id,
+        hero: {
+          ...prev.id.hero,
+          ...(buttonKey === "heroPrimary" ? { ctaPrimaryVariant: newVariant } : {}),
+          ...(buttonKey === "heroSecondary" ? { ctaSecondaryVariant: newVariant } : {}),
+        },
+        cta: {
+          ...prev.id.cta,
+          ...(buttonKey === "ctaBanner" ? { buttonVariant: newVariant } : {}),
+        },
+      };
+
+      const nextEn = {
+        ...prev.en,
+        hero: {
+          ...prev.en.hero,
+          ...(buttonKey === "heroPrimary" ? { ctaPrimaryVariant: newVariant } : {}),
+          ...(buttonKey === "heroSecondary" ? { ctaSecondaryVariant: newVariant } : {}),
+        },
+        cta: {
+          ...prev.en.cta,
+          ...(buttonKey === "ctaBanner" ? { buttonVariant: newVariant } : {}),
+        },
+      };
+
+      return {
+        ...prev,
+        id: nextId,
+        en: nextEn,
+        ctaPrimaryVariant:
+          buttonKey === "heroPrimary"
+            ? newVariant
+            : prev.ctaPrimaryVariant || prev.id.hero.ctaPrimaryVariant,
+        ctaSecondaryVariant:
+          buttonKey === "heroSecondary"
+            ? newVariant
+            : prev.ctaSecondaryVariant || prev.id.hero.ctaSecondaryVariant,
+        buttonVariant:
+          buttonKey === "ctaBanner"
+            ? newVariant
+            : prev.buttonVariant || prev.id.cta.buttonVariant,
+      };
+    });
+    setHasUnsavedChanges(true);
+  };
+
+  // Fungsi pembaruan media Hero & Cerita secara GLOBAL (sinkron untuk ID & EN)
+  const updateHeroMediaGlobal = (updatedMedia: MediaSectionData) => {
+    setBilingual((prev) => {
+      const nextId = {
+        ...prev.id,
+        hero: {
+          ...prev.id.hero,
+          media: updatedMedia,
+          profileImage: {
+            url: updatedMedia.images[0]?.url || prev.id.hero.profileImage.url,
+            alt: updatedMedia.images[0]?.alt || prev.id.hero.profileImage.alt,
+            publicId: updatedMedia.images[0]?.publicId || prev.id.hero.profileImage.publicId,
+          },
+          imageCaption: updatedMedia.caption || prev.id.hero.imageCaption,
+        },
+      };
+
+      const nextEn = {
+        ...prev.en,
+        hero: {
+          ...prev.en.hero,
+          media: updatedMedia,
+          profileImage: {
+            url: updatedMedia.images[0]?.url || prev.en.hero.profileImage.url,
+            alt: updatedMedia.images[0]?.alt || prev.en.hero.profileImage.alt,
+            publicId: updatedMedia.images[0]?.publicId || prev.en.hero.profileImage.publicId,
+          },
+          imageCaption: updatedMedia.caption || prev.en.hero.imageCaption,
+        },
+      };
+
+      return {
+        ...prev,
+        id: nextId,
+        en: nextEn,
+        heroMedia: updatedMedia,
+      };
+    });
+    setHasUnsavedChanges(true);
+  };
+
+  const updateStoryMediaGlobal = (updatedMedia: MediaSectionData) => {
+    setBilingual((prev) => {
+      const nextId = {
+        ...prev.id,
+        story: {
+          ...prev.id.story,
+          media: updatedMedia,
+          storyImage: {
+            url: updatedMedia.images[0]?.url || prev.id.story.storyImage.url,
+            alt: updatedMedia.images[0]?.alt || prev.id.story.storyImage.alt,
+            publicId: updatedMedia.images[0]?.publicId || prev.id.story.storyImage.publicId,
+          },
+        },
+      };
+
+      const nextEn = {
+        ...prev.en,
+        story: {
+          ...prev.en.story,
+          media: updatedMedia,
+          storyImage: {
+            url: updatedMedia.images[0]?.url || prev.en.story.storyImage.url,
+            alt: updatedMedia.images[0]?.alt || prev.en.story.storyImage.alt,
+            publicId: updatedMedia.images[0]?.publicId || prev.en.story.storyImage.publicId,
+          },
+        },
+      };
+
+      return {
+        ...prev,
+        id: nextId,
+        en: nextEn,
+        storyMedia: updatedMedia,
+      };
+    });
+    setHasUnsavedChanges(true);
+  };
+
+  // Simpan data dwibahasa dan varian gaya global ke Cloud Firestore
   const handleSaveToFirestore = async () => {
     setIsSaving(true);
-    setSaveStatus({ type: "idle" });
 
-    try {
+    const ctaPrimaryVariant =
+      bilingual.ctaPrimaryVariant ||
+      bilingual.id?.hero?.ctaPrimaryVariant ||
+      bilingual.en?.hero?.ctaPrimaryVariant ||
+      "ocean-blue-solid";
+
+    const ctaSecondaryVariant =
+      bilingual.ctaSecondaryVariant ||
+      bilingual.id?.hero?.ctaSecondaryVariant ||
+      bilingual.en?.hero?.ctaSecondaryVariant ||
+      "neutral-outline";
+
+    const buttonVariant =
+      bilingual.buttonVariant ||
+      bilingual.id?.cta?.buttonVariant ||
+      bilingual.en?.cta?.buttonVariant ||
+      "sunset-amber-solid";
+
+    const heroMedia =
+      bilingual.heroMedia ||
+      bilingual.id?.hero?.media ||
+      defaultAboutPageContent.hero.media;
+
+    const storyMedia =
+      bilingual.storyMedia ||
+      bilingual.id?.story?.media ||
+      defaultAboutPageContent.story.media;
+
+    const savePromise = (async () => {
       const res = await fetch("/api/admin/about", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          lang,
-          data: activeContent,
+          id: bilingual.id,
+          en: bilingual.en,
+          ctaPrimaryVariant,
+          ctaSecondaryVariant,
+          buttonVariant,
+          heroMedia,
+          storyMedia,
         }),
       });
 
@@ -196,158 +292,26 @@ export default function AdminAboutInlineEditorPage() {
         setBilingual(json.data);
       }
 
-      setSaveStatus({
-        type: "success",
-        message: `Perubahan konten bahasa ${lang.toUpperCase()} berhasil disimpan ke Cloud Firestore ('settings/about_page')!`,
-      });
+      return json;
+    })();
 
-      setTimeout(() => {
-        setSaveStatus((prev) => (prev.type === "success" ? { type: "idle" } : prev));
-      }, 4000);
+    toast.promise(savePromise, {
+      loading: "Menyimpan perubahan ke Firestore...",
+      success: "Perubahan berhasil disimpan!",
+      error: (err: any) =>
+        err?.message || "Terjadi kendala saat menyimpan perubahan ke server.",
+    });
+
+    try {
+      await savePromise;
     } catch (err: any) {
       console.error("Error saving to Firestore:", err);
-      setSaveStatus({
-        type: "error",
-        message: err?.message || "Terjadi kesalahan saat menyimpan data.",
-      });
     } finally {
       setIsSaving(false);
     }
   };
 
-
-  // Trigger Modal Ganti Foto
-  const openImageModal = (target: "profile" | "story") => {
-    setUploadError(null);
-    setUploadSuccess(null);
-    if (target === "profile") {
-      setImageModal({
-        isOpen: true,
-        target: "profile",
-        title: "Ganti Foto Potret Profil Bli Gede",
-        url: activeContent.hero.profileImage.url,
-        alt: activeContent.hero.profileImage.alt,
-        caption: activeContent.hero.imageCaption,
-      });
-    } else {
-      setImageModal({
-        isOpen: true,
-        target: "story",
-        title: "Ganti Foto Suasana Cerita & Pura Bali",
-        url: activeContent.story.storyImage.url,
-        alt: activeContent.story.storyImage.alt,
-      });
-    }
-  };
-
-  // Upload gambar ke Cloudinary via API /api/cloudinary/upload
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Validasi ukuran file di sisi browser (maksimal 15MB)
-    if (file.size > 15 * 1024 * 1024) {
-      setUploadError("Ukuran berkas terlalu besar (maksimal 15MB). Harap gunakan foto yang lebih ringan.");
-      if (fileInputRef.current) fileInputRef.current.value = "";
-      return;
-    }
-
-    // Validasi format file
-    if (!file.type.startsWith("image/")) {
-      setUploadError("Format berkas tidak valid. Harap pilih file gambar (JPG, PNG, atau WebP).");
-      if (fileInputRef.current) fileInputRef.current.value = "";
-      return;
-    }
-
-    setIsUploadingImage(true);
-    setUploadError(null);
-    setUploadSuccess(null);
-
-    // Timeout proteksi 60 detik di sisi browser
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000);
-
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "gede-bali/about");
-
-      const res = await fetch("/api/cloudinary/upload", {
-        method: "POST",
-        body: formData,
-        signal: controller.signal,
-      });
-
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || "Gagal mengunggah foto ke Cloudinary.");
-      }
-
-      // Pastikan URL aman berformat HTTPS
-      const finalUrl = data.url.startsWith("http://")
-        ? data.url.replace(/^http:\/\//i, "https://")
-        : data.url;
-
-      // Update URL pratinjau di modal & beri feedback
-      setImageModal((prev) => ({
-        ...prev,
-        url: finalUrl,
-      }));
-      setUploadSuccess("Foto berhasil diunggah ke Cloudinary! Klik 'Terapkan Foto' untuk memasangnya di halaman.");
-    } catch (err: any) {
-      console.error("Upload error:", err);
-      if (err.name === "AbortError") {
-        setUploadError(
-          "Waktu unggah habis (Request Timeout). Koneksi internet lambat atau berkas terlalu besar. Silakan coba kembali."
-        );
-      } else {
-        setUploadError(err?.message || "Gagal mengunggah gambar ke Cloudinary.");
-      }
-    } finally {
-      clearTimeout(timeoutId);
-      setIsUploadingImage(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
-  };
-
-
-  // Terapkan perubahan foto ke konten aktif
-  const applyImageChanges = () => {
-    if (imageModal.target === "profile") {
-      updateActiveContent((prev) => ({
-        ...prev,
-        hero: {
-          ...prev.hero,
-          profileImage: {
-            ...prev.hero.profileImage,
-            url: imageModal.url,
-            alt: imageModal.alt,
-          },
-          imageCaption: imageModal.caption || prev.hero.imageCaption,
-        },
-      }));
-    } else {
-      updateActiveContent((prev) => ({
-        ...prev,
-        story: {
-          ...prev.story,
-          storyImage: {
-            ...prev.story.storyImage,
-            url: imageModal.url,
-            alt: imageModal.alt,
-          },
-        },
-      }));
-    }
-    setImageModal((prev) => ({ ...prev, isOpen: false }));
-    setUploadSuccess(null);
-    setSaveStatus({
-      type: "success",
-      message: "Foto berhasil diperbarui di tampilan! Klik 'Simpan Perubahan ke Firestore' untuk mempublikasikan.",
-    });
-  };
-
-  // Helper render ikon Lucide
+  // Dynamic icon mapper untuk Lucide icons (identik dengan AboutPageClient)
   const renderIcon = (iconName: string, className = "w-6 h-6 text-[#0C8C5E]") => {
     switch ((iconName || "").toLowerCase()) {
       case "clock":
@@ -359,6 +323,7 @@ export default function AdminAboutInlineEditorPage() {
       case "award":
         return <Award className={className} />;
       case "shieldcheck":
+      case "shield":
         return <ShieldCheck className={className} />;
       case "heart":
         return <Heart className={className} />;
@@ -371,101 +336,8 @@ export default function AdminAboutInlineEditorPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#FEFDFB] text-[#08090A] font-sans selection:bg-[#EBF5FB] selection:text-[#1878B8] pb-24">
-      {/* ========================================================
-          STICKY TOP CONTROL BAR (ADMIN & BILINGUAL TOGGLE)
-          ======================================================== */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#EBE9E6] shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
-          {/* Sisi Kiri: Breadcrumb & Indikator Inline Mode */}
-          <div className="flex items-center gap-3">
-            <Link
-              href="/about"
-              className="p-1.5 rounded-xl text-[#5E6965] hover:text-[#1878B8] hover:bg-[#EBF5FB] transition-colors"
-              title="Kembali ke Beranda"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Link>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-[#1878B8] uppercase tracking-wider">
-                Visual Editor
-              </span>
-              <span className="text-xs text-[#CFCDCA]">•</span>
-              <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#EBF5FB] text-[#1878B8] text-[11px] font-semibold border border-[#1878B8]/20">
-                <Pencil className="w-3 h-3" />
-                <span>Klik Elemen untuk Edit Langsung</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Sisi Tengah / Kanan: Pengalih Bahasa [ EN | ID ] */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1 bg-[#FAF8F5] p-1 rounded-xl border border-[#EBE9E6]">
-              <span className="text-[11px] font-semibold text-[#5E6965] px-2 flex items-center gap-1">
-                <Globe className="w-3 h-3 text-[#1878B8]" />
-                <span className="hidden sm:inline">Bahasa:</span>
-              </span>
-              <button
-                type="button"
-                onClick={() => setLang("id")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  lang === "id"
-                    ? "bg-[#1878B8] text-white shadow-xs"
-                    : "text-[#5E6965] hover:text-[#08090A]"
-                }`}
-              >
-                🇮🇩 ID (Indonesia)
-              </button>
-              <button
-                type="button"
-                onClick={() => setLang("en")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  lang === "en"
-                    ? "bg-[#1878B8] text-white shadow-xs"
-                    : "text-[#5E6965] hover:text-[#08090A]"
-                }`}
-              >
-                🇬🇧 EN (English)
-              </button>
-            </div>
-
-            <Link
-              href="/about"
-              target="_blank"
-              className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl border border-[#D3D8D6] bg-white text-[#5E6965] hover:text-[#1878B8] hover:bg-[#FAF8F5] text-xs font-medium transition-colors"
-              title="Lihat Tampilan Publik Halaman /about"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>Lihat Publik</span>
-            </Link>
-          </div>
-        </div>
-
-        {/* Notifikasi Status Simpan Bar */}
-        {saveStatus.type !== "idle" && (
-          <div
-            className={`border-t px-4 py-2 text-xs flex items-center justify-between ${
-              saveStatus.type === "success"
-                ? "bg-[#E8F6F0] border-[#0C8C5E]/30 text-[#0C8C5E]"
-                : "bg-red-50 border-red-200 text-red-700"
-            }`}
-          >
-            <div className="max-w-7xl mx-auto w-full flex items-center gap-2">
-              {saveStatus.type === "success" ? (
-                <CheckCircle2 className="w-4 h-4 shrink-0 text-[#0C8C5E]" />
-              ) : (
-                <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
-              )}
-              <span className="font-medium">{saveStatus.message}</span>
-            </div>
-          </div>
-        )}
-      </header>
-
-      {/* ========================================================
-          HALAMAN UTAMA: 100% REPLIKASI /about DENGAN IN-PLACE EDITING
-          ======================================================== */}
-      <main className="flex-1">
+    <div className="flex min-h-screen flex-col bg-[#FEFDFB] text-[#08090A] font-sans selection:bg-[#EBF5FB] selection:text-[#1878B8]">
+      <main className="flex-1 pb-28 sm:pb-32 w-full max-w-full overflow-x-hidden">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-32 text-center">
             <Loader2 className="w-8 h-8 text-[#1878B8] animate-spin mb-3" />
@@ -476,9 +348,23 @@ export default function AdminAboutInlineEditorPage() {
           </div>
         ) : (
           <>
-            {/* Breadcrumb Ringkas */}
+            {/* ========================================================
+                BREADCRUMB RINGKAS (Mobile & Desktop - 100% IDENTIK PUBLIK)
+                ======================================================== */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
-              <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-medium text-[#5E6965]">
+              {/* Mobile Back Button (< 768px) */}
+              <div className="md:hidden">
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#5E6965] hover:text-[#1878B8] py-1 transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>{lang === "en" ? "Back to Home" : "Kembali ke Beranda"}</span>
+                </Link>
+              </div>
+
+              {/* Desktop Breadcrumb (>= 768px) */}
+              <nav aria-label="Breadcrumb" className="hidden md:flex items-center gap-2 text-xs font-medium text-[#5E6965]">
                 <Link href="/" className="hover:text-[#1878B8] transition-colors">
                   {lang === "en" ? "Home" : "Beranda"}
                 </Link>
@@ -486,24 +372,21 @@ export default function AdminAboutInlineEditorPage() {
                 <span className="text-[#08090A] font-semibold">
                   {lang === "en" ? "About Gede" : "Tentang Gede"}
                 </span>
-                <span className="ml-2 text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm bg-[#FAF8F5] border border-[#EBE9E6] text-[#5E6965]">
-                  Mode: {lang.toUpperCase()}
-                </span>
               </nav>
             </div>
 
             {/* ========================================================
-                SEKSI 1: HERO PORTRAIT & SAPAAN (IN-PLACE EDITABLE)
+                SEKSI 1: HERO PORTRAIT & SAPAAN (100% IDENTIK DENGAN PUBLIK)
                 ======================================================== */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-16 lg:pb-24">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
                 {/* Kolom Kiri: Teks Profil Editorial & Statistik */}
                 <div className="lg:col-span-7 space-y-6 sm:space-y-8">
-                  {/* Badge Hero Editable */}
+                  {/* Aksen Teks Editorial Bersih Tanpa Shape */}
                   <div className="mb-2">
-                    <span className="font-serif italic text-base sm:text-lg text-[#1878B8] font-normal tracking-wide inline-flex items-center">
+                    <span className="font-serif italic text-base sm:text-lg text-[#1878B8] font-normal tracking-wide">
                       “
-                      <InlineEditable
+                      <EditableText
                         value={activeContent.hero.badge}
                         onChange={(val) =>
                           updateActiveContent((prev) => ({
@@ -517,9 +400,9 @@ export default function AdminAboutInlineEditorPage() {
                     </span>
                   </div>
 
-                  {/* Headline Utama Editable (Libre Baskerville) */}
+                  {/* Headline Utama (Libre Baskerville) */}
                   <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#08090A] leading-[1.2] tracking-tight">
-                    <InlineEditable
+                    <EditableText
                       value={activeContent.hero.title}
                       onChange={(val) =>
                         updateActiveContent((prev) => ({
@@ -527,14 +410,14 @@ export default function AdminAboutInlineEditorPage() {
                           hero: { ...prev.hero, title: val },
                         }))
                       }
-                      placeholder="Judul Headline..."
+                      placeholder="Judul Utama Halaman..."
                       multiline
                     />
                   </h1>
 
-                  {/* Paragraf Pengantar Editable */}
+                  {/* Paragraf Pengantar yang Personal & Ramah */}
                   <p className="text-base sm:text-lg text-[#37413C] leading-relaxed">
-                    <InlineEditable
+                    <EditableText
                       value={activeContent.hero.introText}
                       onChange={(val) =>
                         updateActiveContent((prev) => ({
@@ -542,133 +425,136 @@ export default function AdminAboutInlineEditorPage() {
                           hero: { ...prev.hero, introText: val },
                         }))
                       }
-                      placeholder="Paragraf pengantar sapaan..."
+                      placeholder="Paragraf sapaan pembuka..."
                       multiline
                     />
                   </p>
 
-                  {/* Baris Statistik Dinamis (Editable) */}
+                  {/* Baris Statistik Minimalis (bg-[#FAF8F5] border border-[#EBE9E6]/70) */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pt-2 pb-2">
                     {activeContent.hero.stats.map((stat, idx) => (
                       <div
                         key={stat.id || idx}
-                        className="p-3.5 sm:p-4 rounded-2xl bg-[#FAF8F5] border border-[#EBE9E6]/70 transition-transform duration-200 hover:-translate-y-0.5 group"
+                        className="p-3.5 sm:p-4 rounded-2xl bg-[#FAF8F5] border border-[#EBE9E6]/70 transition-transform duration-200 hover:-translate-y-0.5"
                       >
                         <div className="text-2xl sm:text-3xl font-bold text-[#E67E22] tracking-tight">
-                          <InlineEditable
+                          <EditableText
                             value={stat.value}
                             onChange={(val) =>
                               updateActiveContent((prev) => {
-                                const next = [...prev.hero.stats];
-                                next[idx] = { ...next[idx], value: val };
-                                return { ...prev, hero: { ...prev.hero, stats: next } };
+                                const newStats = [...prev.hero.stats];
+                                newStats[idx] = { ...newStats[idx], value: val };
+                                return {
+                                  ...prev,
+                                  hero: { ...prev.hero, stats: newStats },
+                                };
                               })
                             }
-                            placeholder="10+ Tahun"
+                            placeholder="10+..."
                           />
                         </div>
                         <div className="text-xs sm:text-sm text-[#5E6965] font-medium mt-1 leading-snug">
-                          <InlineEditable
+                          <EditableText
                             value={stat.label}
                             onChange={(val) =>
                               updateActiveContent((prev) => {
-                                const next = [...prev.hero.stats];
-                                next[idx] = { ...next[idx], label: val };
-                                return { ...prev, hero: { ...prev.hero, stats: next } };
+                                const newStats = [...prev.hero.stats];
+                                newStats[idx] = { ...newStats[idx], label: val };
+                                return {
+                                  ...prev,
+                                  hero: { ...prev.hero, stats: newStats },
+                                };
                               })
                             }
-                            placeholder="Keterangan..."
+                            placeholder="Label statistik..."
                           />
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  {/* Tombol Interaktif WhatsApp & Jelajah Tur */}
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-                    <div className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-[#1878B8] text-white font-medium text-sm shadow-[0_2px_8px_rgba(24,120,184,0.25)] select-none">
-                      <MessageCircle className="w-4.5 h-4.5" />
-                      <span>{lang === "en" ? "Consult with Bli Gede" : "Konsultasi Bersama Gede"}</span>
-                    </div>
-                    <div className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl border border-[#D3D8D6] bg-white text-[#08090A] font-medium text-sm select-none">
-                      <span>{lang === "en" ? "Explore Tour Packages" : "Lihat Pilihan Tur"}</span>
-                      <ChevronRight className="w-4 h-4" />
-                    </div>
+                  {/* Tombol CTA Hero (Dinamis EditableButton dengan Pemilih Varian) */}
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+                    <EditableButton
+                      value={
+                        activeContent.hero.ctaPrimary ||
+                        (lang === "en" ? "Consult with Bli Gede" : "Konsultasi Bersama Gede")
+                      }
+                      onChange={(val) =>
+                        updateActiveContent((prev) => ({
+                          ...prev,
+                          hero: { ...prev.hero, ctaPrimary: val },
+                        }))
+                      }
+                      variant={
+                        bilingual.ctaPrimaryVariant ||
+                        activeContent.hero.ctaPrimaryVariant ||
+                        "ocean-blue-solid"
+                      }
+                      onVariantChange={(newVariant) =>
+                        updateButtonVariantGlobal("heroPrimary", newVariant)
+                      }
+                      defaultVariant="ocean-blue-solid"
+                      icon={<MessageCircle className="w-4.5 h-4.5" />}
+                      placeholder={lang === "en" ? "Consult with Bli Gede..." : "Konsultasi Bersama Gede..."}
+                      label="Tombol CTA Utama Hero (Pilihan warna tersinkronisasi global untuk ID & EN)"
+                    />
+                    <EditableButton
+                      value={
+                        activeContent.hero.ctaSecondary ||
+                        (lang === "en" ? "Explore Tour Packages" : "Lihat Pilihan Tur")
+                      }
+                      onChange={(val) =>
+                        updateActiveContent((prev) => ({
+                          ...prev,
+                          hero: { ...prev.hero, ctaSecondary: val },
+                        }))
+                      }
+                      variant={
+                        bilingual.ctaSecondaryVariant ||
+                        activeContent.hero.ctaSecondaryVariant ||
+                        "neutral-outline"
+                      }
+                      onVariantChange={(newVariant) =>
+                        updateButtonVariantGlobal("heroSecondary", newVariant)
+                      }
+                      defaultVariant="neutral-outline"
+                      rightIcon={<ChevronRight className="w-4 h-4" />}
+                      placeholder={lang === "en" ? "Explore Tour Packages..." : "Lihat Pilihan Tur..."}
+                      label="Tombol CTA Sekunder Hero (Pilihan warna tersinkronisasi global untuk ID & EN)"
+                    />
                   </div>
                 </div>
 
-                {/* Kolom Kanan: Foto Profil Bli Gede (Interactive Click to Upload) */}
+                {/* Kolom Kanan: Media Dinamis (Single / Multi Template) Bli Gede */}
                 <div className="lg:col-span-5">
-                  <div className="relative mx-auto max-w-md lg:max-w-none">
-                    <div className="absolute -inset-2 rounded-[32px] bg-gradient-to-tr from-[#0C8C5E]/15 to-[#E67E22]/15 blur-xl -z-10" />
-
-                    <div
-                      onClick={() => openImageModal("profile")}
-                      className="group relative overflow-hidden rounded-3xl bg-white border border-[#EBE9E6] shadow-xl shadow-stone-200/50 cursor-pointer hover:border-[#1878B8] transition-all"
-                      title="Klik untuk mengganti foto profil ini (Cloudinary)"
-                    >
-                      {/* Hover Overlay Penanda Ganti Foto */}
-                      <div className="absolute inset-0 bg-[#0F4C81]/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity z-20 flex flex-col items-center justify-center text-white gap-2 p-4 text-center">
-                        <div className="p-3 rounded-full bg-white/20 border border-white/30">
-                          <Camera className="w-6 h-6 text-white" />
-                        </div>
-                        <span className="text-sm font-semibold">
-                          Klik untuk Ganti Foto (Cloudinary)
-                        </span>
-                        <span className="text-xs text-white/80">
-                          Unggah dari komputer atau masukkan link foto
-                        </span>
-                      </div>
-
-                      <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone-100">
-                        <Image
-                          src={activeContent.hero.profileImage.url}
-                          alt={activeContent.hero.profileImage.alt}
-                          fill
-                          priority
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 500px"
-                          className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </div>
-
-                      {/* Caption Foto Editable */}
-                      <div
-                        onClick={(e) => e.stopPropagation()}
-                        className="p-4 sm:p-5 bg-white border-t border-[#EBE9E6]/60 text-center"
-                      >
-                        <p className="text-xs sm:text-sm text-[#5E6965] italic leading-relaxed">
-                          &ldquo;
-                          <InlineEditable
-                            value={activeContent.hero.imageCaption}
-                            onChange={(val) =>
-                              updateActiveContent((prev) => ({
-                                ...prev,
-                                hero: { ...prev.hero, imageCaption: val },
-                              }))
-                            }
-                            placeholder="Caption foto..."
-                          />
-                          &rdquo;
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <EditableMediaSection
+                    media={
+                      activeContent.hero.media ||
+                      bilingual.heroMedia ||
+                      defaultAboutPageContent.hero.media!
+                    }
+                    onChange={updateHeroMediaGlobal}
+                    aspectRatio="aspect-[4/5]"
+                    priority
+                    label="Atur Media & Layout Hero"
+                  />
                 </div>
               </div>
             </section>
 
             {/* ========================================================
-                SEKSI 2: KISAH DI BALIK KEMUDI (IN-PLACE EDITABLE)
+                SEKSI 2: KISAH DI BALIK KEMUDI (Clean White bg-white)
                 ======================================================== */}
             <section className="bg-white border-y border-[#EBE9E6] py-16 sm:py-24">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-                  {/* Kolom Teks Narasi & Pull-Quote */}
+                  {/* Kolom Teks: Narasi Mengalir & Pull Quote */}
                   <div className="lg:col-span-7 space-y-6 sm:space-y-8 order-2 lg:order-1">
                     <div className="space-y-2 mb-4">
                       <span className="font-serif italic text-base sm:text-lg text-[#1878B8] font-normal tracking-wide block">
                         “
-                        <InlineEditable
+                        <EditableText
                           value={activeContent.story.sectionTag}
                           onChange={(val) =>
                             updateActiveContent((prev) => ({
@@ -676,12 +562,12 @@ export default function AdminAboutInlineEditorPage() {
                               story: { ...prev.story, sectionTag: val },
                             }))
                           }
-                          placeholder="Tag Seksi..."
+                          placeholder="Tag seksi cerita..."
                         />
                         ”
                       </span>
                       <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal text-[#08090A] leading-tight">
-                        <InlineEditable
+                        <EditableText
                           value={activeContent.story.title}
                           onChange={(val) =>
                             updateActiveContent((prev) => ({
@@ -689,75 +575,40 @@ export default function AdminAboutInlineEditorPage() {
                               story: { ...prev.story, title: val },
                             }))
                           }
-                          placeholder="Judul Kisah..."
+                          placeholder="Judul Seksi Kisah..."
                           multiline
                         />
                       </h2>
                     </div>
 
-                    {/* Looping Paragraf Narasi Editable */}
+                    {/* Looping Narasi Paragraf */}
                     <div className="space-y-4 text-base sm:text-lg text-[#37413C] leading-relaxed">
                       {activeContent.story.paragraphs.map((paragraph, idx) => (
-                        <div key={idx} className="relative group/p flex items-start gap-2">
-                          <div className="flex-1">
-                            <InlineEditable
-                              value={paragraph}
-                              onChange={(val) =>
-                                updateActiveContent((prev) => {
-                                  const next = [...prev.story.paragraphs];
-                                  next[idx] = val;
-                                  return { ...prev, story: { ...prev.story, paragraphs: next } };
-                                })
-                              }
-                              placeholder={`Paragraf ${idx + 1}...`}
-                              multiline
-                              as="p"
-                            />
-                          </div>
-                          {activeContent.story.paragraphs.length > 1 && (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                updateActiveContent((prev) => ({
+                        <p key={idx}>
+                          <EditableText
+                            value={paragraph}
+                            onChange={(val) =>
+                              updateActiveContent((prev) => {
+                                const newP = [...prev.story.paragraphs];
+                                newP[idx] = val;
+                                return {
                                   ...prev,
-                                  story: {
-                                    ...prev.story,
-                                    paragraphs: prev.story.paragraphs.filter((_, i) => i !== idx),
-                                  },
-                                }))
-                              }
-                              className="opacity-0 group-hover/p:opacity-100 p-1 text-red-500 hover:text-red-700 transition-opacity"
-                              title="Hapus paragraf ini"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          )}
-                        </div>
+                                  story: { ...prev.story, paragraphs: newP },
+                                };
+                              })
+                            }
+                            placeholder={`Paragraf kisah ke-${idx + 1}...`}
+                            multiline
+                          />
+                        </p>
                       ))}
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          updateActiveContent((prev) => ({
-                            ...prev,
-                            story: {
-                              ...prev.story,
-                              paragraphs: [...prev.story.paragraphs, ""],
-                            },
-                          }))
-                        }
-                        className="inline-flex items-center gap-1.5 text-xs text-[#1878B8] font-semibold hover:underline pt-1 cursor-pointer"
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                        <span>Tambah Paragraf Baru</span>
-                      </button>
                     </div>
 
-                    {/* Pull-Quote Elegan Editable */}
+                    {/* Pull-Quote Elegan dengan Aksen Hijau Bali Green */}
                     <div className="border-l-4 border-[#0C8C5E] pl-6 py-3 bg-[#E8F6F0]/50 rounded-r-2xl">
                       <p className="font-serif italic text-lg sm:text-xl text-[#08090A] leading-snug">
                         &ldquo;
-                        <InlineEditable
+                        <EditableText
                           value={activeContent.story.quote}
                           onChange={(val) =>
                             updateActiveContent((prev) => ({
@@ -765,14 +616,14 @@ export default function AdminAboutInlineEditorPage() {
                               story: { ...prev.story, quote: val },
                             }))
                           }
-                          placeholder="Kutipan kalimat..."
+                          placeholder="Kutipan personal..."
                           multiline
                         />
                         &rdquo;
                       </p>
                       <span className="block mt-2 text-xs sm:text-sm font-semibold text-[#0C8C5E]">
                         —{" "}
-                        <InlineEditable
+                        <EditableText
                           value={activeContent.story.quoteAuthor}
                           onChange={(val) =>
                             updateActiveContent((prev) => ({
@@ -780,59 +631,39 @@ export default function AdminAboutInlineEditorPage() {
                               story: { ...prev.story, quoteAuthor: val },
                             }))
                           }
-                          placeholder="Penulis Kutipan..."
+                          placeholder="Nama pembuat kutipan..."
                         />
                       </span>
                     </div>
                   </div>
 
-                  {/* Kolom Visual: Foto Budaya (Click to Upload) */}
+                  {/* Kolom Visual: Media Dinamis (Single / Multi Template) Suasana Cerita */}
                   <div className="lg:col-span-5 order-1 lg:order-2">
-                    <div
-                      onClick={() => openImageModal("story")}
-                      className="group relative rounded-3xl overflow-hidden border border-[#EBE9E6] shadow-xl aspect-[4/5] bg-stone-100 cursor-pointer hover:border-[#1878B8] transition-all"
-                      title="Klik untuk mengganti foto kisah ini (Cloudinary)"
-                    >
-                      <div className="absolute inset-0 bg-[#0F4C81]/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity z-20 flex flex-col items-center justify-center text-white gap-2 p-4 text-center">
-                        <div className="p-3 rounded-full bg-white/20 border border-white/30">
-                          <Camera className="w-6 h-6 text-white" />
-                        </div>
-                        <span className="text-sm font-semibold">
-                          Klik untuk Ganti Foto (Cloudinary)
-                        </span>
-                        <span className="text-xs text-white/80">
-                          Unggah dari komputer atau ganti URL
-                        </span>
-                      </div>
-
-                      <Image
-                        src={activeContent.story.storyImage.url}
-                        alt={activeContent.story.storyImage.alt}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 450px"
-                        className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end p-6 z-10">
-                        <span className="text-white text-xs sm:text-sm font-medium drop-shadow-sm">
-                          {activeContent.story.storyImage.alt}
-                        </span>
-                      </div>
-                    </div>
+                    <EditableMediaSection
+                      media={
+                        activeContent.story.media ||
+                        bilingual.storyMedia ||
+                        defaultAboutPageContent.story.media!
+                      }
+                      onChange={updateStoryMediaGlobal}
+                      aspectRatio="aspect-[4/5]"
+                      label="Atur Media & Layout Cerita"
+                    />
                   </div>
                 </div>
               </div>
             </section>
 
             {/* ========================================================
-                SEKSI 3: BAGAIMANA HARI ANDA BERJALAN BERSAMA GEDE
-                (Pola Ritme 3 Warna: Biru Samudra, Hijau Bali, Oranye Sunset)
+                SEKSI 3: BAGAIMANA HARI ANDA BERJALAN BERSAMA GEDE (Warm Cream bg-[#FEFDFB])
+                Pola Ritme 3 Warna: 1 Biru Samudra, 2 Hijau Bali, 3 Oranye Sunset
                 ======================================================== */}
             <section className="bg-[#FEFDFB] py-16 sm:py-24">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="max-w-2xl mx-auto text-center space-y-2 mb-12 sm:mb-16">
                   <span className="font-serif italic text-base sm:text-lg text-[#1878B8] font-normal tracking-wide block mb-2">
                     “
-                    <InlineEditable
+                    <EditableText
                       value={activeContent.guidingStyle.sectionTag}
                       onChange={(val) =>
                         updateActiveContent((prev) => ({
@@ -840,12 +671,12 @@ export default function AdminAboutInlineEditorPage() {
                           guidingStyle: { ...prev.guidingStyle, sectionTag: val },
                         }))
                       }
-                      placeholder="Tag Seksi..."
+                      placeholder="Tag seksi pilar..."
                     />
                     ”
                   </span>
                   <h2 className="font-serif text-3xl sm:text-4xl font-normal text-[#08090A] leading-tight mb-3">
-                    <InlineEditable
+                    <EditableText
                       value={activeContent.guidingStyle.title}
                       onChange={(val) =>
                         updateActiveContent((prev) => ({
@@ -853,12 +684,11 @@ export default function AdminAboutInlineEditorPage() {
                           guidingStyle: { ...prev.guidingStyle, title: val },
                         }))
                       }
-                      placeholder="Judul Seksi..."
-                      multiline
+                      placeholder="Judul Gaya Memandu..."
                     />
                   </h2>
                   <p className="text-sm sm:text-base text-[#5E6965] leading-relaxed font-sans">
-                    <InlineEditable
+                    <EditableText
                       value={activeContent.guidingStyle.subtitle}
                       onChange={(val) =>
                         updateActiveContent((prev) => ({
@@ -866,75 +696,79 @@ export default function AdminAboutInlineEditorPage() {
                           guidingStyle: { ...prev.guidingStyle, subtitle: val },
                         }))
                       }
-                      placeholder="Subjudul..."
+                      placeholder="Subjudul pilar..."
                       multiline
                     />
                   </p>
                 </div>
 
-                {/* 3 Pilar Layanan (In-Place Editable) */}
+                {/* 3 Esai Singkat dengan Tata Letak Editorial Lega (Pola Ritme 3 Warna) */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                   {activeContent.guidingStyle.pillars.map((pillar, idx) => {
                     const iconBoxBg =
                       idx === 0
                         ? "bg-[#EBF5FB] text-[#1878B8]"
                         : idx === 1
-                        ? "bg-[#E8F6F0] text-[#0C8C5E]"
-                        : "bg-[#FDF3E6] text-[#E67E22]";
+                          ? "bg-[#E8F6F0] text-[#0C8C5E]"
+                          : "bg-[#FDF3E6] text-[#E67E22]";
                     const iconColor =
                       idx === 0
                         ? "w-6 h-6 text-[#1878B8]"
                         : idx === 1
-                        ? "w-6 h-6 text-[#0C8C5E]"
-                        : "w-6 h-6 text-[#E67E22]";
-                    const hoverBorder =
-                      idx === 0
-                        ? "hover:border-[#1878B8]"
-                        : idx === 1
-                        ? "hover:border-[#0C8C5E]"
-                        : "hover:border-[#E67E22]";
+                          ? "w-6 h-6 text-[#0C8C5E]"
+                          : "w-6 h-6 text-[#E67E22]";
+                    // Kartu kedua ("Kisah Budaya yang Hidup") memiliki aksen garis tepi hijau zamrud (Emerald border)
+                    const borderClass =
+                      idx === 1
+                        ? "border-[#0C8C5E]/40 hover:border-[#0C8C5E] shadow-sm"
+                        : idx === 0
+                          ? "border-[#EBE9E6] hover:border-[#1878B8]"
+                          : "border-[#EBE9E6] hover:border-[#E67E22]";
 
                     return (
                       <div
                         key={pillar.id || idx}
-                        className={`group relative p-6 sm:p-8 rounded-2xl bg-white border border-[#EBE9E6] shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between ${hoverBorder}`}
+                        className={`group relative p-6 sm:p-8 rounded-2xl bg-white border shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between ${borderClass}`}
                       >
                         <div className="space-y-4">
-                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105 ${iconBoxBg}`}>
+                          {/* Icon Header */}
+                          <div
+                            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105 ${iconBoxBg}`}
+                          >
                             {renderIcon(pillar.icon, iconColor)}
                           </div>
 
                           <h3 className="font-serif text-xl font-bold text-[#08090A] leading-snug">
-                            <InlineEditable
+                            <EditableText
                               value={pillar.title}
                               onChange={(val) =>
                                 updateActiveContent((prev) => {
-                                  const next = [...prev.guidingStyle.pillars];
-                                  next[idx] = { ...next[idx], title: val };
+                                  const newPillars = [...prev.guidingStyle.pillars];
+                                  newPillars[idx] = { ...newPillars[idx], title: val };
                                   return {
                                     ...prev,
-                                    guidingStyle: { ...prev.guidingStyle, pillars: next },
+                                    guidingStyle: { ...prev.guidingStyle, pillars: newPillars },
                                   };
                                 })
                               }
-                              placeholder="Judul Pilar..."
+                              placeholder="Judul pilar..."
                             />
                           </h3>
 
                           <p className="text-sm sm:text-base text-[#5E6965] leading-relaxed">
-                            <InlineEditable
+                            <EditableText
                               value={pillar.description}
                               onChange={(val) =>
                                 updateActiveContent((prev) => {
-                                  const next = [...prev.guidingStyle.pillars];
-                                  next[idx] = { ...next[idx], description: val };
+                                  const newPillars = [...prev.guidingStyle.pillars];
+                                  newPillars[idx] = { ...newPillars[idx], description: val };
                                   return {
                                     ...prev,
-                                    guidingStyle: { ...prev.guidingStyle, pillars: next },
+                                    guidingStyle: { ...prev.guidingStyle, pillars: newPillars },
                                   };
                                 })
                               }
-                              placeholder="Keterangan pilar..."
+                              placeholder="Deskripsi pilar..."
                               multiline
                             />
                           </p>
@@ -947,7 +781,8 @@ export default function AdminAboutInlineEditorPage() {
             </section>
 
             {/* ========================================================
-                SEKSI 4: STANDAR KENYAMANAN & KEPASTIAN (TRUST STRIP)
+                SEKSI 4: STANDAR KENYAMANAN & KEPASTIAN (Clean White bg-white)
+                Pola Ritme 3 Warna: 1 Biru Samudra, 2 Hijau Bali, 3 Oranye Sunset
                 ======================================================== */}
             <section className="bg-white border-y border-[#EBE9E6] py-12 sm:py-16">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -957,14 +792,14 @@ export default function AdminAboutInlineEditorPage() {
                       idx === 0
                         ? "bg-[#EBF5FB] text-[#1878B8]"
                         : idx === 1
-                        ? "bg-[#E8F6F0] text-[#0C8C5E]"
-                        : "bg-[#FDF3E6] text-[#E67E22]";
+                          ? "bg-[#E8F6F0] text-[#0C8C5E]"
+                          : "bg-[#FDF3E6] text-[#E67E22]";
                     const iconColor =
                       idx === 0
                         ? "w-5 h-5 text-[#1878B8]"
                         : idx === 1
-                        ? "w-5 h-5 text-[#0C8C5E]"
-                        : "w-5 h-5 text-[#E67E22]";
+                          ? "w-5 h-5 text-[#0C8C5E]"
+                          : "w-5 h-5 text-[#E67E22]";
 
                     return (
                       <div
@@ -974,31 +809,31 @@ export default function AdminAboutInlineEditorPage() {
                         <div className={`p-2.5 rounded-xl shrink-0 ${iconBoxBg}`}>
                           {renderIcon(item.icon, iconColor)}
                         </div>
-                        <div className="space-y-1 flex-1">
+                        <div className="space-y-1">
                           <h4 className="font-bold text-sm sm:text-base text-[#08090A]">
-                            <InlineEditable
+                            <EditableText
                               value={item.title}
                               onChange={(val) =>
                                 updateActiveContent((prev) => {
-                                  const next = [...prev.trustStrip];
-                                  next[idx] = { ...next[idx], title: val };
-                                  return { ...prev, trustStrip: next };
+                                  const newTrust = [...prev.trustStrip];
+                                  newTrust[idx] = { ...newTrust[idx], title: val };
+                                  return { ...prev, trustStrip: newTrust };
                                 })
                               }
-                              placeholder="Judul Kepercayaan..."
+                              placeholder="Judul trust..."
                             />
                           </h4>
                           <p className="text-xs sm:text-sm text-[#5E6965] leading-relaxed">
-                            <InlineEditable
+                            <EditableText
                               value={item.description}
                               onChange={(val) =>
                                 updateActiveContent((prev) => {
-                                  const next = [...prev.trustStrip];
-                                  next[idx] = { ...next[idx], description: val };
-                                  return { ...prev, trustStrip: next };
+                                  const newTrust = [...prev.trustStrip];
+                                  newTrust[idx] = { ...newTrust[idx], description: val };
+                                  return { ...prev, trustStrip: newTrust };
                                 })
                               }
-                              placeholder="Deskripsi..."
+                              placeholder="Deskripsi trust..."
                               multiline
                             />
                           </p>
@@ -1011,20 +846,22 @@ export default function AdminAboutInlineEditorPage() {
             </section>
 
             {/* ========================================================
-                SEKSI 5: BOTTOM CTA BANNER (IN-PLACE EDITABLE)
+                SEKSI 5: BOTTOM CTA BANNER (Gradien Biru Samudra Elegan)
+                bg-gradient-to-r from-[#0F4C81] to-[#1878B8] text-white
                 ======================================================== */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0F4C81] to-[#1878B8] text-white p-8 sm:p-12 lg:p-16 text-center shadow-xl">
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 w-full max-w-full box-border">
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0F4C81] to-[#1878B8] text-white p-5 sm:p-12 lg:p-16 text-center shadow-xl w-full max-w-full box-border">
+                {/* Soft decorative background circles */}
                 <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-white/10 blur-2xl pointer-events-none" />
                 <div className="absolute -bottom-24 -right-24 w-64 h-64 rounded-full bg-[#E67E22]/20 blur-2xl pointer-events-none" />
 
-                <div className="relative max-w-2xl mx-auto space-y-4">
+                <div className="relative max-w-2xl mx-auto space-y-4 w-full">
                   <span className="inline-block px-3 py-1 rounded-full bg-white/15 text-xs font-semibold tracking-wider uppercase text-white/90 border border-white/20">
                     {lang === "en" ? "Direct Local Consultation" : "Konsultasi Rute Langsung"}
                   </span>
 
                   <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal leading-tight">
-                    <InlineEditable
+                    <EditableText
                       value={activeContent.cta.title}
                       onChange={(val) =>
                         updateActiveContent((prev) => ({
@@ -1032,13 +869,13 @@ export default function AdminAboutInlineEditorPage() {
                           cta: { ...prev.cta, title: val },
                         }))
                       }
-                      placeholder="Judul Banner CTA..."
+                      placeholder="Judul banner CTA..."
                       multiline
                     />
                   </h2>
 
                   <p className="text-sm sm:text-base text-white/90 leading-relaxed max-w-xl mx-auto">
-                    <InlineEditable
+                    <EditableText
                       value={activeContent.cta.subtitle}
                       onChange={(val) =>
                         updateActiveContent((prev) => ({
@@ -1046,25 +883,36 @@ export default function AdminAboutInlineEditorPage() {
                           cta: { ...prev.cta, subtitle: val },
                         }))
                       }
-                      placeholder="Subjudul Banner CTA..."
+                      placeholder="Subjudul banner CTA..."
                       multiline
                     />
                   </p>
 
                   <div className="pt-4">
-                    <div className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-[#E67E22] text-white font-medium text-sm shadow-[0_4px_16px_rgba(230,126,34,0.3)]">
-                      <MessageCircle className="w-4.5 h-4.5" />
-                      <InlineEditable
-                        value={activeContent.cta.buttonText}
-                        onChange={(val) =>
-                          updateActiveContent((prev) => ({
-                            ...prev,
-                            cta: { ...prev.cta, buttonText: val },
-                          }))
-                        }
-                        placeholder="Teks Tombol..."
-                      />
-                    </div>
+                    <EditableButton
+                      value={
+                        activeContent.cta.buttonText ||
+                        (lang === "en" ? "Chat with Bli Gede on WhatsApp" : "Kirim Pesan ke Bli Gede")
+                      }
+                      onChange={(val) =>
+                        updateActiveContent((prev) => ({
+                          ...prev,
+                          cta: { ...prev.cta, buttonText: val },
+                        }))
+                      }
+                      variant={
+                        bilingual.buttonVariant ||
+                        activeContent.cta.buttonVariant ||
+                        "sunset-amber-solid"
+                      }
+                      onVariantChange={(newVariant) =>
+                        updateButtonVariantGlobal("ctaBanner", newVariant)
+                      }
+                      defaultVariant="sunset-amber-solid"
+                      icon={<MessageCircle className="w-4.5 h-4.5" />}
+                      placeholder="Teks tombol WhatsApp..."
+                      label="Tombol Banner CTA (Pilihan warna tersinkronisasi global untuk ID & EN)"
+                    />
                   </div>
                 </div>
               </div>
@@ -1073,241 +921,14 @@ export default function AdminAboutInlineEditorPage() {
         )}
       </main>
 
-      <Footer />
-
-      {/* ========================================================
-          FLOATING ACTION BAR DI BAGIAN BAWAH LAYAR (STICKY BAR)
-          ======================================================== */}
-      <aside aria-label="Floating Control Bar" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-3xl">
-        <div className="bg-white/95 backdrop-blur-md border border-[#EBE9E6] shadow-2xl rounded-2xl p-2.5 sm:p-3 px-4 sm:px-5 flex flex-wrap items-center justify-between gap-3">
-          {/* Status Penyimpanan */}
-          <div className="flex items-center gap-2">
-            {hasUnsavedChanges ? (
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-[#E67E22] text-xs font-semibold border border-amber-200">
-                <span className="w-2 h-2 rounded-full bg-[#E67E22] animate-pulse" />
-                <span>Ada Perubahan Belum Disimpan</span>
-              </span>
-            ) : (
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E8F6F0] text-[#0C8C5E] text-xs font-semibold border border-[#0C8C5E]/20">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>
-                  {lastSavedTime ? `Tersimpan (${lastSavedTime})` : "Tersimpan di Cloud Firestore"}
-                </span>
-              </span>
-            )}
-          </div>
-
-          {/* Quick Toggle Bahasa di Floating Bar */}
-          <div className="hidden sm:flex items-center gap-1 bg-[#FAF8F5] p-1 rounded-xl border border-[#EBE9E6]">
-            <button
-              type="button"
-              onClick={() => setLang("id")}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                lang === "id" ? "bg-[#1878B8] text-white" : "text-[#5E6965]"
-              }`}
-            >
-              ID
-            </button>
-            <button
-              type="button"
-              onClick={() => setLang("en")}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                lang === "en" ? "bg-[#1878B8] text-white" : "text-[#5E6965]"
-              }`}
-            >
-              EN
-            </button>
-          </div>
-
-          {/* Tombol Utama Simpan Perubahan */}
-          <div className="flex items-center gap-2">
-            <Link
-              href="/about"
-              target="_blank"
-              className="p-2.5 rounded-xl border border-[#D3D8D6] bg-white text-[#5E6965] hover:text-[#1878B8] transition-colors"
-              title="Lihat Halaman Publik"
-            >
-              <ExternalLink className="w-4 h-4" />
-            </Link>
-
-            <button
-              type="button"
-              onClick={handleSaveToFirestore}
-              disabled={isSaving}
-              className="inline-flex items-center justify-center gap-2 h-11 px-5 sm:px-6 rounded-xl bg-[#1878B8] hover:bg-[#0F4C81] text-white text-xs sm:text-sm font-semibold shadow-[0_2px_12px_rgba(24,120,184,0.35)] transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Menyimpan ke Firestore...</span>
-                </>
-              ) : (
-                <>
-                  <Save className="w-4 h-4" />
-                  <span>Simpan Perubahan ke Firestore</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-      </aside>
-
-      {/* ========================================================
-          MODAL UPLOAD GAMBAR INTERAKTIF (CLOUDINARY)
-          ======================================================== */}
-      {imageModal.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl border border-[#EBE9E6] shadow-2xl max-w-lg w-full overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            {/* Modal Header */}
-            <div className="p-5 border-b border-[#EBE9E6] flex items-center justify-between">
-              <div>
-                <h3 className="font-serif text-lg font-bold text-[#08090A]">
-                  {imageModal.title}
-                </h3>
-                <p className="text-xs text-[#5E6965] mt-0.5">
-                  Terintegrasi langsung dengan Cloudinary CDN (WebP otomatis)
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setImageModal((prev) => ({ ...prev, isOpen: false }))}
-                className="p-1.5 rounded-full text-[#5E6965] hover:text-[#08090A] hover:bg-[#FAF8F5]"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-5 space-y-4">
-              {/* Pratinjau Foto */}
-              <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-stone-100 border border-[#EBE9E6]">
-                {imageModal.url ? (
-                  <Image
-                    src={imageModal.url}
-                    alt={imageModal.alt || "Pratinjau Foto"}
-                    fill
-                    className="object-cover object-center"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-xs text-[#5E6965]">
-                    Belum ada gambar
-                  </div>
-                )}
-                {isUploadingImage && (
-                  <div className="absolute inset-0 bg-black/50 backdrop-blur-xs flex flex-col items-center justify-center text-white gap-2">
-                    <Loader2 className="w-7 h-7 animate-spin text-[#1878B8]" />
-                    <span className="text-xs font-semibold">Mengunggah ke Cloudinary...</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Error Alert */}
-              {uploadError && (
-                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <span>{uploadError}</span>
-                </div>
-              )}
-
-              {/* Success Alert */}
-              {uploadSuccess && (
-                <div className="p-3 rounded-xl bg-[#E8F6F0] border border-[#0C8C5E]/30 text-[#0C8C5E] text-xs flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 shrink-0 text-[#0C8C5E]" />
-                  <span>{uploadSuccess}</span>
-                </div>
-              )}
-
-              {/* Tombol Upload File Komputer */}
-              <div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploadingImage}
-                  className="w-full h-11 px-4 rounded-xl border-2 border-dashed border-[#1878B8] hover:bg-[#EBF5FB] text-[#1878B8] text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer disabled:opacity-50"
-                >
-                  <Upload className="w-4 h-4" />
-                  <span>Unggah Foto dari Komputer (Cloudinary)</span>
-                </button>
-              </div>
-
-              {/* Input URL Gambar Manual */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-[#08090A]">
-                  Atau Tempel URL Gambar
-                </label>
-                <input
-                  type="text"
-                  value={imageModal.url}
-                  onChange={(e) =>
-                    setImageModal((prev) => ({ ...prev, url: e.target.value }))
-                  }
-                  placeholder="https://images.unsplash.com/... atau https://res.cloudinary.com/..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D3D8D6] text-xs focus:outline-hidden focus:border-[#1878B8] bg-[#FAF8F5]"
-                />
-              </div>
-
-              {/* Input Alt Text */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-[#08090A]">
-                  Deskripsi Gambar (Alt Text)
-                </label>
-                <input
-                  type="text"
-                  value={imageModal.alt}
-                  onChange={(e) =>
-                    setImageModal((prev) => ({ ...prev, alt: e.target.value }))
-                  }
-                  placeholder="Deskripsi foto..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#D3D8D6] text-xs focus:outline-hidden focus:border-[#1878B8] bg-[#FAF8F5]"
-                />
-              </div>
-
-              {/* Input Caption (Khusus Profil) */}
-              {imageModal.target === "profile" && (
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-[#08090A]">
-                    Teks Caption di Bawah Foto
-                  </label>
-                  <input
-                    type="text"
-                    value={imageModal.caption || ""}
-                    onChange={(e) =>
-                      setImageModal((prev) => ({ ...prev, caption: e.target.value }))
-                    }
-                    placeholder="Gede Sudiartana — Lahir, tumbuh..."
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D3D8D6] text-xs focus:outline-hidden focus:border-[#1878B8] bg-[#FAF8F5]"
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* Modal Footer */}
-            <div className="p-4 border-t border-[#EBE9E6] flex items-center justify-end gap-2 bg-[#FAF8F5]">
-              <button
-                type="button"
-                onClick={() => setImageModal((prev) => ({ ...prev, isOpen: false }))}
-                className="h-10 px-4 rounded-xl border border-[#D3D8D6] bg-white text-[#5E6965] hover:text-[#08090A] text-xs font-medium cursor-pointer"
-              >
-                Batal
-              </button>
-              <button
-                type="button"
-                onClick={applyImageChanges}
-                className="h-10 px-5 rounded-xl bg-[#1878B8] hover:bg-[#0F4C81] text-white text-xs font-semibold shadow-xs cursor-pointer"
-              >
-                Terapkan Foto
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Floating Save Action Bar */}
+      <AdminSaveBar
+        isSaving={isSaving}
+        hasUnsavedChanges={hasUnsavedChanges}
+        lastSavedTime={lastSavedTime}
+        onSave={handleSaveToFirestore}
+        lang={lang}
+      />
     </div>
   );
 }

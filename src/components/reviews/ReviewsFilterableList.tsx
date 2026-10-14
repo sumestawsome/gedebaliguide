@@ -5,6 +5,7 @@ import { Star, Quote, CheckCircle2, MessageSquarePlus, X, Send, HeartHandshake, 
 import { motion, AnimatePresence } from "framer-motion";
 import { Review } from "@/types";
 import ReviewCard from "./ReviewCard";
+import { toast } from "sonner";
 
 interface ReviewsFilterableListProps {
   initialReviews: Review[];
@@ -105,6 +106,9 @@ export default function ReviewsFilterableList({ initialReviews }: ReviewsFiltera
   const handleSubmitReview = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    toast.success("Ulasan berhasil dikirim!", {
+      description: "Terima kasih, ulasan Anda akan segera ditinjau untuk moderasi.",
+    });
     setTimeout(() => {
       setSubmitted(false);
       setModalOpen(false);

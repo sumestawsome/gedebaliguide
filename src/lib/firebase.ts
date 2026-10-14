@@ -28,11 +28,17 @@ try {
 
 let auth: Auth | null = null;
 try {
-  if (process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== "AIzaSyDummyKeyForPublicFirestoreAccess00") {
+  auth = getAuth(app);
+} catch {
+  // SSR or missing config fallback
+  auth = null;
+}
+
+export function getFirebaseAuth(): Auth {
+  if (!auth) {
     auth = getAuth(app);
   }
-} catch {
-  auth = null;
+  return auth;
 }
 
 export { app, db, auth, firebaseConfig };

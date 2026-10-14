@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Send, CheckCircle2, MessageCircle, RefreshCw, Sparkles, AlertCircle, Calendar, Users, Compass } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { toast } from "sonner";
 
 export default function ContactMessageForm() {
   const [name, setName] = useState("");
@@ -30,7 +31,7 @@ export default function ContactMessageForm() {
     setIsLoading(true);
 
     // Simulate mock network latency
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
     setSubmittedData({
       name,
@@ -42,6 +43,9 @@ export default function ContactMessageForm() {
     });
     setIsLoading(false);
     setIsSuccess(true);
+    toast.success("Pesan Anda berhasil dikirim!", {
+      description: "Bli Gede akan segera menghubungi Anda melalui nomor WhatsApp.",
+    });
   };
 
   const handleReset = () => {

@@ -3,6 +3,7 @@ import { Libre_Baskerville, Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import FloatingWhatsApp from "@/components/common/FloatingWhatsApp";
+import AppToaster from "@/components/common/AppToaster";
 
 const libreBaskerville = Libre_Baskerville({
   weight: ["400", "700"],
@@ -39,6 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${libreBaskerville.variable} ${inter.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased selection:bg-[#EBF5FB] selection:text-[#1878B8] bg-[#FEFDFB] text-[#121715]">
+        <AppToaster />
         <Navbar />
         {children}
         <FloatingWhatsApp />

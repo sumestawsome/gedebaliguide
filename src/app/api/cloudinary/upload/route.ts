@@ -69,8 +69,34 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      let targetImageUrl = String(body.image).trim();
+      // Auto-prefix HTTPS jika belum ada protokol
+      if (!/^https?:\/\//i.test(targetImageUrl)) {
+        targetImageUrl = `https://${targetImageUrl}`;
+      }
+
+      // Deteksi & konversi cerdas tautan halaman web Unsplash ke direct image CDN
+      const unsplashPageMatch = targetImageUrl.match(
+        /(?:https?:\/\/)?(?:www\.)?unsplash\.com\/(?:[a-z]{2}\/)?(?:photos|foto)\/([a-zA-Z0-9_\-\.]+)/i
+      );
+      if (unsplashPageMatch && unsplashPageMatch[1]) {
+        const slugOrId = unsplashPageMatch[1];
+        let photoId = slugOrId;
+        if (slugOrId.includes("photo-")) {
+          photoId = slugOrId.substring(slugOrId.indexOf("photo-"));
+          targetImageUrl = `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=1600&q=80`;
+        } else {
+          const parts = slugOrId.split("-");
+          const lastPart = parts[parts.length - 1];
+          if (lastPart && lastPart.length >= 8) {
+            photoId = lastPart;
+          }
+          targetImageUrl = `https://images.unsplash.com/photo-${photoId}?auto=format&fit=crop&w=1600&q=80`;
+        }
+      }
+
       if (body.folder) folder = body.folder;
-      uploadResult = await uploadImage(body.image, folder);
+      uploadResult = await uploadImage(targetImageUrl, folder);
     }
 
     // Pastikan URL aman berformat HTTPS

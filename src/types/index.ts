@@ -183,6 +183,50 @@ export interface PillarItem {
   description: string;
 }
 
+export type { ButtonVariant } from "@/lib/button-variants";
+
+/**
+ * Struktur objek data tombol tunggal:
+ * - Atribut Dwibahasa: Teks tombol per-bahasa (ID & EN).
+ * - Atribut Global: Varian gaya desain & URL tujuan (bersama untuk ID & EN).
+ */
+export interface ButtonData {
+  text: {
+    id: string;
+    en: string;
+  };
+  variant: import("@/lib/button-variants").ButtonVariant; // Bersifat global untuk ID & EN
+  url?: string;
+}
+
+export type MediaMode = "single" | "multi";
+
+export type SingleImageTemplate =
+  | "classic-editorial" // 1. Satu kartu vertikal proporsional (rasio 4:5), sudut membulat, label caption minimalis
+  | "ambient-glow"      // 2. Foto utama dengan aksen kotak bayangan hangat bertumpuk di belakangnya
+  | "polaroid-frame";   // 3. Foto berbingkai putih jurnal perjalanan otentik & badge lisensi HPI
+
+export type MultiImageTemplate =
+  | "stacked-deck"      // 1. Kartu bertumpuk interaktif dengan efek rotasi miring & indikator titik
+  | "editorial-bento"   // 2. Kolase bergaya majalah: 1 foto utama besar + 2 foto pendukung
+  | "smooth-slider";    // 3. Slider geser horizontal touch-friendly dengan navigasi panah & thumbnail
+
+export interface MediaItem {
+  id?: string;
+  url: string;
+  alt: string;
+  caption?: string;
+  publicId?: string;
+}
+
+export interface MediaSectionData {
+  mode: MediaMode;
+  singleTemplate: SingleImageTemplate;
+  multiTemplate: MultiImageTemplate;
+  images: MediaItem[];
+  caption?: string;
+}
+
 export interface AboutPageContent {
   hero: {
     badge: string;
@@ -193,8 +237,15 @@ export interface AboutPageContent {
       publicId: string;
       alt: string;
     };
+    media?: MediaSectionData;
     imageCaption: string;
     stats: StatItem[];
+    ctaPrimary?: string;
+    ctaPrimaryVariant?: import("@/lib/button-variants").ButtonVariant;
+    ctaSecondary?: string;
+    ctaSecondaryVariant?: import("@/lib/button-variants").ButtonVariant;
+    ctaPrimaryButton?: ButtonData;
+    ctaSecondaryButton?: ButtonData;
   };
   story: {
     sectionTag: string;
@@ -207,6 +258,7 @@ export interface AboutPageContent {
       publicId: string;
       alt: string;
     };
+    media?: MediaSectionData;
   };
   guidingStyle: {
     sectionTag: string;
@@ -219,6 +271,8 @@ export interface AboutPageContent {
     title: string;
     subtitle: string;
     buttonText: string;
+    buttonVariant?: import("@/lib/button-variants").ButtonVariant;
+    button?: ButtonData;
   };
   id?: AboutPageContent;
   en?: AboutPageContent;
@@ -228,6 +282,11 @@ export interface AboutPageContent {
 export interface BilingualAboutPageContent {
   id: AboutPageContent;
   en: AboutPageContent;
+  ctaPrimaryVariant?: import("@/lib/button-variants").ButtonVariant;
+  ctaSecondaryVariant?: import("@/lib/button-variants").ButtonVariant;
+  buttonVariant?: import("@/lib/button-variants").ButtonVariant;
+  heroMedia?: MediaSectionData;
+  storyMedia?: MediaSectionData;
   updatedAt?: string;
 }
 

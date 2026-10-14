@@ -62,6 +62,11 @@ export default function Navbar({ currentLang, onLanguageChange }: NavbarProps) {
     }
   }, [mobileMenuOpen]);
 
+  // Sembunyikan Navbar publik pada rute panel admin (/admin/*)
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   const navLabels = {
     id: {
       home: "Beranda",

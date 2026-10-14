@@ -58,6 +58,11 @@ export async function POST(request: NextRequest) {
       const bilingualPayload: BilingualAboutPageContent = {
         id: body.id,
         en: body.en,
+        ctaPrimaryVariant: body.ctaPrimaryVariant || body.id.hero?.ctaPrimaryVariant,
+        ctaSecondaryVariant: body.ctaSecondaryVariant || body.id.hero?.ctaSecondaryVariant,
+        buttonVariant: body.buttonVariant || body.id.cta?.buttonVariant,
+        heroMedia: body.heroMedia || body.id.hero?.media || body.en.hero?.media,
+        storyMedia: body.storyMedia || body.id.story?.media || body.en.story?.media,
       };
       saveResult = await saveBilingualAboutPageContent(bilingualPayload);
     }

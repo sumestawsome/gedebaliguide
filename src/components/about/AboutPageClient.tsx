@@ -19,6 +19,8 @@ import {
 import Footer from "@/components/layout/Footer";
 import { AboutPageContent, StatItem, PillarItem, TrustItem } from "@/types";
 import { handleWhatsAppClick } from "@/lib/lead-tracker";
+import { getButtonVariantClasses } from "@/lib/button-variants";
+import MediaRenderer from "@/components/common/MediaRenderer";
 
 interface AboutPageClientProps {
   initialContent: AboutPageContent;
@@ -176,8 +178,28 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
     profileImage: (isEn ? (enResolved as any).hero?.profileImage : (idResolved as any).hero?.profileImage) || initialContent.hero.profileImage,
     imageCaption: isEn ? (enResolved.hero?.imageCaption || contentEn.hero.imageCaption) : (idResolved.hero?.imageCaption || initialContent.hero.imageCaption),
     stats: ((isEn ? (enResolved as any).hero?.stats : (idResolved as any).hero?.stats) || initialContent.hero.stats) as StatItem[],
-    ctaPrimary: isEn ? (enResolved.hero as any)?.ctaPrimary || contentEn.hero.ctaPrimary : "Konsultasi Bersama Gede",
-    ctaSecondary: isEn ? (enResolved.hero as any)?.ctaSecondary || contentEn.hero.ctaSecondary : "Lihat Pilihan Tur",
+    ctaPrimary: isEn
+      ? (enResolved.hero as any)?.ctaPrimary || contentEn.hero.ctaPrimary
+      : (idResolved.hero?.ctaPrimary || initialContent.hero.ctaPrimary || "Konsultasi Bersama Gede"),
+    ctaPrimaryVariant:
+      (initialContent as any).ctaPrimaryVariant ||
+      (enResolved.hero as any)?.ctaPrimaryVariant ||
+      (idResolved.hero as any)?.ctaPrimaryVariant ||
+      initialContent.hero.ctaPrimaryVariant ||
+      "ocean-blue-solid",
+    ctaSecondary: isEn
+      ? (enResolved.hero as any)?.ctaSecondary || contentEn.hero.ctaSecondary
+      : (idResolved.hero?.ctaSecondary || initialContent.hero.ctaSecondary || "Lihat Pilihan Tur"),
+    ctaSecondaryVariant:
+      (initialContent as any).ctaSecondaryVariant ||
+      (enResolved.hero as any)?.ctaSecondaryVariant ||
+      (idResolved.hero as any)?.ctaSecondaryVariant ||
+      initialContent.hero.ctaSecondaryVariant ||
+      "neutral-outline",
+    media:
+      (initialContent as any).heroMedia ||
+      (isEn ? (enResolved as any).hero?.media : (idResolved as any).hero?.media) ||
+      initialContent.hero.media,
   };
 
   const storyData = {
@@ -187,6 +209,10 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
     quote: isEn ? (enResolved.story?.quote || contentEn.story.quote) : (idResolved.story?.quote || initialContent.story.quote),
     quoteAuthor: isEn ? (enResolved.story?.quoteAuthor || contentEn.story.quoteAuthor) : (idResolved.story?.quoteAuthor || initialContent.story.quoteAuthor),
     storyImage: (isEn ? (enResolved as any).story?.storyImage : (idResolved as any).story?.storyImage) || initialContent.story.storyImage,
+    media:
+      (initialContent as any).storyMedia ||
+      (isEn ? (enResolved as any).story?.media : (idResolved as any).story?.media) ||
+      initialContent.story.media,
   };
 
 
@@ -203,6 +229,12 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
     title: isEn ? (enResolved.cta?.title || contentEn.cta.title) : (idResolved.cta?.title || initialContent.cta.title),
     subtitle: isEn ? (enResolved.cta?.subtitle || contentEn.cta.subtitle) : (idResolved.cta?.subtitle || initialContent.cta.subtitle),
     buttonText: isEn ? (enResolved.cta?.buttonText || contentEn.cta.buttonText) : (idResolved.cta?.buttonText || initialContent.cta.buttonText),
+    buttonVariant:
+      (initialContent as any).buttonVariant ||
+      (enResolved.cta as any)?.buttonVariant ||
+      (idResolved.cta as any)?.buttonVariant ||
+      initialContent.cta.buttonVariant ||
+      "sunset-amber-solid",
   };
 
 
@@ -277,19 +309,25 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
                 ))}
               </div>
 
-              {/* Tombol CTA (Standarisasi Ukuran h-11, Primary Biru Samudra) */}
+              {/* Tombol CTA (Dinamis Varian dari State/Firestore) */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => handleWhatsAppClick("Konsultasi Profil Gede")}
-                  className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl bg-[#1878B8] hover:bg-[#0F4C81] text-white font-medium text-sm shadow-[0_2px_8px_rgba(24,120,184,0.25)] transition-all cursor-pointer"
+                  className={`inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl font-medium text-sm transition-all cursor-pointer ${getButtonVariantClasses(
+                    heroData.ctaPrimaryVariant,
+                    "ocean-blue-solid"
+                  )}`}
                 >
                   <MessageCircle className="w-4.5 h-4.5" />
                   <span>{heroData.ctaPrimary}</span>
                 </button>
                 <Link
                   href="/tours"
-                  className="inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl border border-[#D3D8D6] bg-white hover:bg-[#FAF8F5] text-[#08090A] font-medium text-sm transition-colors text-center"
+                  className={`inline-flex items-center justify-center gap-2 h-11 px-5 py-2.5 rounded-xl font-medium text-sm transition-colors text-center ${getButtonVariantClasses(
+                    heroData.ctaSecondaryVariant,
+                    "neutral-outline"
+                  )}`}
                 >
                   <span>{heroData.ctaSecondary}</span>
                   <ChevronRight className="w-4 h-4" />
@@ -297,30 +335,18 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
               </div>
             </div>
 
-            {/* Kolom Kanan: Kartu Foto Bli Gede (rounded-3xl) & Caption Bersahaja */}
+            {/* Kolom Kanan: Media Dinamis (Single / Multi Template) Bli Gede */}
             <div className="lg:col-span-5">
-              <div className="relative mx-auto max-w-md lg:max-w-none">
-                {/* Decorative Soft Accent Backdrop */}
-                <div className="absolute -inset-2 rounded-[32px] bg-gradient-to-tr from-[#0C8C5E]/15 to-[#E67E22]/15 blur-xl -z-10" />
-
-                <div className="overflow-hidden rounded-3xl bg-white border border-[#EBE9E6] shadow-xl shadow-stone-200/50">
-                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone-100">
-                    <Image
-                      src={heroData.profileImage.url}
-                      alt={heroData.profileImage.alt}
-                      fill
-                      priority
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 500px"
-                      className="object-cover object-center transition-transform duration-500 hover:scale-105"
-                    />
-                  </div>
-                  <div className="p-4 sm:p-5 bg-white border-t border-[#EBE9E6]/60">
-                    <p className="text-xs sm:text-sm text-[#5E6965] italic leading-relaxed text-center">
-                      &ldquo;{heroData.imageCaption}&rdquo;
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <MediaRenderer
+                media={heroData.media}
+                fallbackImage={{
+                  url: heroData.profileImage.url,
+                  alt: heroData.profileImage.alt,
+                  caption: heroData.imageCaption,
+                }}
+                aspectRatio="aspect-[4/5]"
+                priority
+              />
             </div>
           </div>
         </section>
@@ -360,22 +386,17 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
                 </div>
               </div>
 
-              {/* Kolom Visual: Foto Suasana Budaya & Pura Bali */}
+              {/* Kolom Visual: Media Dinamis (Single / Multi Template) Suasana Cerita */}
               <div className="lg:col-span-5 order-1 lg:order-2">
-                <div className="relative rounded-3xl overflow-hidden border border-[#EBE9E6] shadow-xl aspect-[4/5] bg-stone-100">
-                  <Image
-                    src={storyData.storyImage.url}
-                    alt={storyData.storyImage.alt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 450px"
-                    className="object-cover object-center"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end p-6">
-                    <span className="text-white text-xs sm:text-sm font-medium drop-shadow-sm">
-                      {storyData.storyImage.alt}
-                    </span>
-                  </div>
-                </div>
+                <MediaRenderer
+                  media={storyData.media}
+                  fallbackImage={{
+                    url: storyData.storyImage.url,
+                    alt: storyData.storyImage.alt,
+                    caption: storyData.storyImage.alt,
+                  }}
+                  aspectRatio="aspect-[4/5]"
+                />
               </div>
             </div>
           </div>
@@ -495,13 +516,13 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
             SEKSI 5: BOTTOM CTA BANNER (Gradien Biru Samudra Elegan)
             bg-gradient-to-r from-[#0F4C81] to-[#1878B8] text-white
             ======================================================== */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0F4C81] to-[#1878B8] text-white p-8 sm:p-12 lg:p-16 text-center shadow-xl">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 w-full max-w-full box-border">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0F4C81] to-[#1878B8] text-white p-5 sm:p-12 lg:p-16 text-center shadow-xl w-full max-w-full box-border">
             {/* Soft decorative background circles */}
             <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-white/10 blur-2xl pointer-events-none" />
             <div className="absolute -bottom-24 -right-24 w-64 h-64 rounded-full bg-[#E67E22]/20 blur-2xl pointer-events-none" />
 
-            <div className="relative max-w-2xl mx-auto space-y-4">
+            <div className="relative max-w-2xl mx-auto space-y-4 w-full">
               <span className="inline-block px-3 py-1 rounded-full bg-white/15 text-xs font-semibold tracking-wider uppercase text-white/90 border border-white/20">
                 {isEn ? "Direct Local Consultation" : "Konsultasi Rute Langsung"}
               </span>
@@ -518,7 +539,10 @@ export default function AboutPageClient({ initialContent }: AboutPageClientProps
                 <button
                   type="button"
                   onClick={() => handleWhatsAppClick("Konsultasi Profil Gede")}
-                  className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-[#E67E22] hover:bg-[#D35400] text-white font-medium text-sm shadow-[0_4px_16px_rgba(230,126,34,0.3)] transition-all cursor-pointer"
+                  className={`inline-flex items-center justify-center gap-2 h-11 px-6 rounded-xl font-medium text-sm transition-all cursor-pointer ${getButtonVariantClasses(
+                    ctaData.buttonVariant,
+                    "sunset-amber-solid"
+                  )}`}
                 >
                   <MessageCircle className="w-4.5 h-4.5" />
                   <span>{ctaData.buttonText}</span>
